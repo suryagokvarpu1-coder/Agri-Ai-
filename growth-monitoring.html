@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="site_title">Growth Monitoring - Agri-AI Yield Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="translations.js"></script>
+    <script src="global-settings.js"></script>
+    <script src="sidebar-navigation.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        /* CSS Variables - Premium Color Palette */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --primary-gradient-alt: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+            --dark-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            --light-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.16);
+            --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.24);
+            --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Global Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000000;
+            background-attachment: fixed;
+            color: #e2e8f0;
+            line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Animated Background Pattern - Dark Theme */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 10% 80%, rgba(79, 172, 254, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: backgroundShift 25s ease infinite;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            33% { transform: translate(30px, -30px) scale(1.1) rotate(5deg); opacity: 0.9; }
+            66% { transform: translate(-30px, 30px) scale(0.9) rotate(-5deg); opacity: 0.95; }
+        }
+        
+        #app-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header Styling */
+        header {
+            background: rgba(0, 0, 0, 0.9) !important;
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: sticky;
+            top: 0;
+        }
+        
+        header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.8px;
+            font-size: 1.75rem;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+        
+        /* Navigation Links */
+        nav a {
+            position: relative;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #cbd5e1;
+            padding: 0.5rem 0;
+        }
+        
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.6);
+        }
+        
+        nav a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        
+        nav a:hover::before {
+            width: 100%;
+        }
+        
+        nav a.active {
+            color: #ffffff;
+        }
+        
+        nav a.active::before {
+            width: 100%;
+        }
+        
+        /* Crop Card Styling */
+        .crop-card {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .crop-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+        
+        .crop-card.active {
+            border-color: #10b981;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+        }
+        
+        /* Growth Stage Progress */
+        .stage-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 12px;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .stage-progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+            background: linear-gradient(90deg, #10b981, #059669, #047857);
+            position: relative;
+        }
+        
+        .stage-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Growth Stages */
+        .growth-stage {
+            background: rgba(30, 30, 30, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .growth-stage.completed {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .growth-stage.current {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            animation: pulse 2s infinite;
+        }
+        
+        .growth-stage.upcoming {
+            border-color: rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+        }
+        
+        /* Countdown Timer */
+        .countdown-timer {
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .countdown-timer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .countdown-number {
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: 'Space Grotesk', sans-serif;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Add Crop Form */
+        .add-crop-form {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-input, .form-select {
+            background: rgba(30, 30, 30, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: #e2e8f0;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        
+        .form-select option {
+            background: #1a1a1a;
+            color: #e2e8f0;
+        }
+        
+        /* Button Styling */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: #e2e8f0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-germination {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .status-vegetative {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .status-flowering {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .status-fruiting {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .status-harvest {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .countdown-number {
+                font-size: 2rem;
+            }
+            
+            .crop-card {
+                padding: 1rem;
+            }
+            
+            .add-crop-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-content">
+        <!-- Header with Toggle Button -->
+        <header class="bg-white shadow-md sticky top-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <!-- Toggle Button -->
+                <button onclick="toggleSidebar()" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                
+                <!-- Logo (Center) -->
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold">Agri-AI</h1>
+                </div>
+                
+                <!-- User Info (Right) -->
+                <div class="flex items-center space-x-3">
+                    <div class="hidden sm:block text-right">
+                        <p class="text-sm font-medium text-gray-900" id="header-username">Welcome</p>
+                        <p class="text-xs text-gray-500">Growth Monitor</p>
+                    </div>
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-bold" id="header-avatar">U</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Growth Monitoring Section -->
+        <section class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 data-i18n="growth_monitoring_title" class="text-4xl md:text-5xl font-bold text-white mb-6">Growth Stage Monitoring</h2>
+                    <p data-i18n="growth_monitoring_subtitle" class="text-xl text-gray-400 max-w-3xl mx-auto">
+                        Track your crops from germination to harvest with AI-powered growth stage detection and precise "Days to Maturity" countdown timers.
+                    </p>
+                </div>
+
+                <!-- Add New Crop Form -->
+                <div class="add-crop-form">
+                    <h3 data-i18n="growth_add_crop" class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Add New Crop to Monitor
+                    </h3>
+                    
+                    <form id="add-crop-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div>
+                            <label for="crop-name" data-i18n="growth_crop_name" class="block text-sm font-medium text-gray-300 mb-2">Crop Name</label>
+                            <input type="text" id="crop-name" class="form-input" placeholder="e.g., Tomatoes" required>
+                        </div>
+                        
+                        <div>
+                            <label for="crop-variety" data-i18n="growth_variety" class="block text-sm font-medium text-gray-300 mb-2">Variety</label>
+                            <select id="crop-variety" class="form-select" required>
+                                <option value="">Select Variety</option>
+                                <option value="determinate">Determinate</option>
+                                <option value="indeterminate">Indeterminate</option>
+                                <option value="cherry">Cherry</option>
+                                <option value="beefsteak">Beefsteak</option>
+                                <option value="roma">Roma</option>
+                                <option value="heirloom">Heirloom</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="planting-date" class="block text-sm font-medium text-gray-300 mb-2">Planting Date</label>
+                            <input type="date" id="planting-date" class="form-input" required>
+                        </div>
+                        
+                        <div>
+                            <label for="field-location" class="block text-sm font-medium text-gray-300 mb-2">Field Location</label>
+                            <input type="text" id="field-location" class="form-input" placeholder="e.g., North Field A" required>
+                        </div>
+                        
+                        <div class="md:col-span-2 lg:col-span-4">
+                            <button type="submit" class="btn-primary w-full md:w-auto">
+                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Start Monitoring Crop
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Active Crops Grid -->
+                <div id="crops-grid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                    <!-- Crop cards will be populated by JavaScript -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="text-center py-16">
+                    <svg class="w-24 h-24 text-gray-600 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    <h3 class="text-2xl font-bold text-gray-400 mb-4">No Crops Being Monitored</h3>
+                    <p class="text-gray-500 mb-6">Add your first crop above to start tracking its growth stages and countdown to harvest.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Crop Detail Modal -->
+    <div id="crop-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="modal-title" class="text-2xl font-bold text-white">Crop Details</h3>
+                    <button onclick="closeCropModal()" class="text-gray-400 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="modal-content">
+                    <!-- Modal content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Check -->
+    <script>
+        // Check if user is authenticated
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('agri-ai-token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Validate token
+            fetch('http://localhost:3000/api/user/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    localStorage.removeItem('agri-ai-token');
+                    localStorage.removeItem('agri-ai-user');
+                    window.location.href = 'login.html';
+                }
+            }).catch(error => {
+                console.error('Token validation error:', error);
+                localStorage.removeItem('agri-ai-token');
+                localStorage.removeItem('agri-ai-user');
+                window.location.href = 'login.html';
+            });
+
+            // Initialize growth monitoring system
+            initializeGrowthMonitoring();
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('agri-ai-token');
+            localStorage.removeItem('agri-ai-user');
+            window.location.href = 'login.html';
+        }
+
+        // Modal functions
+        function closeCropModal() {
+            document.getElementById('crop-modal').classList.add('hidden');
+        }
+    </script>
+    
+    <script src="growth-monitoring.js"></script>
+</body>
+</html>

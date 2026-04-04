@@ -1,0 +1,34 @@
+{
+  "name": "agri-ai-yield-optimizer",
+  "version": "2.0.0",
+  "description": "Modern agricultural AI platform with separate pages for optimal user experience",
+  "main": "simple-server.js",
+  "scripts": {
+    "start": "node simple-server.js",
+    "dev": "nodemon simple-server.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "agriculture",
+    "ai",
+    "yield-prediction",
+    "farming",
+    "separate-pages"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

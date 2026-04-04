@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="site_title">Soil Analysis - Agri-AI Yield Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="translations.js"></script>
+    <script src="global-settings.js"></script>
+    <script src="sidebar-navigation.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        /* CSS Variables - Premium Color Palette */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --primary-gradient-alt: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+            --dark-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            --light-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.16);
+            --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.24);
+            --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Global Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000000;
+            background-attachment: fixed;
+            color: #e2e8f0;
+            line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Animated Background Pattern - Dark Theme */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 10% 80%, rgba(79, 172, 254, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: backgroundShift 25s ease infinite;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            33% { transform: translate(30px, -30px) scale(1.1) rotate(5deg); opacity: 0.9; }
+            66% { transform: translate(-30px, 30px) scale(0.9) rotate(-5deg); opacity: 0.95; }
+        }
+        
+        #app-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header Styling */
+        header {
+            background: rgba(0, 0, 0, 0.9) !important;
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: sticky;
+            top: 0;
+        }
+        
+        header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.8px;
+            font-size: 1.75rem;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+        
+        /* Navigation Links */
+        nav a {
+            position: relative;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #cbd5e1;
+            padding: 0.5rem 0;
+        }
+        
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.6);
+        }
+        
+        nav a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        
+        nav a:hover::before {
+            width: 100%;
+        }
+        
+        nav a.active {
+            color: #ffffff;
+        }
+        
+        nav a.active::before {
+            width: 100%;
+        }
+        
+        /* Upload Area Styling */
+        .upload-area {
+            border: 3px dashed rgba(102, 126, 234, 0.3);
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area:hover {
+            border-color: rgba(102, 126, 234, 0.6);
+            background: rgba(30, 30, 30, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+        }
+        
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+        
+        /* Analysis Results */
+        .analysis-result {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            animation: slideInUp 0.6s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Soil Type Cards */
+        .soil-type-card {
+            background: rgba(30, 30, 30, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .soil-type-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+        
+        .soil-type-card.sandy {
+            border-color: rgba(245, 158, 11, 0.5);
+        }
+        
+        .soil-type-card.loamy {
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+        
+        .soil-type-card.clay {
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+            margin: 0.5rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+        
+        .progress-fill.sandy {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+        
+        .progress-fill.loamy {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+        
+        .progress-fill.clay {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+        
+        /* Crop Recommendation Cards */
+        .crop-card {
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .crop-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Button Styling */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app-content">
+        <!-- Header with Toggle Button -->
+        <header class="bg-white shadow-md sticky top-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <!-- Toggle Button -->
+                <button onclick="toggleSidebar()" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                
+                <!-- Logo (Center) -->
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold">Agri-AI</h1>
+                </div>
+                
+                <!-- User Info (Right) -->
+                <div class="flex items-center space-x-3">
+                    <div class="hidden sm:block text-right">
+                        <p class="text-sm font-medium text-gray-900" id="header-username">Welcome</p>
+                        <p class="text-xs text-gray-500">Soil Analysis</p>
+                    </div>
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-bold" id="header-avatar">U</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Soil Analysis Section -->
+        <section class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 data-i18n="soil_analysis_title" class="text-4xl md:text-5xl font-bold text-white mb-6">AI Soil Texture Analysis</h2>
+                    <p data-i18n="soil_analysis_subtitle" class="text-xl text-gray-400 max-w-3xl mx-auto">
+                        Upload a macro photograph of your soil sample and let our AI analyze the texture to determine soil type and recommend the best crops for optimal yield.
+                    </p>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="bg-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-700 mb-8">
+                    <h3 data-i18n="soil_upload_title" class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Upload Soil Sample Photo
+                    </h3>
+                    
+                    <!-- Upload Area -->
+                    <div id="upload-area" class="upload-area p-12 text-center cursor-pointer">
+                        <div id="upload-content">
+                            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <h4 data-i18n="soil_upload_subtitle" class="text-xl font-semibold text-white mb-2">Drop your soil photo here</h4>
+                            <p class="text-gray-400 mb-4">or click to browse files</p>
+                            <p class="text-sm text-gray-500">Supports: JPG, PNG, WEBP (Max 10MB)</p>
+                            <button class="btn-primary mt-4">Choose File</button>
+                        </div>
+                        <input type="file" id="soil-image" accept="image/*" class="hidden">
+                    </div>
+
+                    <!-- Photography Tips -->
+                    <div class="mt-8 bg-blue-900/20 border border-blue-500/30 rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-blue-300 mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Photography Tips for Best Results
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-200">
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Take close-up macro shots (2-4 inches from soil)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Ensure good lighting (natural daylight preferred)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Include a coin or ruler for scale reference</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-400">✓</span>
+                                <span>Capture soil texture details clearly</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Results -->
+                <div id="analysis-results" class="hidden">
+                    <!-- Soil Type Analysis -->
+                    <div class="analysis-result">
+                        <h3 data-i18n="soil_results_title" class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            Soil Texture Analysis Results
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <!-- Sandy Soil -->
+                            <div class="soil-type-card sandy">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-4 h-4 rounded-full bg-yellow-500"></div>
+                                    <h4 data-i18n="soil_sandy" class="text-lg font-semibold text-white">Sandy Soil</h4>
+                                </div>
+                                <div class="progress-bar">
+                                    <div id="sandy-progress" class="progress-fill sandy" style="width: 0%"></div>
+                                </div>
+                                <p id="sandy-percentage" class="text-sm text-gray-300 mt-2">0%</p>
+                                <p class="text-xs text-gray-400 mt-2">Large particles, good drainage, low water retention</p>
+                            </div>
+
+                            <!-- Loamy Soil -->
+                            <div class="soil-type-card loamy">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                                    <h4 data-i18n="soil_loamy" class="text-lg font-semibold text-white">Loamy Soil</h4>
+                                </div>
+                                <div class="progress-bar">
+                                    <div id="loamy-progress" class="progress-fill loamy" style="width: 0%"></div>
+                                </div>
+                                <p id="loamy-percentage" class="text-sm text-gray-300 mt-2">0%</p>
+                                <p class="text-xs text-gray-400 mt-2">Balanced mixture, ideal for most crops</p>
+                            </div>
+
+                            <!-- Clay Soil -->
+                            <div class="soil-type-card clay">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-4 h-4 rounded-full bg-red-500"></div>
+                                    <h4 data-i18n="soil_clay" class="text-lg font-semibold text-white">Clay Soil</h4>
+                                </div>
+                                <div class="progress-bar">
+                                    <div id="clay-progress" class="progress-fill clay" style="width: 0%"></div>
+                                </div>
+                                <p id="clay-percentage" class="text-sm text-gray-300 mt-2">0%</p>
+                                <p class="text-xs text-gray-400 mt-2">Fine particles, high water retention, nutrient-rich</p>
+                            </div>
+                        </div>
+
+                        <!-- Primary Soil Type -->
+                        <div id="primary-soil-type" class="bg-gray-800 rounded-xl p-6 mb-6">
+                            <h4 class="text-xl font-semibold text-white mb-3">Primary Soil Type Detected</h4>
+                            <div class="flex items-center gap-4">
+                                <div id="soil-type-icon" class="w-12 h-12 rounded-full flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h5 id="detected-soil-type" class="text-2xl font-bold text-white">Analyzing...</h5>
+                                    <p id="soil-confidence" class="text-gray-400">Confidence: --</p>
+                                </div>
+                            </div>
+                            <p id="soil-description" class="text-gray-300 mt-4">Analysis in progress...</p>
+                        </div>
+                    </div>
+
+                    <!-- Crop Recommendations -->
+                    <div class="analysis-result">
+                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            Recommended Crops for Your Soil
+                        </h3>
+                        
+                        <div id="crop-recommendations" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Crop cards will be populated by JavaScript -->
+                        </div>
+
+                        <!-- Additional Recommendations -->
+                        <div class="mt-8 bg-green-900/20 border border-green-500/30 rounded-xl p-6">
+                            <h4 class="text-lg font-semibold text-green-300 mb-3">Soil Improvement Tips</h4>
+                            <div id="soil-tips" class="text-green-200">
+                                <!-- Tips will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-state" class="hidden text-center py-12">
+                    <div class="loading-spinner mb-4"></div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Analyzing Soil Texture...</h3>
+                    <p class="text-gray-400">Our AI is examining your soil sample for texture analysis</p>
+                    <div class="mt-4 text-sm text-gray-500">
+                        <p id="analysis-step">Step 1: Processing image...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Authentication Check -->
+    <script>
+        // Check if user is authenticated
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('agri-ai-token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Validate token
+            fetch('http://localhost:3000/api/user/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    localStorage.removeItem('agri-ai-token');
+                    localStorage.removeItem('agri-ai-user');
+                    window.location.href = 'login.html';
+                }
+            }).catch(error => {
+                console.error('Token validation error:', error);
+                localStorage.removeItem('agri-ai-token');
+                localStorage.removeItem('agri-ai-user');
+                window.location.href = 'login.html';
+            });
+
+            // Initialize soil analysis functionality
+            initializeSoilAnalysis();
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('agri-ai-token');
+            localStorage.removeItem('agri-ai-user');
+            window.location.href = 'login.html';
+        }
+    </script>
+    
+    <script src="soil-analysis.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "users": [
+    {
+      "id": 2,
+      "username": "gyaswanth",
+      "password": "123654Tt@",
+      "fullName": "G Yaswanth",
+      "email": null,
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2026-01-24T06:29:25.656Z",
+      "lastLogin": "2026-01-24T08:23:59.357Z",
+      "loginCount": 3,
+      "predictions": []
+    },
+    {
+      "id": 3,
+      "username": "testuser123",
+      "password": "testpass123",
+      "fullName": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2026-01-24T07:48:21.012Z",
+      "lastLogin": "2026-01-24T07:48:23.015Z",
+      "loginCount": 1,
+      "predictions": []
+    },
+    {
+      "id": 4,
+      "username": "dinesh",
+      "password": "dinesh123",
+      "fullName": "dinesh",
+      "email": null,
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2026-01-25T04:49:17.543Z",
+      "lastLogin": "2026-01-25T04:50:16.999Z",
+      "loginCount": 1,
+      "predictions": []
+    }
+  ],
+  "lastUpdated": "2026-01-25T04:50:16.999Z",
+  "totalUsers": 3
+}

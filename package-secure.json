@@ -1,0 +1,68 @@
+{
+  "name": "agri-ai-secure",
+  "version": "2.0.0",
+  "description": "Agri-AI Yield Optimizer with Enterprise Secure Database",
+  "main": "secure-server.js",
+  "scripts": {
+    "start": "node secure-server.js",
+    "setup": "node database-setup.js",
+    "test": "node test-secure-database.js",
+    "backup": "node -e \"const DatabaseManager = require('./database-manager'); const db = new DatabaseManager(); db.createBackup().then(() => db.close());\"",
+    "dev": "node secure-server.js",
+    "simple": "node simple-server.js"
+  },
+  "keywords": [
+    "agriculture",
+    "ai",
+    "yield-prediction",
+    "secure-database",
+    "encryption",
+    "enterprise"
+  ],
+  "author": "Agri-AI Team",
+  "license": "MIT",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agri-ai/yield-optimizer"
+  },
+  "bugs": {
+    "url": "https://github.com/agri-ai/yield-optimizer/issues"
+  },
+  "homepage": "https://github.com/agri-ai/yield-optimizer#readme",
+  "security": {
+    "encryption": "AES-256-GCM",
+    "hashing": "PBKDF2-SHA512",
+    "keyDerivation": "100000 rounds",
+    "sessionManagement": "Secure tokens",
+    "rateLimiting": "60 requests/minute",
+    "auditLogging": "Comprehensive logging",
+    "backups": "Automated daily backups"
+  },
+  "database": {
+    "type": "Encrypted JSON",
+    "location": "./secure-data",
+    "collections": [
+      "users",
+      "sessions", 
+      "predictions",
+      "audit",
+      "settings"
+    ],
+    "features": [
+      "Data encryption at rest",
+      "Secure password hashing",
+      "Session management",
+      "Audit logging",
+      "Automated backups",
+      "Rate limiting",
+      "Input validation"
+    ]
+  }
+}

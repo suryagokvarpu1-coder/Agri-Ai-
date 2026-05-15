@@ -77,6 +77,25 @@ class TranslationSystem {
     'carbon_credits_ready':'carbon credits ready to sell',
     'feedback_title':'Feedback & Support',
     'feedback_subtitle':'We value your feedback and are here to help.',
+    // Section badges
+    'badge_overview':'OVERVIEW','badge_technology':'TECHNOLOGY','badge_map':'MAP TOOL',
+    'badge_predictor':'YIELD PREDICTOR','badge_impact':'GLOBAL IMPACT',
+    // Settings section headings
+    'settings_notifications':'Notifications','settings_privacy':'Privacy & Data',
+    'settings_performance':'Performance','settings_account':'Account & Data',
+    'settings_need_help':'Need Help?',
+    // Notification toggle labels
+    'notif_predictions':'Prediction Updates',
+    'notif_predictions_desc':'Get notified when new predictions are available',
+    'notif_weather':'Weather Alerts',
+    'notif_weather_desc':'Receive alerts for severe weather conditions',
+    'notif_system':'System Updates',
+    'notif_system_desc':'Get notified about system maintenance and updates',
+    // Privacy toggle labels
+    'privacy_analytics':'Analytics & Usage Data',
+    'privacy_analytics_desc':'Help improve our service by sharing anonymous usage data',
+    'privacy_sharing':'Data Sharing',
+    'privacy_sharing_desc':'Share anonymized data with agricultural research institutions',
     'auth_login_title':'Welcome Back','auth_login_subtitle':'Sign in to your Agri-AI account',
     'auth_signup_title':'Join Agri-AI','auth_signup_subtitle':'Create your account to access the yield predictor',
     'auth_username':'Username','auth_password':'Password','auth_email':'Email (Optional)',
@@ -158,6 +177,21 @@ class TranslationSystem {
     'carbon_tons_co2':'టన్నుల CO₂ ఈ సంవత్సరం','carbon_credits_ready':'కార్బన్ క్రెడిట్‌లు అమ్మడానికి సిద్ధం',
     'feedback_title':'అభిప్రాయం మరియు మద్దతు',
     'feedback_subtitle':'మేము మీ అభిప్రాయాన్ని విలువైనదిగా భావిస్తాము మరియు సహాయం చేయడానికి ఇక్కడ ఉన్నాము.',
+    'badge_overview':'అవలోకనం','badge_technology':'సాంకేతికత','badge_map':'మ్యాప్ టూల్',
+    'badge_predictor':'దిగుబడి అంచనా','badge_impact':'గ్లోబల్ ప్రభావం',
+    'settings_notifications':'నోటిఫికేషన్లు','settings_privacy':'గోప్యత మరియు డేటా',
+    'settings_performance':'పనితీరు','settings_account':'ఖాతా మరియు డేటా',
+    'settings_need_help':'సహాయం కావాలా?',
+    'notif_predictions':'అంచనా నవీకరణలు',
+    'notif_predictions_desc':'కొత్త అంచనాలు అందుబాటులో ఉన్నప్పుడు తెలియజేయండి',
+    'notif_weather':'వాతావరణ హెచ్చరికలు',
+    'notif_weather_desc':'తీవ్రమైన వాతావరణ పరిస్థితులకు హెచ్చరికలు అందుకోండి',
+    'notif_system':'సిస్టమ్ నవీకరణలు',
+    'notif_system_desc':'సిస్టమ్ నిర్వహణ మరియు నవీకరణల గురించి తెలియజేయండి',
+    'privacy_analytics':'అనలిటిక్స్ మరియు వినియోగ డేటా',
+    'privacy_analytics_desc':'అనామక వినియోగ డేటాను పంచుకోవడం ద్వారా మా సేవను మెరుగుపరచడంలో సహాయం చేయండి',
+    'privacy_sharing':'డేటా భాగస్వామ్యం',
+    'privacy_sharing_desc':'వ్యవసాయ పరిశోధన సంస్థలతో అనామకీకరించిన డేటాను పంచుకోండి',
     'auth_login_title':'తిరిగి స్వాగతం','auth_login_subtitle':'దిగుబడి అంచనా వేయడానికి మీ ఖాతాలోకి సైన్ ఇన్ చేయండి',
     'auth_signup_title':'వ్యవసాయ-AIలో చేరండి','auth_signup_subtitle':'దిగుబడి అంచనా వేయడానికి మీ ఖాతాను సృష్టించండి',
     'auth_username':'వినియోగదారు పేరు','auth_password':'పాస్‌వర్డ్','auth_email':'ఇమెయిల్ (ఐచ్ఛికం)',
@@ -239,6 +273,21 @@ class TranslationSystem {
     'carbon_tons_co2':'टन CO₂ इस वर्ष','carbon_credits_ready':'कार्बन क्रेडिट बेचने के लिए तैयार',
     'feedback_title':'प्रतिक्रिया और समर्थन',
     'feedback_subtitle':'हम आपकी प्रतिक्रिया को महत्व देते हैं और मदद के लिए यहाँ हैं।',
+    'badge_overview':'अवलोकन','badge_technology':'प्रौद्योगिकी','badge_map':'मैप टूल',
+    'badge_predictor':'उपज अनुमान','badge_impact':'वैश्विक प्रभाव',
+    'settings_notifications':'सूचनाएं','settings_privacy':'गोपनीयता और डेटा',
+    'settings_performance':'प्रदर्शन','settings_account':'खाता और डेटा',
+    'settings_need_help':'मदद चाहिए?',
+    'notif_predictions':'अनुमान अपडेट',
+    'notif_predictions_desc':'जब नए अनुमान उपलब्ध हों तो सूचित करें',
+    'notif_weather':'मौसम अलर्ट',
+    'notif_weather_desc':'गंभीर मौसम स्थितियों के लिए अलर्ट प्राप्त करें',
+    'notif_system':'सिस्टम अपडेट',
+    'notif_system_desc':'सिस्टम रखरखाव और अपडेट के बारे में सूचित करें',
+    'privacy_analytics':'एनालिटिक्स और उपयोग डेटा',
+    'privacy_analytics_desc':'अनाम उपयोग डेटा साझा करके हमारी सेवा को बेहतर बनाने में मदद करें',
+    'privacy_sharing':'डेटा साझाकरण',
+    'privacy_sharing_desc':'कृषि अनुसंधान संस्थानों के साथ अनामीकृत डेटा साझा करें',
     'auth_login_title':'वापस स्वागत है','auth_login_subtitle':'उपज अनुमान के लिए अपने खाते में साइन इन करें',
     'auth_signup_title':'कृषि-AI में शामिल हों','auth_signup_subtitle':'उपज अनुमान के लिए अपना खाता बनाएं',
     'auth_username':'उपयोगकर्ता नाम','auth_password':'पासवर्ड','auth_email':'ईमेल (वैकल्पिक)',
@@ -320,6 +369,21 @@ class TranslationSystem {
     'carbon_tons_co2':'டன் CO₂ இந்த ஆண்டு','carbon_credits_ready':'கார்பன் கிரெடிட்கள் விற்பனைக்கு தயார்',
     'feedback_title':'கருத்து மற்றும் ஆதரவு',
     'feedback_subtitle':'நாங்கள் உங்கள் கருத்தை மதிக்கிறோம் மற்றும் உதவ இங்கே இருக்கிறோம்.',
+    'badge_overview':'கண்ணோட்டம்','badge_technology':'தொழில்நுட்பம்','badge_map':'வரைபட கருவி',
+    'badge_predictor':'விளைச்சல் கணிப்பு','badge_impact':'உலகளாவிய தாக்கம்',
+    'settings_notifications':'அறிவிப்புகள்','settings_privacy':'தனியுரிமை மற்றும் தரவு',
+    'settings_performance':'செயல்திறன்','settings_account':'கணக்கு மற்றும் தரவு',
+    'settings_need_help':'உதவி வேண்டுமா?',
+    'notif_predictions':'கணிப்பு புதுப்பிப்புகள்',
+    'notif_predictions_desc':'புதிய கணிப்புகள் கிடைக்கும்போது அறிவிக்கவும்',
+    'notif_weather':'வானிலை எச்சரிக்கைகள்',
+    'notif_weather_desc':'கடுமையான வானிலை நிலைமைகளுக்கு எச்சரிக்கைகளைப் பெறுங்கள்',
+    'notif_system':'கணினி புதுப்பிப்புகள்',
+    'notif_system_desc':'கணினி பராமரிப்பு மற்றும் புதுப்பிப்புகள் பற்றி அறிவிக்கவும்',
+    'privacy_analytics':'பகுப்பாய்வு மற்றும் பயன்பாட்டு தரவு',
+    'privacy_analytics_desc':'அநாமதேய பயன்பாட்டு தரவை பகிர்வதன் மூலம் எங்கள் சேவையை மேம்படுத்த உதவுங்கள்',
+    'privacy_sharing':'தரவு பகிர்வு',
+    'privacy_sharing_desc':'வேளாண் ஆராய்ச்சி நிறுவனங்களுடன் அநாமதேயமாக்கப்பட்ட தரவை பகிரவும்',
     'auth_login_title':'மீண்டும் வரவேற்கிறோம்','auth_login_subtitle':'விளைச்சல் கணிப்புக்கு உங்கள் கணக்கில் உள்நுழையவும்',
     'auth_signup_title':'வேளாண்-AIல் சேரவும்','auth_signup_subtitle':'விளைச்சல் கணிப்புக்கு உங்கள் கணக்கை உருவாக்கவும்',
     'auth_username':'பயனர் பெயர்','auth_password':'கடவுச்சொல்','auth_email':'மின்னஞ்சல் (விருப்பமானது)',
@@ -401,6 +465,21 @@ class TranslationSystem {
     'carbon_tons_co2':'ಟನ್ CO₂ ಈ ವರ್ಷ','carbon_credits_ready':'ಕಾರ್ಬನ್ ಕ್ರೆಡಿಟ್‌ಗಳು ಮಾರಾಟಕ್ಕೆ ಸಿದ್ಧ',
     'feedback_title':'ಪ್ರತಿಕ್ರಿಯೆ ಮತ್ತು ಬೆಂಬಲ',
     'feedback_subtitle':'ನಾವು ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಮೌಲ್ಯಯುತವಾಗಿ ಪರಿಗಣಿಸುತ್ತೇವೆ ಮತ್ತು ಸಹಾಯ ಮಾಡಲು ಇಲ್ಲಿದ್ದೇವೆ.',
+    'badge_overview':'ಅವಲೋಕನ','badge_technology':'ತಂತ್ರಜ್ಞಾನ','badge_map':'ನಕ್ಷೆ ಸಾಧನ',
+    'badge_predictor':'ಇಳುವರಿ ಅಂದಾಜು','badge_impact':'ಜಾಗತಿಕ ಪ್ರಭಾವ',
+    'settings_notifications':'ಅಧಿಸೂಚನೆಗಳು','settings_privacy':'ಗೌಪ್ಯತೆ ಮತ್ತು ಡೇಟಾ',
+    'settings_performance':'ಕಾರ್ಯಕ್ಷಮತೆ','settings_account':'ಖಾತೆ ಮತ್ತು ಡೇಟಾ',
+    'settings_need_help':'ಸಹಾಯ ಬೇಕೇ?',
+    'notif_predictions':'ಅಂದಾಜು ನವೀಕರಣಗಳು',
+    'notif_predictions_desc':'ಹೊಸ ಅಂದಾಜುಗಳು ಲಭ್ಯವಾದಾಗ ತಿಳಿಸಿ',
+    'notif_weather':'ಹವಾಮಾನ ಎಚ್ಚರಿಕೆಗಳು',
+    'notif_weather_desc':'ತೀವ್ರ ಹವಾಮಾನ ಪರಿಸ್ಥಿತಿಗಳಿಗೆ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಸ್ವೀಕರಿಸಿ',
+    'notif_system':'ಸಿಸ್ಟಮ್ ನವೀಕರಣಗಳು',
+    'notif_system_desc':'ಸಿಸ್ಟಮ್ ನಿರ್ವಹಣೆ ಮತ್ತು ನವೀಕರಣಗಳ ಬಗ್ಗೆ ತಿಳಿಸಿ',
+    'privacy_analytics':'ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ಬಳಕೆ ಡೇಟಾ',
+    'privacy_analytics_desc':'ಅನಾಮಧೇಯ ಬಳಕೆ ಡೇಟಾ ಹಂಚಿಕೊಳ್ಳುವ ಮೂಲಕ ನಮ್ಮ ಸೇವೆಯನ್ನು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡಿ',
+    'privacy_sharing':'ಡೇಟಾ ಹಂಚಿಕೆ',
+    'privacy_sharing_desc':'ಕೃಷಿ ಸಂಶೋಧನಾ ಸಂಸ್ಥೆಗಳೊಂದಿಗೆ ಅನಾಮಧೇಯ ಡೇಟಾ ಹಂಚಿಕೊಳ್ಳಿ',
     'auth_login_title':'ಮತ್ತೆ ಸ್ವಾಗತ','auth_login_subtitle':'ಇಳುವರಿ ಅಂದಾಜಿಗಾಗಿ ನಿಮ್ಮ ಖಾತೆಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ',
     'auth_signup_title':'ಕೃಷಿ-AIಗೆ ಸೇರಿ','auth_signup_subtitle':'ಇಳುವರಿ ಅಂದಾಜಿಗಾಗಿ ನಿಮ್ಮ ಖಾತೆ ರಚಿಸಿ',
     'auth_username':'ಬಳಕೆದಾರ ಹೆಸರು','auth_password':'ಪಾಸ್‌ವರ್ಡ್','auth_email':'ಇಮೇಲ್ (ಐಚ್ಛಿಕ)',
@@ -467,6 +546,8 @@ class TranslationSystem {
 
     applyTranslations() {
         if (typeof document === 'undefined') return;
+
+        // 1. Translate all elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
             const translation = this.translate(key);
@@ -476,10 +557,267 @@ class TranslationSystem {
                 element.textContent = translation;
             }
         });
+
+        // 2. Translate page title
         const titleEl = document.querySelector('title[data-i18n]');
         if (titleEl) titleEl.textContent = this.translate(titleEl.getAttribute('data-i18n'));
+
+        // 3. Fix impact.html duplicate key bug — stat numbers must stay as numbers
+        this._fixImpactStats();
+
+        // 4. Smart DOM translation for hardcoded text (non-English languages only)
+        if (this.currentLanguage !== 'en-in') {
+            this._translateHardcodedText();
+        }
+
+        // 5. Update document language attribute
         document.documentElement.lang = this.currentLanguage;
         console.log(`🌐 Translations applied: ${this.currentLanguage}`);
+    }
+
+    _fixImpactStats() {
+        // impact.html uses same data-i18n key on both the number and the label
+        // Fix: restore the stat numbers which get overwritten
+        const statNumbers = {
+            'impact_farmers': '50K+',
+            'impact_yield': '25%',
+            'impact_countries': '100+',
+            'impact_savings': '30%'
+        };
+        const statLabels = {
+            'impact_farmers': { 'en-in':'Farmers Helped','te':'రైతులకు సహాయం','hi':'किसानों की मदद','ta':'விவசாயிகளுக்கு உதவி','kn':'ರೈತರಿಗೆ ಸಹಾಯ' },
+            'impact_yield':   { 'en-in':'Yield Increase','te':'దిగుబడి పెరుగుదల','hi':'उपज वृद्धि','ta':'விளைச்சல் அதிகரிப்பு','kn':'ಇಳುವರಿ ಹೆಚ್ಚಳ' },
+            'impact_countries':{ 'en-in':'Countries Served','te':'దేశాలలో సేవలు','hi':'देशों में सेवाएं','ta':'நாடுகளில் சேவைகள்','kn':'ದೇಶಗಳಲ್ಲಿ ಸೇವೆಗಳು' },
+            'impact_savings': { 'en-in':'Resource Savings','te':'వనరుల ఆదా','hi':'संसाधन बचत','ta':'வள சேமிப்பு','kn':'ಸಂಪನ್ಮೂಲ ಉಳಿತಾಯ' }
+        };
+        Object.keys(statNumbers).forEach(key => {
+            const els = document.querySelectorAll(`[data-i18n="${key}"]`);
+            if (els.length >= 2) {
+                els[0].textContent = statNumbers[key]; // first = number, keep as-is
+                const lang = this.currentLanguage;
+                els[1].textContent = (statLabels[key][lang] || statLabels[key]['en-in']);
+            }
+        });
+    }
+
+    _translateHardcodedText() {
+        const lang = this.currentLanguage;
+        const map = this._getHardcodedTextMap(lang);
+        if (!map) return;
+
+        // Walk all text nodes and translate matching strings
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode(node) {
+                    // Skip script, style, and already-translated nodes
+                    const parent = node.parentElement;
+                    if (!parent) return NodeFilter.FILTER_REJECT;
+                    const tag = parent.tagName;
+                    if (['SCRIPT','STYLE','NOSCRIPT'].includes(tag)) return NodeFilter.FILTER_REJECT;
+                    if (parent.hasAttribute('data-i18n')) return NodeFilter.FILTER_REJECT;
+                    if (parent.hasAttribute('data-translated')) return NodeFilter.FILTER_REJECT;
+                    const text = node.textContent.trim();
+                    if (!text) return NodeFilter.FILTER_REJECT;
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            }
+        );
+
+        const nodesToTranslate = [];
+        let node;
+        while ((node = walker.nextNode())) {
+            nodesToTranslate.push(node);
+        }
+
+        nodesToTranslate.forEach(textNode => {
+            const original = textNode.textContent.trim();
+            if (map[original]) {
+                textNode.textContent = textNode.textContent.replace(original, map[original]);
+                if (textNode.parentElement) {
+                    textNode.parentElement.setAttribute('data-translated', 'true');
+                }
+            }
+        });
+
+        // Also translate select option text
+        document.querySelectorAll('select option').forEach(opt => {
+            const text = opt.textContent.trim();
+            if (map[text]) opt.textContent = map[text];
+        });
+
+        // Translate placeholder attributes not covered by data-i18n
+        document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(el => {
+            if (el.hasAttribute('data-i18n')) return;
+            const ph = el.getAttribute('placeholder');
+            if (ph && map[ph]) el.setAttribute('placeholder', map[ph]);
+        });
+    }
+
+    _getHardcodedTextMap(lang) {
+        const maps = {
+            'te': {
+                // Header page labels
+                'Dashboard': 'డాష్‌బోర్డ్', 'Overview': 'అవలోకనం', 'Technology': 'సాంకేతికత',
+                'Map Tool': 'మ్యాప్ టూల్', 'Predict Yield': 'దిగుబడి అంచనా', 'Impact': 'ప్రభావం',
+                'Settings': 'సెట్టింగ్స్', 'Soil Analysis': 'మట్టి విశ్లేషణ',
+                'Growth Monitor': 'వృద్ధి పర్యవేక్షణ', 'Carbon Tracking': 'కార్బన్ ట్రాకింగ్',
+                'Feedback': 'అభిప్రాయం',
+                // Section badges
+                'OVERVIEW': 'అవలోకనం', 'TECHNOLOGY': 'సాంకేతికత', 'MAP TOOL': 'మ్యాప్ టూల్',
+                'YIELD PREDICTOR': 'దిగుబడి అంచనా', 'GLOBAL IMPACT': 'గ్లోబల్ ప్రభావం',
+                // Overview page
+                'AI-Powered Predictions': 'AI-శక్తితో కూడిన అంచనాలు',
+                'Global Coverage': 'గ్లోబల్ కవరేజ్', 'Real-time Analytics': 'రియల్-టైమ్ అనలిటిక్స్',
+                'Expert Recommendations': 'నిపుణుల సిఫార్సులు', 'Historical Analysis': 'చారిత్రక విశ్లేషణ',
+                'Mobile Friendly': 'మొబైల్ ఫ్రెండ్లీ',
+                'Prediction Accuracy': 'అంచనా ఖచ్చితత్వం', 'Farmers Served': 'రైతులకు సేవ',
+                'Countries Covered': 'కవర్ చేసిన దేశాలు', 'Support Available': 'మద్దతు అందుబాటులో',
+                // Technology page
+                'Cutting-Edge AI Technology': 'అత్యాధునిక AI టెక్నాలజీ',
+                'Machine Learning': 'మెషిన్ లెర్నింగ్', 'Satellite Imagery': 'సాటిలైట్ ఇమేజరీ',
+                'Weather Analytics': 'వాతావరణ అనలిటిక్స్', 'Soil Analysis': 'మట్టి విశ్లేషణ',
+                'Big Data Processing': 'బిగ్ డేటా ప్రాసెసింగ్', 'IoT Integration': 'IoT ఇంటిగ్రేషన్',
+                'Our Technology Stack': 'మా టెక్నాలజీ స్టాక్',
+                // Impact page
+                'Environmental Sustainability': 'పర్యావరణ స్థిరత్వం',
+                'Economic Growth': 'ఆర్థిక వృద్ధి', 'Food Security': 'ఆహార భద్రత',
+                'Digital Inclusion': 'డిజిటల్ చేర్పు', 'Knowledge Transfer': 'జ్ఞాన బదిలీ',
+                'Community Impact': 'సమాజ ప్రభావం', 'Success Stories': 'విజయ గాథలు',
+                'Real farmers, real results from around the world': 'ప్రపంచవ్యాప్తంగా నిజమైన రైతులు, నిజమైన ఫలితాలు',
+                // Settings page
+                'Language & Region': 'భాష మరియు ప్రాంతం', 'Language': 'భాష', 'Units': 'యూనిట్లు',
+                'Notifications': 'నోటిఫికేషన్లు', 'Prediction Updates': 'అంచనా నవీకరణలు',
+                'Get notified when new predictions are available': 'కొత్త అంచనాలు అందుబాటులో ఉన్నప్పుడు తెలియజేయండి',
+                'Weather Alerts': 'వాతావరణ హెచ్చరికలు',
+                'Receive alerts for severe weather conditions': 'తీవ్రమైన వాతావరణ పరిస్థితులకు హెచ్చరికలు అందుకోండి',
+                'System Updates': 'సిస్టమ్ నవీకరణలు',
+                'Get notified about system maintenance and updates': 'సిస్టమ్ నిర్వహణ మరియు నవీకరణల గురించి తెలియజేయండి',
+                'Privacy & Data': 'గోప్యత మరియు డేటా',
+                'Analytics & Usage Data': 'అనలిటిక్స్ మరియు వినియోగ డేటా',
+                'Help improve our service by sharing anonymous usage data': 'అనామక వినియోగ డేటాను పంచుకోవడం ద్వారా మా సేవను మెరుగుపరచడంలో సహాయం చేయండి',
+                'Data Sharing': 'డేటా భాగస్వామ్యం',
+                'Share anonymized data with agricultural research institutions': 'వ్యవసాయ పరిశోధన సంస్థలతో అనామకీకరించిన డేటాను పంచుకోండి',
+                'Performance': 'పనితీరు', 'Animation Level': 'యానిమేషన్ స్థాయి',
+                'No Animations': 'యానిమేషన్లు లేవు', 'Reduced Animations': 'తగ్గించిన యానిమేషన్లు',
+                'Normal Animations': 'సాధారణ యానిమేషన్లు', 'Enhanced Animations': 'మెరుగైన యానిమేషన్లు',
+                'Account & Data': 'ఖాతా మరియు డేటా', 'Export Data': 'డేటా ఎగుమతి',
+                'Import Data': 'డేటా దిగుమతి', 'Need Help?': 'సహాయం కావాలా?',
+                '24/7 Help Line': '24/7 సహాయ లైన్',
+                'Call for immediate assistance': 'తక్షణ సహాయం కోసం కాల్ చేయండి',
+                'India:': 'భారతదేశం:', 'International:': 'అంతర్జాతీయ:', 'WhatsApp:': 'వాట్సాప్:',
+                'Available 24/7 • Multilingual Support': '24/7 అందుబాటులో • బహుభాషా మద్దతు',
+                'Send Feedback': 'అభిప్రాయం పంపండి',
+                'Report issues or suggestions': 'సమస్యలు లేదా సూచనలు నివేదించండి',
+                'Metric (kg, hectares)': 'మెట్రిక్ (కిలో, హెక్టార్లు)',
+                'Imperial (lbs, acres)': 'ఇంపీరియల్ (పౌండ్లు, ఎకరాలు)',
+                // Predict page
+                'Crop Type': 'పంట రకం', 'Location': 'స్థానం', 'Field Size (acres)': 'పొలం పరిమాణం (ఎకరాలు)',
+                'Planting Date': 'విత్తన తేదీ', 'Soil Type': 'మట్టి రకం',
+                'Irrigation System': 'నీటిపారుదల వ్యవస్థ', 'Fertilizer Usage': 'ఎరువుల వాడకం',
+                'Previous Year Yield (tons/acre)': 'గత సంవత్సర దిగుబడి (టన్నులు/ఎకరం)',
+                'Additional Notes & Comments': 'అదనపు గమనికలు మరియు వ్యాఖ్యలు',
+                'Generate Prediction': 'అంచనా రూపొందించండి',
+                'Select Crop Type': 'పంట రకాన్ని ఎంచుకోండి',
+                'Select Soil Type': 'మట్టి రకాన్ని ఎంచుకోండి',
+                'Select Irrigation Type': 'నీటిపారుదల రకాన్ని ఎంచుకోండి',
+                'Select Fertilizer Level': 'ఎరువుల స్థాయిని ఎంచుకోండి',
+                // Soil analysis
+                'Upload Soil Sample Photo': 'మట్టి నమూనా ఫోటో అప్‌లోడ్ చేయండి',
+                'Drop your soil photo here': 'మీ మట్టి ఫోటోను ఇక్కడ వదలండి',
+                'or click to browse files': 'లేదా ఫైళ్లను బ్రౌజ్ చేయడానికి క్లిక్ చేయండి',
+                'Choose File': 'ఫైల్ ఎంచుకోండి',
+                'Photography Tips for Best Results': 'ఉత్తమ ఫలితాల కోసం ఫోటోగ్రఫీ చిట్కాలు',
+                'Sandy Soil': 'ఇసుక మట్టి', 'Loamy Soil': 'లోమీ మట్టి', 'Clay Soil': 'బంకమట్టి',
+                'Primary Soil Type Detected': 'ప్రాథమిక మట్టి రకం గుర్తించబడింది',
+                'Recommended Crops for Your Soil': 'మీ మట్టికి సిఫార్సు చేయబడిన పంటలు',
+                'Soil Improvement Tips': 'మట్టి మెరుగుదల చిట్కాలు',
+                'Analyzing Soil Texture...': 'మట్టి ఆకృతిని విశ్లేషిస్తోంది...',
+                // Growth monitoring
+                'Add New Crop to Monitor': 'పర్యవేక్షించడానికి కొత్త పంటను జోడించండి',
+                'Crop Name': 'పంట పేరు', 'Variety': 'రకం', 'Field Location': 'పొలం స్థానం',
+                'Start Monitoring Crop': 'పంట పర్యవేక్షణ ప్రారంభించండి',
+                'No Crops Being Monitored': 'పర్యవేక్షించబడుతున్న పంటలు లేవు',
+                'Crop Details': 'పంట వివరాలు',
+                // Carbon tracking
+                'Carbon Sequestered': 'కార్బన్ సీక్వెస్టర్డ్',
+                'Available Credits': 'అందుబాటులో ఉన్న క్రెడిట్‌లు',
+                'Estimated Value': 'అంచనా విలువ', 'Sell Credits': 'క్రెడిట్‌లను అమ్మండి',
+                'Calculate Carbon Sequestration': 'కార్బన్ సీక్వెస్ట్రేషన్‌ను లెక్కించండి',
+                'Farm Size (acres)': 'వ్యవసాయ పరిమాణం (ఎకరాలు)',
+                'Primary Crop Type': 'ప్రాథమిక పంట రకం', 'Farming Method': 'వ్యవసాయ పద్ధతి',
+                'Calculate Carbon Impact': 'కార్బన్ ప్రభావాన్ని లెక్కించండి',
+                'Carbon Impact Analysis': 'కార్బన్ ప్రభావ విశ్లేషణ',
+                'Carbon Credits Marketplace': 'కార్బన్ క్రెడిట్‌ల మార్కెట్‌ప్లేస్',
+                'Request Verification': 'ధృవీకరణ అభ్యర్థించండి',
+                'List Credits for Sale': 'అమ్మకానికి క్రెడిట్‌లను జాబితా చేయండి',
+                // Feedback page
+                'General Feedback': 'సాధారణ అభిప్రాయం', 'Report a Bug': 'బగ్ నివేదించండి',
+                'Get Support': 'మద్దతు పొందండి', 'Your Name': 'మీ పేరు',
+                'Email Address': 'ఇమెయిల్ చిరునామా', 'Category': 'వర్గం',
+                'Your Feedback': 'మీ అభిప్రాయం', 'Submit Feedback': 'అభిప్రాయం సమర్పించండి',
+                'Bug Title': 'బగ్ శీర్షిక', 'Priority Level': 'ప్రాధాన్యత స్థాయి',
+                'Page/Feature Affected': 'ప్రభావిత పేజీ/ఫీచర్',
+                'Detailed Description': 'వివరణాత్మక వివరణ', 'Report Bug': 'బగ్ నివేదించండి',
+                'Subject': 'విషయం', 'Detailed Message': 'వివరణాత్మక సందేశం',
+                'Submit Support Request': 'మద్దతు అభ్యర్థన సమర్పించండి',
+                'Clear Form': 'ఫారమ్ క్లియర్ చేయండి',
+                'Email Support': 'ఇమెయిల్ మద్దతు', 'Live Chat': 'లైవ్ చాట్',
+                'Documentation': 'డాక్యుమెంటేషన్', 'Get help via email': 'ఇమెయిల్ ద్వారా సహాయం పొందండి',
+                'Chat with our team': 'మా బృందంతో చాట్ చేయండి',
+                'Browse our help docs': 'మా సహాయ డాక్స్ బ్రౌజ్ చేయండి',
+                'Start Chat': 'చాట్ ప్రారంభించండి', 'View Docs': 'డాక్స్ చూడండి',
+                // Map page
+                'Interactive Agricultural Map': 'ఇంటరాక్టివ్ వ్యవసాయ మ్యాప్',
+                'Map Controls & Filters': 'మ్యాప్ నియంత్రణలు మరియు ఫిల్టర్లు',
+                'Region': 'ప్రాంతం', 'Crop Type': 'పంట రకం', 'Data Layer': 'డేటా లేయర్',
+                'Time Period': 'సమయ వ్యవధి', 'Apply Filters': 'ఫిల్టర్లను వర్తింపజేయండి',
+                'Reset Filters': 'ఫిల్టర్లను రీసెట్ చేయండి',
+                'Global View': 'గ్లోబల్ వ్యూ', 'North America': 'ఉత్తర అమెరికా',
+                'South America': 'దక్షిణ అమెరికా', 'Europe': 'యూరప్', 'Asia': 'ఆసియా',
+                'Africa': 'ఆఫ్రికా', 'Oceania': 'ఓషియానియా',
+                'All Crops': 'అన్ని పంటలు', 'Satellite View': 'సాటిలైట్ వ్యూ',
+                'Weather Data': 'వాతావరణ డేటా', 'Soil Health': 'మట్టి ఆరోగ్యం',
+                'Yield Predictions': 'దిగుబడి అంచనాలు', 'Historical Data': 'చారిత్రక డేటా',
+                'Terrain': 'భూభాగం', 'Current': 'ప్రస్తుత',
+                'Last 7 Days': 'చివరి 7 రోజులు', 'Last 30 Days': 'చివరి 30 రోజులు',
+                'Last Season': 'చివరి సీజన్', 'Last Year': 'చివరి సంవత్సరం',
+                'Last 5 Years': 'చివరి 5 సంవత్సరాలు',
+                // Auth pages
+                'Sign In': 'సైన్ ఇన్', 'Create Account': 'ఖాతా సృష్టించండి',
+                'Full Name': 'పూర్తి పేరు', 'Username': 'వినియోగదారు పేరు',
+                'Email (Optional)': 'ఇమెయిల్ (ఐచ్ఛికం)', 'Password': 'పాస్‌వర్డ్',
+                'Confirm Password': 'పాస్‌వర్డ్ నిర్ధారించండి',
+                "Don't have an account?": 'ఖాతా లేదా?',
+                'Already have an account?': 'ఇప్పటికే ఖాతా ఉందా?',
+                'Sign up here': 'ఇక్కడ సైన్ అప్ చేయండి',
+                'Sign in here': 'ఇక్కడ సైన్ ఇన్ చేయండి',
+                'By signing up, you agree to our Terms of Service': 'సైన్ అప్ చేయడం ద్వారా, మీరు మా సేవా నిబంధనలకు అంగీకరిస్తున్నారు',
+            }
+        };
+
+        // For Hindi, Tamil, Kannada — build from the same English keys using translation lookup
+        ['hi','ta','kn'].forEach(l => {
+            if (!maps[l]) {
+                maps[l] = {};
+                // Reuse the Telugu map structure but with the correct language translations
+                const enKeys = Object.keys(maps['te']);
+                enKeys.forEach(enText => {
+                    // Try to find a matching translation key
+                    const t = this.translations[l];
+                    if (!t) return;
+                    // Find the key whose English value matches enText
+                    const enT = this.translations['en-in'];
+                    const matchKey = Object.keys(enT).find(k => enT[k] === enText);
+                    if (matchKey && t[matchKey]) {
+                        maps[l][enText] = t[matchKey];
+                    }
+                });
+            }
+        });
+
+        return maps[lang] || null;
     }
 
     setupLanguageSelector() {

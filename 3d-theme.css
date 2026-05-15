@@ -1,0 +1,542 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   AGRI-AI  ·  3D IMMERSIVE THEME
+   Adds depth, perspective, particle effects and premium 3D animations
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Root 3D Variables ─────────────────────────────────────────────────── */
+:root {
+  --perspective: 1200px;
+  --card-depth: 40px;
+  --neon-green:  #00ff88;
+  --neon-purple: #a855f7;
+  --neon-blue:   #3b82f6;
+  --neon-pink:   #f093fb;
+  --glass-3d:    rgba(10, 10, 20, 0.75);
+  --border-glow: rgba(102, 126, 234, 0.5);
+  --shadow-3d:   0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+/* ── Three.js Canvas Background ────────────────────────────────────────── */
+#threejs-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body {
+  background: #000 !important;
+}
+
+body::before, body::after {
+  display: none !important; /* replaced by Three.js */
+}
+
+#app-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 3D Scene Container ─────────────────────────────────────────────────── */
+.scene-3d {
+  perspective: var(--perspective);
+  perspective-origin: 50% 50%;
+}
+
+/* ── 3D Card System ─────────────────────────────────────────────────────── */
+.card-3d {
+  transform-style: preserve-3d;
+  transform: perspective(var(--perspective)) rotateX(0deg) rotateY(0deg) translateZ(0);
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+  will-change: transform;
+  position: relative;
+}
+
+.card-3d::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.08) 0%,
+    rgba(255,255,255,0.02) 50%,
+    rgba(255,255,255,0.06) 100%);
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.card-3d::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(102,126,234,0.4) 0%,
+    rgba(118,75,162,0.2) 50%,
+    rgba(240,147,251,0.3) 100%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(8px);
+}
+
+.card-3d:hover::after {
+  opacity: 1;
+}
+
+/* ── Override existing .bg-white cards with 3D glass ───────────────────── */
+.bg-white {
+  background: var(--glass-3d) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: var(--shadow-3d) !important;
+  transform-style: preserve-3d;
+  transform: perspective(var(--perspective)) rotateX(0deg) rotateY(0deg) translateZ(0);
+  transition: transform 0.15s ease-out, box-shadow 0.4s ease, border-color 0.4s ease !important;
+  will-change: transform;
+  position: relative;
+  overflow: visible !important;
+}
+
+.bg-white::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(102,126,234,0.5),
+    rgba(240,147,251,0.3));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(12px);
+  border-radius: 28px;
+}
+
+.bg-white:hover::after {
+  opacity: 1;
+}
+
+/* ── 3D Icon Box ────────────────────────────────────────────────────────── */
+.icon-box {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease !important;
+  position: relative;
+}
+
+.icon-box:hover {
+  transform: rotateY(180deg) scale(1.1) !important;
+  box-shadow: 0 0 30px rgba(102,126,234,0.6), 0 0 60px rgba(240,147,251,0.3) !important;
+}
+
+/* ── Neon Glow Borders ──────────────────────────────────────────────────── */
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 5px var(--neon-green), 0 0 20px rgba(0,255,136,0.3), inset 0 0 5px rgba(0,255,136,0.1); }
+  50%       { box-shadow: 0 0 15px var(--neon-green), 0 0 40px rgba(0,255,136,0.5), inset 0 0 10px rgba(0,255,136,0.2); }
+}
+
+@keyframes neonPulsePurple {
+  0%, 100% { box-shadow: 0 0 5px var(--neon-purple), 0 0 20px rgba(168,85,247,0.3); }
+  50%       { box-shadow: 0 0 15px var(--neon-purple), 0 0 40px rgba(168,85,247,0.5); }
+}
+
+@keyframes borderRotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Floating 3D Particles (CSS fallback) ───────────────────────────────── */
+@keyframes float3d {
+  0%   { transform: translateY(0px) translateZ(0px) rotateX(0deg); opacity: 0.6; }
+  33%  { transform: translateY(-20px) translateZ(30px) rotateX(10deg); opacity: 1; }
+  66%  { transform: translateY(10px) translateZ(-20px) rotateX(-5deg); opacity: 0.7; }
+  100% { transform: translateY(0px) translateZ(0px) rotateX(0deg); opacity: 0.6; }
+}
+
+/* ── Scroll Entrance Animations ─────────────────────────────────────────── */
+.reveal-3d {
+  opacity: 0;
+  transform: perspective(800px) rotateX(15deg) translateY(40px) scale(0.95);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1),
+              transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+.reveal-3d.visible {
+  opacity: 1;
+  transform: perspective(800px) rotateX(0deg) translateY(0) scale(1);
+}
+
+.reveal-3d-left {
+  opacity: 0;
+  transform: perspective(800px) rotateY(-20deg) translateX(-40px);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1),
+              transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+.reveal-3d-left.visible {
+  opacity: 1;
+  transform: perspective(800px) rotateY(0deg) translateX(0);
+}
+
+.reveal-3d-right {
+  opacity: 0;
+  transform: perspective(800px) rotateY(20deg) translateX(40px);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1),
+              transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+.reveal-3d-right.visible {
+  opacity: 1;
+  transform: perspective(800px) rotateY(0deg) translateX(0);
+}
+
+/* ── Stagger delays ─────────────────────────────────────────────────────── */
+.reveal-3d:nth-child(1) { transition-delay: 0.0s; }
+.reveal-3d:nth-child(2) { transition-delay: 0.1s; }
+.reveal-3d:nth-child(3) { transition-delay: 0.2s; }
+.reveal-3d:nth-child(4) { transition-delay: 0.3s; }
+.reveal-3d:nth-child(5) { transition-delay: 0.4s; }
+.reveal-3d:nth-child(6) { transition-delay: 0.5s; }
+
+/* ── 3D Header ──────────────────────────────────────────────────────────── */
+header {
+  background: rgba(0,0,0,0.85) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(102,126,234,0.3) !important;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5),
+              0 1px 0 rgba(255,255,255,0.05),
+              0 0 60px rgba(102,126,234,0.1) !important;
+}
+
+header h1 {
+  text-shadow: 0 0 20px rgba(102,126,234,0.8), 0 0 40px rgba(240,147,251,0.4) !important;
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% { filter: brightness(1); }
+  50%       { filter: brightness(1.3) drop-shadow(0 0 8px rgba(102,126,234,0.8)); }
+}
+
+/* ── 3D Sidebar ─────────────────────────────────────────────────────────── */
+#sidebar {
+  background: linear-gradient(180deg,
+    rgba(5,5,15,0.98) 0%,
+    rgba(10,10,30,0.98) 50%,
+    rgba(5,5,15,0.98) 100%) !important;
+  border-right: 1px solid rgba(102,126,234,0.2) !important;
+  box-shadow: 4px 0 40px rgba(0,0,0,0.8), 0 0 60px rgba(102,126,234,0.1) !important;
+}
+
+#sidebar a, #sidebar button {
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+#sidebar a::before, #sidebar button::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 3px; height: 100%;
+  background: linear-gradient(180deg, #667eea, #f093fb);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+#sidebar a:hover::before,
+#sidebar a.bg-blue-600::before {
+  transform: scaleY(1);
+}
+
+#sidebar a:hover, #sidebar button:hover {
+  transform: translateX(4px) !important;
+  background: rgba(102,126,234,0.15) !important;
+  color: #fff !important;
+}
+
+/* ── 3D Buttons ─────────────────────────────────────────────────────────── */
+button[type="submit"],
+.login-button,
+.signup-button,
+.btn-primary,
+#predict-button {
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.3s ease !important;
+}
+
+button[type="submit"]:hover,
+.login-button:hover,
+.signup-button:hover,
+.btn-primary:hover,
+#predict-button:hover {
+  transform: translateY(-4px) scale(1.03) rotateX(5deg) !important;
+  box-shadow: 0 20px 40px rgba(102,126,234,0.5),
+              0 0 0 1px rgba(255,255,255,0.1),
+              inset 0 1px 0 rgba(255,255,255,0.2) !important;
+}
+
+button[type="submit"]:active,
+.login-button:active,
+.btn-primary:active {
+  transform: translateY(-1px) scale(0.99) rotateX(2deg) !important;
+}
+
+/* ── Ripple Effect on Buttons ───────────────────────────────────────────── */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transform: scale(0);
+  animation: rippleAnim 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ── 3D Form Inputs ─────────────────────────────────────────────────────── */
+input, select, textarea {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 8px 30px rgba(102,126,234,0.3),
+              0 0 0 2px rgba(102,126,234,0.5),
+              0 0 20px rgba(102,126,234,0.2) !important;
+}
+
+/* ── 3D Stats / Counter Cards ───────────────────────────────────────────── */
+.text-center.bg-gray-800 {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease;
+  position: relative;
+}
+
+.text-center.bg-gray-800:hover {
+  transform: perspective(600px) rotateX(-8deg) translateY(-8px) scale(1.04);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 30px rgba(102,126,234,0.3);
+}
+
+/* ── 3D Progress Bars ───────────────────────────────────────────────────── */
+.progress-fill, .stage-progress-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after, .stage-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: progressShine 2s ease infinite;
+}
+
+@keyframes progressShine {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* ── 3D Countdown Timer ─────────────────────────────────────────────────── */
+.countdown-timer {
+  transform-style: preserve-3d;
+  animation: countdownFloat 4s ease-in-out infinite;
+}
+
+@keyframes countdownFloat {
+  0%, 100% { transform: perspective(400px) rotateX(0deg) translateY(0); }
+  50%       { transform: perspective(400px) rotateX(5deg) translateY(-6px); }
+}
+
+.countdown-number {
+  text-shadow: 0 0 20px rgba(255,255,255,0.5),
+               0 4px 8px rgba(0,0,0,0.5) !important;
+  animation: numberPulse 2s ease-in-out infinite;
+}
+
+@keyframes numberPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.05); }
+}
+
+/* ── 3D Map Container ───────────────────────────────────────────────────── */
+.map-iframe-wrapper {
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s ease;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+.map-iframe-wrapper:hover {
+  transform: perspective(1000px) rotateX(-3deg) rotateY(2deg) scale(1.01);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6),
+              0 0 40px rgba(102,126,234,0.3),
+              20px 20px 60px rgba(0,0,0,0.4),
+              -20px -20px 60px rgba(102,126,234,0.1) !important;
+}
+
+/* ── 3D Upload Area ─────────────────────────────────────────────────────── */
+.upload-area {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease !important;
+}
+
+.upload-area:hover, .upload-area.dragover {
+  transform: perspective(800px) rotateX(-5deg) scale(1.02) !important;
+  box-shadow: 0 20px 50px rgba(102,126,234,0.3),
+              0 0 30px rgba(102,126,234,0.2) !important;
+}
+
+/* ── 3D Carbon Cards ────────────────────────────────────────────────────── */
+.carbon-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease !important;
+}
+
+.carbon-card:hover {
+  transform: perspective(800px) rotateX(-6deg) rotateY(3deg) translateY(-8px) !important;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5),
+              0 0 30px rgba(16,185,129,0.2) !important;
+}
+
+/* ── 3D Crop Cards ──────────────────────────────────────────────────────── */
+.crop-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease !important;
+}
+
+.crop-card:hover {
+  transform: perspective(800px) rotateX(-8deg) rotateY(4deg) translateY(-10px) !important;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5),
+              0 0 30px rgba(102,126,234,0.3) !important;
+}
+
+/* ── 3D Feedback Cards ──────────────────────────────────────────────────── */
+.feedback-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease !important;
+}
+
+.feedback-card:hover {
+  transform: perspective(800px) rotateX(-5deg) translateY(-6px) !important;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5),
+              0 0 25px rgba(102,126,234,0.2) !important;
+}
+
+/* ── Holographic Shimmer on Headings ────────────────────────────────────── */
+h2, h3 {
+  position: relative;
+}
+
+.text-shimmer, h2.text-white, h2.font-bold {
+  background: linear-gradient(90deg,
+    #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 75%, #764ba2 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: holographicShimmer 4s linear infinite;
+}
+
+@keyframes holographicShimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── 3D Avatar ──────────────────────────────────────────────────────────── */
+#header-avatar {
+  animation: avatarSpin 8s linear infinite;
+  box-shadow: 0 0 15px rgba(102,126,234,0.6), 0 0 30px rgba(240,147,251,0.3) !important;
+}
+
+@keyframes avatarSpin {
+  0%   { box-shadow: 0 0 15px rgba(102,126,234,0.6), 0 0 30px rgba(240,147,251,0.3); }
+  33%  { box-shadow: 0 0 15px rgba(240,147,251,0.6), 0 0 30px rgba(102,126,234,0.3); }
+  66%  { box-shadow: 0 0 15px rgba(16,185,129,0.6), 0 0 30px rgba(102,126,234,0.3); }
+  100% { box-shadow: 0 0 15px rgba(102,126,234,0.6), 0 0 30px rgba(240,147,251,0.3); }
+}
+
+/* ── Loading Spinner 3D ─────────────────────────────────────────────────── */
+.loading-spinner {
+  border: 3px solid rgba(102,126,234,0.2) !important;
+  border-top-color: #667eea !important;
+  box-shadow: 0 0 20px rgba(102,126,234,0.4), inset 0 0 10px rgba(102,126,234,0.1) !important;
+}
+
+/* ── Notification Toast 3D ──────────────────────────────────────────────── */
+#notification-toast, #success-toast, #notification-message {
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(16,185,129,0.3) !important;
+  animation: toastSlide 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes toastSlide {
+  from { transform: translateX(100%) scale(0.8) rotateY(-20deg); opacity: 0; }
+  to   { transform: translateX(0) scale(1) rotateY(0deg); opacity: 1; }
+}
+
+/* ── 3D Toggle Switch ───────────────────────────────────────────────────── */
+.toggle-switch .slider {
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4), 0 0 10px rgba(102,126,234,0.2) !important;
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+
+.toggle-switch input:checked + .slider {
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3),
+              0 0 15px rgba(102,126,234,0.5),
+              0 0 30px rgba(102,126,234,0.2) !important;
+}
+
+/* ── Soil Type Cards 3D ─────────────────────────────────────────────────── */
+.soil-type-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease !important;
+}
+
+.soil-type-card:hover {
+  transform: perspective(600px) rotateX(-8deg) translateY(-6px) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4) !important;
+}
+
+/* ── Growth Stage 3D ────────────────────────────────────────────────────── */
+.growth-stage {
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease !important;
+}
+
+.growth-stage:hover {
+  transform: perspective(600px) rotateX(-5deg) translateX(8px) !important;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4) !important;
+}
+
+/* ── Disable 3D on touch devices (performance) ──────────────────────────── */
+@media (hover: none) {
+  .card-3d, .bg-white, .carbon-card, .crop-card,
+  .feedback-card, .soil-type-card, .growth-stage,
+  .text-center.bg-gray-800, .map-iframe-wrapper {
+    transform: none !important;
+    transition: box-shadow 0.3s ease !important;
+  }
+  .icon-box:hover {
+    transform: scale(1.05) !important;
+  }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -3,6 +3,20 @@
  * Applies theme, performance, and other settings across all pages
  */
 
+// ── Inject 3D animation engine on every page ──────────────────────────────
+(function inject3D() {
+    if (document.getElementById('agri-3d-script')) return;
+    const s = document.createElement('script');
+    s.id  = 'agri-3d-script';
+    s.src = '3d-animations.js';
+    // Append after DOM so it can find elements
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => document.body.appendChild(s));
+    } else {
+        document.body.appendChild(s);
+    }
+})();
+
 class GlobalSettings {
     constructor() {
         this.settings = {

@@ -8,6 +8,7 @@
     <script src="translations.js"></script>
     <script src="global-settings.js"></script>
     <script src="api-config.js"></script>
+    <script src="auth.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
@@ -391,175 +392,67 @@
 
     <!-- Authentication System -->
     <script>
-        class LoginSystem {
-            constructor() {
-                this.apiUrl = window.API_BASE_URL || 'http://localhost:3000/api';
-                this.init();
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // If already logged in, skip straight to the app
+            if (window.AuthSystem.isLoggedIn()) {
+                window.location.href = 'overview.html';
+                return;
             }
 
-            init() {
-                // Check if user is already logged in
-                const token = localStorage.getItem('agri-ai-token');
-                if (token) {
-                    this.validateToken(token);
-                }
-
-                // Set up event listeners
-                this.setupEventListeners();
+            // Pre-fill username from signup redirect
+            const urlParams = new URLSearchParams(window.location.search);
+            const preUser = urlParams.get('username');
+            if (preUser) {
+                const el = document.getElementById('login-username');
+                if (el) el.value = preUser;
             }
 
-            setupEventListeners() {
-                const loginForm = document.getElementById('login-form');
-                if (loginForm) {
-                    loginForm.addEventListener('submit', (e) => this.handleLogin(e));
-                }
-            }
-
-            async handleLogin(e) {
+            // Handle form submit
+            document.getElementById('login-form').addEventListener('submit', function (e) {
                 e.preventDefault();
-                
+
                 const username = document.getElementById('login-username').value.trim();
                 const password = document.getElementById('login-password').value;
-                
-                if (!username || !password) {
-                    this.showError('Please fill in all fields');
-                    return;
-                }
 
-                this.setLoading(true);
-                this.hideMessages();
+                hideMessages();
+                setLoading(true);
 
-                try {
-                    const response = await fetch(`${this.apiUrl}/auth/login`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ username, password })
-                    });
+                // Small timeout so the loading spinner is visible
+                setTimeout(() => {
+                    const result = window.AuthSystem.login(username, password);
+                    setLoading(false);
 
-                    const data = await response.json();
-
-                    if (response.ok && data.success) {
-                        // Store token and user data
-                        localStorage.setItem('agri-ai-token', data.token);
-                        localStorage.setItem('agri-ai-user', JSON.stringify(data.user));
-                        
-                        this.showSuccess(data.message || 'Login successful!');
-                        
-                        // Redirect to main app after 1.5 seconds
-                        setTimeout(() => {
-                            window.location.href = 'overview.html';
-                        }, 1500);
+                    if (result.success) {
+                        showSuccess(result.message || 'Login successful!');
+                        setTimeout(() => { window.location.href = 'overview.html'; }, 1200);
                     } else {
-                        this.showError(data.error || 'Login failed');
+                        showError(result.error || 'Login failed');
                     }
-                } catch (error) {
-                    console.error('Login error:', error);
-                    this.showError('Network error. Please check your connection.');
-                } finally {
-                    this.setLoading(false);
-                }
+                }, 400);
+            });
+
+            function showError(msg) {
+                const el = document.getElementById('login-error');
+                if (el) { el.classList.remove('hidden'); el.querySelector('p').textContent = msg; }
             }
-
-            async validateToken(token) {
-                try {
-                    const response = await fetch(`${this.apiUrl}/user/profile`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-
-                    if (response.ok) {
-                        // User is already logged in, redirect to main app
-                        window.location.href = 'overview.html';
-                    } else {
-                        // Token is invalid, clear it
-                        localStorage.removeItem('agri-ai-token');
-                        localStorage.removeItem('agri-ai-user');
-                    }
-                } catch (error) {
-                    console.error('Token validation error:', error);
-                    localStorage.removeItem('agri-ai-token');
-                    localStorage.removeItem('agri-ai-user');
-                }
+            function showSuccess(msg) {
+                const el = document.getElementById('login-success');
+                if (el) { el.classList.remove('hidden'); el.querySelector('p').textContent = msg; }
             }
-
-            showError(message) {
-                const errorElement = document.getElementById('login-error');
-                if (errorElement) {
-                    errorElement.classList.remove('hidden');
-                    const messageElement = errorElement.querySelector('p');
-                    if (messageElement) {
-                        messageElement.textContent = message;
-                    }
-                }
+            function hideMessages() {
+                document.getElementById('login-error').classList.add('hidden');
+                document.getElementById('login-success').classList.add('hidden');
             }
-
-            showSuccess(message) {
-                const successElement = document.getElementById('login-success');
-                if (successElement) {
-                    successElement.classList.remove('hidden');
-                    const messageElement = successElement.querySelector('p');
-                    if (messageElement) {
-                        messageElement.textContent = message;
-                    }
-                }
-            }
-
-            hideMessages() {
-                const errorElement = document.getElementById('login-error');
-                const successElement = document.getElementById('login-success');
-                
-                if (errorElement) errorElement.classList.add('hidden');
-                if (successElement) successElement.classList.add('hidden');
-            }
-
-            setLoading(isLoading) {
-                const submitButton = document.querySelector('button[type="submit"]');
-                if (submitButton) {
-                    if (isLoading) {
-                        submitButton.disabled = true;
-                        submitButton.classList.add('opacity-75', 'cursor-not-allowed');
-                        const span = submitButton.querySelector('span');
-                        if (span) {
-                            span.innerHTML = `
-                                <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Signing In...
-                            `;
-                        }
-                    } else {
-                        submitButton.disabled = false;
-                        submitButton.classList.remove('opacity-75', 'cursor-not-allowed');
-                        const span = submitButton.querySelector('span');
-                        if (span) {
-                            span.innerHTML = `
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                                </svg>
-                                Sign In
-                            `;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Initialize login system when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new LoginSystem();
-            
-            // Check if username was passed from signup
-            const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('username');
-            if (username) {
-                const usernameInput = document.getElementById('login-username');
-                if (usernameInput) {
-                    usernameInput.value = username;
-                }
+            function setLoading(on) {
+                const btn  = document.querySelector('button[type="submit"]');
+                const span = btn.querySelector('span');
+                btn.disabled = on;
+                btn.classList.toggle('opacity-75', on);
+                btn.classList.toggle('cursor-not-allowed', on);
+                span.innerHTML = on
+                    ? `<svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Signing In...`
+                    : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>Sign In`;
             }
         });
     </script>

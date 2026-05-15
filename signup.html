@@ -8,6 +8,7 @@
     <script src="translations.js"></script>
     <script src="global-settings.js"></script>
     <script src="api-config.js"></script>
+    <script src="auth.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
@@ -435,195 +436,68 @@
 
     <!-- Authentication System -->
     <script>
-        class SignupSystem {
-            constructor() {
-                this.apiUrl = window.API_BASE_URL || 'http://localhost:3000/api';
-                this.init();
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Already logged in → go to app
+            if (window.AuthSystem.isLoggedIn()) {
+                window.location.href = 'overview.html';
+                return;
             }
 
-            init() {
-                // Check if user is already logged in
-                const token = localStorage.getItem('agri-ai-token');
-                if (token) {
-                    this.validateToken(token);
-                }
-
-                // Set up event listeners
-                this.setupEventListeners();
-            }
-
-            setupEventListeners() {
-                const signupForm = document.getElementById('signup-form');
-                if (signupForm) {
-                    signupForm.addEventListener('submit', (e) => this.handleSignup(e));
-                }
-            }
-
-            async handleSignup(e) {
+            document.getElementById('signup-form').addEventListener('submit', function (e) {
                 e.preventDefault();
-                
-                const fullName = document.getElementById('signup-name').value.trim();
-                const username = document.getElementById('signup-username').value.trim();
-                const password = document.getElementById('signup-password').value;
-                const confirmPassword = document.getElementById('signup-confirm-password').value;
-                const email = document.getElementById('signup-email')?.value.trim() || '';
-                
-                // Validation
-                if (!fullName || !username || !password || !confirmPassword) {
-                    this.showError('Please fill in all required fields');
-                    return;
-                }
 
-                if (username.length < 3) {
-                    this.showError('Username must be at least 3 characters long');
-                    return;
-                }
+                const fullName        = document.getElementById('signup-name').value.trim();
+                const username        = document.getElementById('signup-username').value.trim();
+                const email           = document.getElementById('signup-email').value.trim();
+                const password        = document.getElementById('signup-password').value;
+                const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+                hideMessages();
 
                 if (password !== confirmPassword) {
-                    this.showError('Passwords do not match');
+                    showError('Passwords do not match');
                     return;
                 }
 
-                if (password.length < 6) {
-                    this.showError('Password must be at least 6 characters long');
-                    return;
-                }
+                setLoading(true);
 
-                this.setLoading(true);
-                this.hideMessages();
+                setTimeout(() => {
+                    const result = window.AuthSystem.register(username, password, fullName, email);
+                    setLoading(false);
 
-                try {
-                    const response = await fetch(`${this.apiUrl}/auth/register`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ 
-                            username, 
-                            password, 
-                            fullName, 
-                            email 
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok && data.success) {
-                        this.showSuccess(data.message || 'Account created successfully!');
-                        
-                        // Redirect to login page after 2 seconds with username
+                    if (result.success) {
+                        showSuccess(result.message || 'Account created! Redirecting to login...');
                         setTimeout(() => {
-                            window.location.href = `login.html?username=${encodeURIComponent(username)}`;
-                        }, 2000);
+                            window.location.href = 'login.html?username=' + encodeURIComponent(username);
+                        }, 1500);
                     } else {
-                        this.showError(data.error || 'Registration failed');
+                        showError(result.error || 'Registration failed');
                     }
-                } catch (error) {
-                    console.error('Signup error:', error);
-                    this.showError('Network error. Please check your connection.');
-                } finally {
-                    this.setLoading(false);
-                }
+                }, 400);
+            });
+
+            function showError(msg) {
+                const el = document.getElementById('signup-error');
+                if (el) { el.classList.remove('hidden'); el.querySelector('p').textContent = msg; }
             }
-
-            async validateToken(token) {
-                try {
-                    const response = await fetch(`${this.apiUrl}/user/profile`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-
-                    if (response.ok) {
-                        // User is already logged in, redirect to main app
-                        window.location.href = 'overview.html';
-                    } else {
-                        // Token is invalid, clear it
-                        localStorage.removeItem('agri-ai-token');
-                        localStorage.removeItem('agri-ai-user');
-                    }
-                } catch (error) {
-                    console.error('Token validation error:', error);
-                    localStorage.removeItem('agri-ai-token');
-                    localStorage.removeItem('agri-ai-user');
-                }
+            function showSuccess(msg) {
+                const el = document.getElementById('signup-success');
+                if (el) { el.classList.remove('hidden'); el.querySelector('p').textContent = msg; }
             }
-
-            showError(message) {
-                const errorElement = document.getElementById('signup-error');
-                if (errorElement) {
-                    errorElement.classList.remove('hidden');
-                    const messageElement = errorElement.querySelector('p');
-                    if (messageElement) {
-                        messageElement.textContent = message;
-                    }
-                }
+            function hideMessages() {
+                document.getElementById('signup-error').classList.add('hidden');
+                document.getElementById('signup-success').classList.add('hidden');
             }
-
-            showSuccess(message) {
-                const successElement = document.getElementById('signup-success');
-                if (successElement) {
-                    successElement.classList.remove('hidden');
-                    const messageElement = successElement.querySelector('p');
-                    if (messageElement) {
-                        messageElement.textContent = message;
-                    }
-                }
-            }
-
-            hideMessages() {
-                const errorElement = document.getElementById('signup-error');
-                const successElement = document.getElementById('signup-success');
-                
-                if (errorElement) errorElement.classList.add('hidden');
-                if (successElement) successElement.classList.add('hidden');
-            }
-
-            setLoading(isLoading) {
-                const submitButton = document.querySelector('button[type="submit"]');
-                if (submitButton) {
-                    if (isLoading) {
-                        submitButton.disabled = true;
-                        submitButton.classList.add('opacity-75', 'cursor-not-allowed');
-                        const span = submitButton.querySelector('span');
-                        if (span) {
-                            span.innerHTML = `
-                                <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Creating Account...
-                            `;
-                        }
-                    } else {
-                        submitButton.disabled = false;
-                        submitButton.classList.remove('opacity-75', 'cursor-not-allowed');
-                        const span = submitButton.querySelector('span');
-                        if (span) {
-                            span.innerHTML = `
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                                </svg>
-                                Create Account
-                            `;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Initialize signup system when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new SignupSystem();
-            
-            // Check if username was passed from signup
-            const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('username');
-            if (username) {
-                const usernameInput = document.getElementById('login-username');
-                if (usernameInput) {
-                    usernameInput.value = username;
-                }
+            function setLoading(on) {
+                const btn  = document.querySelector('button[type="submit"]');
+                const span = btn.querySelector('span');
+                btn.disabled = on;
+                btn.classList.toggle('opacity-75', on);
+                btn.classList.toggle('cursor-not-allowed', on);
+                span.innerHTML = on
+                    ? `<svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Creating Account...`
+                    : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>Create Account`;
             }
         });
     </script>

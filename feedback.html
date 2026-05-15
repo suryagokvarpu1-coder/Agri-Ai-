@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="translations.js"></script>
     <script src="global-settings.js"></script>
+    <script src="api-config.js"></script>
+    <script src="auth.js"></script>
     <script src="sidebar-navigation.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
@@ -575,140 +577,8 @@
 
     <!-- Authentication Check -->
     <script>
-        // Check if user is authenticated
         document.addEventListener('DOMContentLoaded', () => {
-            const token = localStorage.getItem('agri-ai-token');
-            if (!token) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            // Validate token
-            fetch('http://localhost:3001/api/user/profile', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }).then(response => {
-                if (!response.ok) {
-                    localStorage.removeItem('agri-ai-token');
-                    localStorage.removeItem('agri-ai-user');
-                    window.location.href = 'login.html';
-                }
-            }).catch(error => {
-                console.error('Token validation error:', error);
-                localStorage.removeItem('agri-ai-token');
-                localStorage.removeItem('agri-ai-user');
-                window.location.href = 'login.html';
-            });
-        });
-
-        // Logout function
-        function logout() {
-            localStorage.removeItem('agri-ai-token');
-            localStorage.removeItem('agri-ai-user');
-            window.location.href = 'login.html';
-        }
-
-        // Form submission handlers
-        document.getElementById('general-feedback-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            submitFeedback('general', this);
-        });
-
-        document.getElementById('bug-report-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            submitFeedback('bug', this);
-        });
-
-        document.getElementById('support-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            submitFeedback('support', this);
-        });
-
-        function submitFeedback(type, form) {
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData);
-            
-            // Add metadata
-            data.type = type;
-            data.timestamp = new Date().toISOString();
-            data.user = localStorage.getItem('agri-ai-user') || 'anonymous';
-            data.userAgent = navigator.userAgent;
-            data.url = window.location.href;
-            
-            // Simulate submission (in real app, send to server)
-            console.log(`${type.charAt(0).toUpperCase() + type.slice(1)} submitted:`, data);
-            
-            // Show success message
-            let message = '';
-            switch(type) {
-                case 'general':
-                    message = 'Thank you for your feedback! We appreciate your input.';
-                    break;
-                case 'bug':
-                    message = 'Bug report submitted successfully! We\'ll investigate this issue.';
-                    break;
-                case 'support':
-                    message = 'Support request submitted! We\'ll get back to you soon.';
-                    break;
-            }
-            
-            showToast(message);
-            
-            // Clear form
-            form.reset();
-        }
-
-        function clearSupportForm() {
-            document.getElementById('support-form').reset();
-            showToast('Form cleared');
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('success-toast');
-            const messageEl = document.getElementById('toast-message');
-            
-            messageEl.textContent = message;
-            toast.classList.remove('translate-x-full');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-x-full');
-            }, 4000);
-        }
-
-        function startLiveChat() {
-            showToast('Live chat feature coming soon!');
-        }
-
-        function openDocumentation() {
-            showToast('Documentation feature coming soon!');
-        }
-
-        // Auto-fill user information if available
-        document.addEventListener('DOMContentLoaded', () => {
-            const user = localStorage.getItem('agri-ai-user');
-            if (user) {
-                try {
-                    const userData = JSON.parse(user);
-                    // Auto-fill name fields
-                    const nameFields = document.querySelectorAll('input[name="name"]');
-                    nameFields.forEach(field => {
-                        if (userData.username) {
-                            field.value = userData.username;
-                        }
-                    });
-                    
-                    // Auto-fill email fields
-                    const emailFields = document.querySelectorAll('input[name="email"]');
-                    emailFields.forEach(field => {
-                        if (userData.email) {
-                            field.value = userData.email;
-                        }
-                    });
-                } catch (e) {
-                    console.log('Could not parse user data');
-                }
-            }
+            window.AuthSystem.requireAuth();
         });
     </script>
 </body>

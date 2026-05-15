@@ -88,17 +88,7 @@ The `simple-server.js` provides:
 
 Supported languages:
 - English (US/India)
-- Hindi (हिन्दी)
 - Telugu (తెలుగు)
-- Tamil (தமிழ்)
-- Kannada (ಕನ್ನಡ)
-- Malayalam (മലയാളം)
-- Gujarati (ગુજરાતી)
-- Marathi (मराठी)
-- Bengali (বাংলা)
-- Punjabi (ਪੰਜਾਬੀ)
-- Odia (ଓଡ଼ିଆ)
-- Assamese (অসমীয়া)
 
 ## 🧪 Testing the Application
 

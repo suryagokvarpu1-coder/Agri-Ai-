@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="translations.js"></script>
     <script src="global-settings.js"></script>
+    <script src="api-config.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,7 +50,7 @@
         
         if (token) {
             // Validate token and redirect accordingly
-            fetch('http://localhost:3000/api/user/profile', {
+            fetch((window.API_BASE_URL || 'http://localhost:3000/api') + '/user/profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

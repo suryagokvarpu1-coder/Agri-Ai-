@@ -201,6 +201,22 @@
             line-height: 1.6;
             resize: vertical;
         }
+
+        /* Mobile: reduce oversized inputs */
+        @media (max-width: 640px) {
+            input[type="number"],
+            input[type="date"],
+            input[type="text"],
+            select,
+            textarea {
+                min-height: 3rem;
+                padding: 0.75rem 1rem;
+                font-size: 1rem;
+            }
+            textarea {
+                min-height: 5rem;
+            }
+        }
         
         input:focus,
         select:focus,
@@ -213,12 +229,11 @@
             color: #ffffff !important;
         }
         
-        /* Form field hover effects */
-        input:hover,
-        select:hover,
-        textarea:hover {
-            border-color: rgba(102, 126, 234, 0.5);
-            transform: translateY(-2px);
+        /* Disable hover transforms on touch devices */
+        @media (hover: none) {
+            input:hover, select:hover, textarea:hover {
+                transform: none;
+            }
         }
         
         /* Placeholder styling */
@@ -358,18 +373,18 @@
         </header>
 
         <!-- Predict Yield Section -->
-        <section id="predictor" class="py-20 px-4 sm:px-6 lg:px-8">
+        <section id="predictor" class="py-10 md:py-20 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
-                <div class="text-center mb-16">
+                <div class="text-center mb-10 md:mb-16">
                     <h3 class="text-sm font-semibold text-purple-600 uppercase tracking-wide mb-4">YIELD PREDICTOR</h3>
-                    <h2 data-i18n="predict_title" class="text-4xl md:text-5xl font-bold text-white mb-6">AI-Powered Yield Prediction</h2>
-                    <p data-i18n="predict_subtitle" class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    <h2 data-i18n="predict_title" class="text-3xl md:text-5xl font-bold text-white mb-6">AI-Powered Yield Prediction</h2>
+                    <p data-i18n="predict_subtitle" class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
                         Get accurate crop yield predictions using advanced machine learning algorithms. Enter your farm details below to receive personalized insights.
                     </p>
                 </div>
 
                 <!-- Prediction Form -->
-                <div class="bg-gray-800 p-10 rounded-3xl shadow-2xl">
+                <div class="bg-gray-800 p-5 sm:p-10 rounded-3xl shadow-2xl">
                     <form id="prediction-form" class="space-y-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
@@ -455,8 +470,8 @@
                             <p data-i18n="predict_notes_help" class="text-xs text-gray-500 mt-1">Optional: Provide any additional context that might help improve prediction accuracy</p>
                         </div>
 
-                        <div class="text-center pt-6">
-                            <button type="submit" id="predict-button" class="px-12 py-4 text-white font-bold rounded-2xl transition-all duration-300">
+                        <div class="text-center pt-4 sm:pt-6">
+                            <button type="submit" id="predict-button" class="w-full sm:w-auto px-8 sm:px-12 py-4 text-white font-bold rounded-2xl transition-all duration-300">
                                     <span data-i18n="predict_generate" class="flex items-center justify-center gap-3">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
@@ -503,7 +518,7 @@
             }
             
             // Validate token
-            fetch('http://localhost:3000/api/user/profile', {
+            fetch((window.API_BASE_URL || 'http://localhost:3000/api') + '/user/profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -546,7 +561,7 @@
             document.getElementById('predict-button').disabled = true;
             
             try {
-                const response = await fetch('http://localhost:3000/api/predict', {
+                const response = await fetch((window.API_BASE_URL || 'http://localhost:3000/api') + '/predict', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

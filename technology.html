@@ -400,7 +400,7 @@
             }
             
             // Validate token
-            fetch('http://localhost:3000/api/user/profile', {
+            fetch((window.API_BASE_URL || 'http://localhost:3000/api') + '/user/profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

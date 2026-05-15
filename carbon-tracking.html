@@ -291,16 +291,33 @@
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .carbon-card {
-                padding: 1.5rem;
+                padding: 1.25rem;
                 border-radius: 16px;
             }
             
             textarea {
-                min-height: 6rem;
+                min-height: 5rem;
             }
             
             .chart-container {
-                height: 250px;
+                height: 220px;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            select {
+                min-height: 3rem;
+                padding: 0.75rem 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (hover: none) {
+            input:hover, select:hover, textarea:hover {
+                transform: none;
+            }
+            .carbon-card:hover {
+                transform: none;
             }
         }
         
@@ -352,11 +369,11 @@
         </header>
 
         <!-- Carbon Tracking Section -->
-        <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <section class="py-10 md:py-20 px-4 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-16">
-                    <h2 data-i18n="carbon_tracking_title" class="text-4xl md:text-5xl font-bold text-white mb-6">Carbon Footprint Tracking</h2>
-                    <p data-i18n="carbon_tracking_subtitle" class="text-xl text-gray-400 max-w-3xl mx-auto">
+                <div class="text-center mb-10 md:mb-16">
+                    <h2 data-i18n="carbon_tracking_title" class="text-3xl md:text-5xl font-bold text-white mb-6">Carbon Footprint Tracking</h2>
+                    <p data-i18n="carbon_tracking_subtitle" class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
                         Monitor your farm's carbon sequestration, track environmental impact, and earn carbon credits through sustainable farming practices.
                     </p>
                 </div>
@@ -433,8 +450,8 @@
                         <h3 data-i18n="carbon_calculate_title" class="text-2xl font-bold text-white">Calculate Carbon Sequestration</h3>
                     </div>
                     
-                    <form id="carbon-form" class="space-y-8">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <form id="carbon-form" class="space-y-5 sm:space-y-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8">
                             <!-- Farm Information -->
                             <div class="space-y-6">
                                 <h4 class="text-lg font-semibold text-white mb-4">Farm Information</h4>
@@ -643,7 +660,7 @@
             }
             
             // Validate token
-            fetch('http://localhost:3000/api/user/profile', {
+            fetch((window.API_BASE_URL || 'http://localhost:3000/api') + '/user/profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

@@ -26,8 +26,8 @@ class SidebarNavigation {
             <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleSidebar()"></div>
             
             <!-- Side Navigation -->
-            <nav id="sidebar" class="fixed left-0 top-0 h-full w-80 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 shadow-2xl">
-                <div class="p-6">
+            <nav id="sidebar" class="fixed left-0 top-0 h-full w-[85vw] max-w-xs sm:w-80 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 shadow-2xl overflow-y-auto">
+                <div class="p-5 sm:p-6">
                     <!-- Logo Section -->
                     <div class="flex items-center space-x-3 mb-8">
                         <div class="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
@@ -125,8 +125,8 @@ class SidebarNavigation {
             const activeClass = isActive ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white';
             
             menuHTML += `
-                <a href="${item.href}" data-i18n="${item.translationKey}" class="flex items-center space-x-3 px-4 py-3 rounded-lg ${activeClass} font-medium transition-all duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="${item.href}" data-i18n="${item.translationKey}" class="flex items-center space-x-3 px-4 py-3.5 rounded-lg ${activeClass} font-medium transition-all duration-200 min-h-[48px]">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         ${item.icon}
                     </svg>
                     <span>${item.defaultText}</span>
@@ -136,8 +136,8 @@ class SidebarNavigation {
 
         // Add logout button
         menuHTML += `
-            <button onclick="logout()" data-i18n="nav_logout" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-300 hover:bg-red-600 hover:text-white font-medium transition-all duration-200 w-full text-left">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button onclick="logout()" data-i18n="nav_logout" class="flex items-center space-x-3 px-4 py-3.5 rounded-lg text-red-300 hover:bg-red-600 hover:text-white font-medium transition-all duration-200 w-full text-left min-h-[48px]">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                 </svg>
                 <span>Logout</span>

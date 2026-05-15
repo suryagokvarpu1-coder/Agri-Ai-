@@ -399,6 +399,7 @@ class GlobalSettings {
 // Initialize global settings when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.globalSettings = new GlobalSettings();
+    injectGlobalMobileStyles();
 });
 
 // Also initialize immediately if DOM is already loaded
@@ -407,6 +408,111 @@ if (document.readyState === 'loading') {
 } else {
     // DOM is already loaded
     window.globalSettings = new GlobalSettings();
+    injectGlobalMobileStyles();
+}
+
+/**
+ * Inject global mobile-responsive and toggle-switch styles into every page
+ */
+function injectGlobalMobileStyles() {
+    if (document.getElementById('global-mobile-styles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'global-mobile-styles';
+    style.textContent = `
+        /* ===== TOGGLE SWITCH ===== */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+        .toggle-switch .slider {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.15);
+            border-radius: 28px;
+            transition: background 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .toggle-switch .slider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .toggle-switch input:checked + .slider {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: rgba(102,126,234,0.5);
+        }
+        .toggle-switch input:checked + .slider::before {
+            transform: translateY(-50%) translateX(24px);
+        }
+
+        /* ===== GLOBAL MOBILE FIXES ===== */
+
+        /* Ensure header hamburger button has a good touch target */
+        header button[onclick="toggleSidebar()"] {
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Prevent card hover lift on touch devices */
+        @media (hover: none) {
+            .soil-type-card:hover,
+            .crop-card:hover,
+            .growth-stage:hover,
+            .bg-gray-800:hover,
+            .bg-gray-900:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Notification toast: keep inside viewport on mobile */
+        @media (max-width: 640px) {
+            .fixed.top-4.right-4 {
+                right: 0.75rem;
+                left: 0.75rem;
+                max-width: calc(100vw - 1.5rem);
+                transform: none !important;
+            }
+        }
+
+        /* Ensure all section headings scale down gracefully */
+        @media (max-width: 480px) {
+            h2.text-4xl, h2.text-5xl {
+                font-size: 1.75rem !important;
+                line-height: 1.2 !important;
+            }
+            h3.text-2xl, h3.text-3xl {
+                font-size: 1.35rem !important;
+            }
+        }
+
+        /* Prevent horizontal overflow from animations */
+        #app-content {
+            overflow-x: hidden;
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 // Export for use in other scripts

@@ -13,7 +13,7 @@ const url = require('url');
 class SimpleServer {
     constructor() {
         this.port = process.env.PORT || 3000;
-        this.host = process.env.HOST || 'localhost';
+        this.host = process.env.HOST || '0.0.0.0';  // bind to all interfaces for cloud hosting
         this.dataFile = './users-data.json';
         
         // Load existing user data or initialize empty

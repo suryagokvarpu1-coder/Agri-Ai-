@@ -357,17 +357,17 @@
         </header>
 
         <!-- Soil Analysis Section -->
-        <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <section class="py-10 md:py-20 px-4 sm:px-6 lg:px-8">
             <div class="max-w-6xl mx-auto">
-                <div class="text-center mb-16">
-                    <h2 data-i18n="soil_analysis_title" class="text-4xl md:text-5xl font-bold text-white mb-6">AI Soil Texture Analysis</h2>
-                    <p data-i18n="soil_analysis_subtitle" class="text-xl text-gray-400 max-w-3xl mx-auto">
+                <div class="text-center mb-10 md:mb-16">
+                    <h2 data-i18n="soil_analysis_title" class="text-3xl md:text-5xl font-bold text-white mb-6">AI Soil Texture Analysis</h2>
+                    <p data-i18n="soil_analysis_subtitle" class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
                         Upload a macro photograph of your soil sample and let our AI analyze the texture to determine soil type and recommend the best crops for optimal yield.
                     </p>
                 </div>
 
                 <!-- Upload Section -->
-                <div class="bg-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-700 mb-8">
+                <div class="bg-gray-900 rounded-2xl p-5 sm:p-8 shadow-2xl border border-gray-700 mb-8">
                     <h3 data-i18n="soil_upload_title" class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                         <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -376,7 +376,7 @@
                     </h3>
                     
                     <!-- Upload Area -->
-                    <div id="upload-area" class="upload-area p-12 text-center cursor-pointer">
+                    <div id="upload-area" class="upload-area p-8 sm:p-12 text-center cursor-pointer">
                         <div id="upload-content">
                             <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
@@ -535,7 +535,7 @@
             }
             
             // Validate token
-            fetch('http://localhost:3000/api/user/profile', {
+            fetch((window.API_BASE_URL || 'http://localhost:3000/api') + '/user/profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

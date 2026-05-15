@@ -622,70 +622,140 @@
 
     <!-- Authentication Check -->
     <script>
+        // ── Single unified settings key ──────────────────────────────────────
+        const SETTINGS_KEY = 'agri-ai-settings';
+
+        function loadSettings() {
+            try {
+                return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
+            } catch { return {}; }
+        }
+
+        function persistSettings(patch) {
+            const current = loadSettings();
+            const merged = Object.assign({}, current, patch);
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(merged));
+        }
+
+        // ── Restore UI from saved settings ───────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
             window.AuthSystem.requireAuth();
+
+            const s = loadSettings();
+
+            // Language — handled by translationSystem, but sync the dropdown
+            const lang = localStorage.getItem('agri-ai-language') || s.language || 'en-in';
+            const langEl = document.getElementById('language-select');
+            if (langEl) {
+                // Wait for translation system to populate the dropdown
+                setTimeout(() => { if (langEl) langEl.value = lang; }, 200);
+            }
+
+            // Units
+            const unitsEl = document.getElementById('units-select');
+            if (unitsEl && s.units) unitsEl.value = s.units;
+
+            // Animation level
+            const animEl = document.getElementById('animation-level');
+            if (animEl && s.animation) animEl.value = s.animation;
+
+            // Notifications
+            ['predictions', 'weather', 'system'].forEach(id => {
+                const el = document.getElementById('notifications-' + id);
+                if (!el) return;
+                // Default: predictions=true, weather=true, system=false
+                const defaults = { predictions: true, weather: true, system: false };
+                const val = s['notif_' + id];
+                el.checked = val !== undefined ? val : defaults[id];
+            });
+
+            // Privacy
+            ['analytics', 'sharing'].forEach(id => {
+                const el = document.getElementById('privacy-' + id);
+                if (!el) return;
+                const defaults = { analytics: true, sharing: false };
+                const val = s['privacy_' + id];
+                el.checked = val !== undefined ? val : defaults[id];
+            });
         });
 
+        // ── Save all settings ─────────────────────────────────────────────────
         function saveSettings() {
-            // Language is already saved to localStorage by the translation system on change.
-            // Save units preference
+            const lang = document.getElementById('language-select')?.value;
             const units = document.getElementById('units-select')?.value;
-            if (units) localStorage.setItem('agri-ai-units', units);
-
-            // Save notification preferences
-            ['predictions','weather','system'].forEach(id => {
-                const el = document.getElementById('notifications-' + id);
-                if (el) localStorage.setItem('agri-ai-notif-' + id, el.checked);
-            });
-
-            // Save privacy preferences
-            ['analytics','sharing'].forEach(id => {
-                const el = document.getElementById('privacy-' + id);
-                if (el) localStorage.setItem('agri-ai-privacy-' + id, el.checked);
-            });
-
-            // Save animation level
             const anim = document.getElementById('animation-level')?.value;
-            if (anim) localStorage.setItem('agri-ai-animation', anim);
 
-            showToast('Settings saved successfully!');
+            const patch = {};
+            if (lang)  { patch.language  = lang;  localStorage.setItem('agri-ai-language', lang); }
+            if (units) { patch.units     = units; }
+            if (anim)  { patch.animation = anim;  }
+
+            ['predictions', 'weather', 'system'].forEach(id => {
+                const el = document.getElementById('notifications-' + id);
+                if (el) patch['notif_' + id] = el.checked;
+            });
+
+            ['analytics', 'sharing'].forEach(id => {
+                const el = document.getElementById('privacy-' + id);
+                if (el) patch['privacy_' + id] = el.checked;
+            });
+
+            persistSettings(patch);
+
+            // Apply language immediately if changed
+            if (lang && window.translationSystem && window.translationSystem.getCurrentLanguage() !== lang) {
+                window.translationSystem.setLanguage(lang);
+            }
+
+            // Apply animation level
+            if (anim) {
+                document.body.classList.remove('animations-none','animations-reduced','animations-normal','animations-enhanced');
+                document.body.classList.add('animations-' + anim);
+            }
+
+            showToast('✅ Settings saved successfully!');
         }
 
+        // ── Reset to defaults ─────────────────────────────────────────────────
         function resetSettings() {
+            localStorage.removeItem(SETTINGS_KEY);
             localStorage.removeItem('agri-ai-language');
-            localStorage.removeItem('agri-ai-units');
-            localStorage.removeItem('agri-ai-animation');
-            ['predictions','weather','system'].forEach(id => localStorage.removeItem('agri-ai-notif-' + id));
-            ['analytics','sharing'].forEach(id => localStorage.removeItem('agri-ai-privacy-' + id));
 
             // Reset UI
-            if (window.translationSystem) window.translationSystem.setLanguage('en-in');
-            const units = document.getElementById('units-select');
-            if (units) units.value = 'metric';
-            const anim = document.getElementById('animation-level');
-            if (anim) anim.value = 'normal';
+            const langEl = document.getElementById('language-select');
+            if (langEl) langEl.value = 'en-in';
+            const unitsEl = document.getElementById('units-select');
+            if (unitsEl) unitsEl.value = 'metric';
+            const animEl = document.getElementById('animation-level');
+            if (animEl) animEl.value = 'normal';
 
-            showToast('Settings reset to defaults!');
+            document.getElementById('notifications-predictions').checked = true;
+            document.getElementById('notifications-weather').checked = true;
+            document.getElementById('notifications-system').checked = false;
+            document.getElementById('privacy-analytics').checked = true;
+            document.getElementById('privacy-sharing').checked = false;
+
+            if (window.translationSystem) window.translationSystem.setLanguage('en-in');
+
+            showToast('🔄 Settings reset to defaults!');
         }
 
+        // ── Export / Import ───────────────────────────────────────────────────
         function exportData() {
             const data = {
                 users: JSON.parse(localStorage.getItem('agri-ai-users') || '[]'),
-                settings: {
-                    language: localStorage.getItem('agri-ai-language'),
-                    units: localStorage.getItem('agri-ai-units'),
-                    animation: localStorage.getItem('agri-ai-animation')
-                },
+                settings: loadSettings(),
+                language: localStorage.getItem('agri-ai-language'),
                 exportedAt: new Date().toISOString()
             };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'agri-ai-data.json';
+            a.download = 'agri-ai-backup.json';
             a.click();
             URL.revokeObjectURL(url);
-            showToast('Data exported successfully!');
+            showToast('📦 Data exported successfully!');
         }
 
         function importData() {
@@ -699,12 +769,13 @@
                 reader.onload = (ev) => {
                     try {
                         const data = JSON.parse(ev.target.result);
-                        if (data.users) localStorage.setItem('agri-ai-users', JSON.stringify(data.users));
-                        if (data.settings?.language) localStorage.setItem('agri-ai-language', data.settings.language);
-                        showToast('Data imported successfully! Reloading...');
+                        if (data.users)    localStorage.setItem('agri-ai-users', JSON.stringify(data.users));
+                        if (data.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings));
+                        if (data.language) localStorage.setItem('agri-ai-language', data.language);
+                        showToast('✅ Data imported! Reloading...');
                         setTimeout(() => location.reload(), 1200);
                     } catch {
-                        showToast('Invalid file format!');
+                        showToast('❌ Invalid file format!');
                     }
                 };
                 reader.readAsText(file);
@@ -712,40 +783,18 @@
             input.click();
         }
 
-        function openLiveChat() {
-            showToast('Live chat coming soon!');
-        }
+        function openLiveChat() { showToast('💬 Live chat coming soon!'); }
 
+        // ── Toast notification ────────────────────────────────────────────────
         function showToast(message) {
             const toast = document.getElementById('notification-toast');
-            const msg = document.getElementById('notification-message');
-            if (toast && msg) {
-                msg.textContent = message;
-                toast.classList.remove('translate-x-full');
-                setTimeout(() => toast.classList.add('translate-x-full'), 3000);
-            }
+            const msg   = document.getElementById('notification-message');
+            if (!toast || !msg) return;
+            msg.textContent = message;
+            toast.classList.remove('translate-x-full');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.add('translate-x-full'), 3000);
         }
-
-        // Restore saved settings on load
-        document.addEventListener('DOMContentLoaded', () => {
-            const units = localStorage.getItem('agri-ai-units');
-            if (units) { const el = document.getElementById('units-select'); if (el) el.value = units; }
-
-            const anim = localStorage.getItem('agri-ai-animation');
-            if (anim) { const el = document.getElementById('animation-level'); if (el) el.value = anim; }
-
-            ['predictions','weather','system'].forEach(id => {
-                const val = localStorage.getItem('agri-ai-notif-' + id);
-                const el = document.getElementById('notifications-' + id);
-                if (el && val !== null) el.checked = val === 'true';
-            });
-
-            ['analytics','sharing'].forEach(id => {
-                const val = localStorage.getItem('agri-ai-privacy-' + id);
-                const el = document.getElementById('privacy-' + id);
-                if (el && val !== null) el.checked = val === 'true';
-            });
-        });
     </script>
 </body>
 </html>

@@ -57,7 +57,16 @@ class GlobalSettings {
         try {
             const saved = localStorage.getItem('agri-ai-settings');
             if (saved) {
-                this.settings = { ...this.settings, ...JSON.parse(saved) };
+                const parsed = JSON.parse(saved);
+                // Map unified settings keys to internal structure
+                if (parsed.language) this.settings.language = parsed.language;
+                if (parsed.units)    this.settings.units    = parsed.units;
+                if (parsed.animation) this.settings.performance.animations = parsed.animation;
+                if (parsed.notif_predictions !== undefined) this.settings.notifications.predictions = parsed.notif_predictions;
+                if (parsed.notif_weather     !== undefined) this.settings.notifications.weather     = parsed.notif_weather;
+                if (parsed.notif_system      !== undefined) this.settings.notifications.system      = parsed.notif_system;
+                if (parsed.privacy_analytics !== undefined) this.settings.privacy.analytics         = parsed.privacy_analytics;
+                if (parsed.privacy_sharing   !== undefined) this.settings.privacy.sharing           = parsed.privacy_sharing;
             }
         } catch (error) {
             console.warn('Failed to load settings:', error);
@@ -66,7 +75,19 @@ class GlobalSettings {
 
     saveSettings() {
         try {
-            localStorage.setItem('agri-ai-settings', JSON.stringify(this.settings));
+            // Read current unified settings object
+            let current = {};
+            try { current = JSON.parse(localStorage.getItem('agri-ai-settings')) || {}; } catch {}
+            // Merge internal state back
+            current.language  = this.settings.language;
+            current.units     = this.settings.units;
+            current.animation = this.settings.performance.animations;
+            current.notif_predictions = this.settings.notifications.predictions;
+            current.notif_weather     = this.settings.notifications.weather;
+            current.notif_system      = this.settings.notifications.system;
+            current.privacy_analytics = this.settings.privacy.analytics;
+            current.privacy_sharing   = this.settings.privacy.sharing;
+            localStorage.setItem('agri-ai-settings', JSON.stringify(current));
         } catch (error) {
             console.warn('Failed to save settings:', error);
         }
@@ -288,17 +309,20 @@ class GlobalSettings {
     }
 
     applyLanguage(language) {
-        // Wait for translation system to be available
+        // Use the language saved by translations.js (agri-ai-language key takes priority)
+        const savedLang = localStorage.getItem('agri-ai-language');
+        const langToApply = savedLang || language;
+
         const applyLanguageChange = () => {
             if (window.translationSystem && typeof window.translationSystem.setLanguage === 'function') {
-                window.translationSystem.setLanguage(language);
-                console.log(`🌐 Language applied: ${language}`);
+                if (window.translationSystem.getCurrentLanguage() !== langToApply) {
+                    window.translationSystem.setLanguage(langToApply);
+                }
+                console.log(`🌐 Language applied: ${langToApply}`);
             } else {
-                // Retry after a short delay if translation system isn't ready
                 setTimeout(applyLanguageChange, 50);
             }
         };
-        
         applyLanguageChange();
     }
 

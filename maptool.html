@@ -423,7 +423,113 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             window.AuthSystem.requireAuth();
+            initMapController();
         });
+
+        function initMapController() {
+            const regionData = {
+                'global':        { name: 'Global View',      lat: 0,   lng: 0,    zoom: 2 },
+                'north-america': { name: 'North America',    lat: 45,  lng: -100, zoom: 4 },
+                'south-america': { name: 'South America',    lat: -15, lng: -60,  zoom: 4 },
+                'europe':        { name: 'Europe',           lat: 50,  lng: 10,   zoom: 4 },
+                'asia':          { name: 'Asia',             lat: 30,  lng: 100,  zoom: 3 },
+                'africa':        { name: 'Africa',           lat: 0,   lng: 20,   zoom: 3 },
+                'oceania':       { name: 'Oceania',          lat: -25, lng: 140,  zoom: 4 }
+            };
+
+            const mapUrls = {
+                'global':        'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d0!2d0!3m2!1i1024!2i768!4f2!5e0!3m2!1sen!2sus!4v1635959472',
+                'north-america': 'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d-100!2d45!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472',
+                'south-america': 'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d-60!2d-15!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472',
+                'europe':        'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d10!2d50!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472',
+                'asia':          'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d100!2d30!3m2!1i1024!2i768!4f3!5e0!3m2!1sen!2sus!4v1635959472',
+                'africa':        'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d20!2d0!3m2!1i1024!2i768!4f3!5e0!3m2!1sen!2sus!4v1635959472',
+                'oceania':       'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d140!2d-25!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472'
+            };
+
+            let currentFilters = { region: 'global', crop: 'all', layer: 'satellite', time: 'current' };
+
+            // Restore saved filters
+            try {
+                const saved = JSON.parse(localStorage.getItem('agri-ai-map-filters') || '{}');
+                currentFilters = Object.assign(currentFilters, saved);
+                ['region','crop','layer','time'].forEach(id => {
+                    const el = document.getElementById(id + '-filter');
+                    if (el && currentFilters[id]) el.value = currentFilters[id];
+                });
+            } catch (_) {}
+
+            function applyFilters() {
+                currentFilters = {
+                    region: document.getElementById('region-filter')?.value || 'global',
+                    crop:   document.getElementById('crop-filter')?.value   || 'all',
+                    layer:  document.getElementById('layer-filter')?.value  || 'satellite',
+                    time:   document.getElementById('time-filter')?.value   || 'current'
+                };
+                localStorage.setItem('agri-ai-map-filters', JSON.stringify(currentFilters));
+
+                // Update map iframe src based on region
+                const iframe = document.querySelector('iframe');
+                if (iframe && mapUrls[currentFilters.region]) {
+                    iframe.src = mapUrls[currentFilters.region];
+                }
+
+                // Show active filters panel
+                const statusDiv = document.getElementById('filter-status');
+                const filtersDiv = document.getElementById('active-filters');
+                if (statusDiv && filtersDiv) {
+                    statusDiv.classList.remove('hidden');
+                    const regionName = regionData[currentFilters.region]?.name || currentFilters.region;
+                    filtersDiv.innerHTML = `
+                        <div class="bg-gray-800 p-3 rounded-lg"><p class="text-xs text-blue-400 font-semibold mb-1">Region</p><p class="text-gray-300 text-sm">${regionName}</p></div>
+                        <div class="bg-gray-800 p-3 rounded-lg"><p class="text-xs text-blue-400 font-semibold mb-1">Crop</p><p class="text-gray-300 text-sm capitalize">${currentFilters.crop}</p></div>
+                        <div class="bg-gray-800 p-3 rounded-lg"><p class="text-xs text-blue-400 font-semibold mb-1">Layer</p><p class="text-gray-300 text-sm capitalize">${currentFilters.layer}</p></div>
+                        <div class="bg-gray-800 p-3 rounded-lg"><p class="text-xs text-blue-400 font-semibold mb-1">Time</p><p class="text-gray-300 text-sm capitalize">${currentFilters.time}</p></div>
+                    `;
+                }
+
+                showMapNotification('✅ Filters applied!');
+            }
+
+            function resetFilters() {
+                currentFilters = { region: 'global', crop: 'all', layer: 'satellite', time: 'current' };
+                localStorage.removeItem('agri-ai-map-filters');
+
+                ['region','crop','layer','time'].forEach(id => {
+                    const el = document.getElementById(id + '-filter');
+                    if (el) el.value = currentFilters[id];
+                });
+
+                const iframe = document.querySelector('iframe');
+                if (iframe) iframe.src = mapUrls['global'];
+
+                const statusDiv = document.getElementById('filter-status');
+                if (statusDiv) statusDiv.classList.add('hidden');
+
+                showMapNotification('🔄 Filters reset to default.');
+            }
+
+            // Bind buttons
+            document.getElementById('apply-filters-btn')?.addEventListener('click', applyFilters);
+            document.getElementById('reset-filters-btn')?.addEventListener('click', resetFilters);
+
+            // Live update map on region change
+            document.getElementById('region-filter')?.addEventListener('change', (e) => {
+                const iframe = document.querySelector('iframe');
+                if (iframe && mapUrls[e.target.value]) iframe.src = mapUrls[e.target.value];
+            });
+        }
+
+        function showMapNotification(message) {
+            const existing = document.getElementById('map-notification');
+            if (existing) existing.remove();
+            const div = document.createElement('div');
+            div.id = 'map-notification';
+            div.className = 'fixed top-4 right-4 bg-blue-600 text-white px-5 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
+            div.textContent = message;
+            document.body.appendChild(div);
+            setTimeout(() => { if (div.parentNode) div.remove(); }, 3000);
+        }
     </script>
 </body>
 </html>

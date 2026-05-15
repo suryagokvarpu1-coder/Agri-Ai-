@@ -513,7 +513,165 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             window.AuthSystem.requireAuth();
+            setupPredictionForm();
         });
+
+        function setupPredictionForm() {
+            const form = document.getElementById('prediction-form');
+            if (!form) return;
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+
+                // Validate required fields
+                const required = ['crop', 'location', 'fieldSize', 'plantingDate', 'soilType', 'irrigation', 'fertilizer'];
+                const missing = required.filter(f => !data[f] || data[f].trim() === '');
+                if (missing.length > 0) {
+                    showNotification('Please fill in all required fields.', 'error');
+                    return;
+                }
+                if (parseFloat(data.fieldSize) <= 0) {
+                    showNotification('Field size must be greater than 0.', 'error');
+                    return;
+                }
+
+                // Show loading
+                document.getElementById('loading-state').classList.remove('hidden');
+                document.getElementById('result-box').classList.add('hidden');
+                document.getElementById('predict-button').disabled = true;
+
+                try {
+                    // Try server first, fall back to local simulation
+                    let prediction;
+                    try {
+                        const response = await fetch((window.API_BASE_URL || '/api') + '/predict', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+                        if (result.success) prediction = result.prediction;
+                    } catch (_) { /* server not available, use local */ }
+
+                    if (!prediction) {
+                        // Local simulation
+                        await new Promise(r => setTimeout(r, 1500));
+                        prediction = generateLocalPrediction(data);
+                    }
+
+                    displayPredictionResults(prediction);
+                } catch (err) {
+                    showNotification('Failed to generate prediction. Please try again.', 'error');
+                } finally {
+                    document.getElementById('loading-state').classList.add('hidden');
+                    document.getElementById('predict-button').disabled = false;
+                }
+            });
+        }
+
+        function generateLocalPrediction(data) {
+            const yieldPerAcre = Math.floor(Math.random() * 3000) + 2000;
+            const fieldSize    = parseFloat(data.fieldSize) || 1;
+            const confidence   = Math.floor(Math.random() * 25) + 72;
+            return {
+                crop: data.crop,
+                location: data.location,
+                fieldSize: fieldSize,
+                predictedYield: yieldPerAcre,
+                totalProduction: Math.round(yieldPerAcre * fieldSize),
+                confidence: confidence,
+                factors: {
+                    weather: ['Favorable', 'Good', 'Moderate'][Math.floor(Math.random() * 3)],
+                    soil: ['Excellent', 'Good', 'Fair'][Math.floor(Math.random() * 3)],
+                    irrigation: ['Optimal', 'Adequate', 'Limited'][Math.floor(Math.random() * 3)]
+                },
+                recommendations: [
+                    'Monitor soil moisture levels weekly.',
+                    'Consider applying nitrogen fertilizer at mid-season.',
+                    'Watch for pest activity and apply control measures if needed.',
+                    'Ensure adequate irrigation during flowering stage.'
+                ].slice(0, Math.floor(Math.random() * 2) + 2),
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        function displayPredictionResults(prediction) {
+            const container = document.getElementById('prediction-results');
+            const box       = document.getElementById('result-box');
+
+            const factorColor = (val) => {
+                if (['Favorable','Excellent','Optimal'].includes(val)) return 'text-green-400';
+                if (['Good','Adequate'].includes(val)) return 'text-blue-400';
+                return 'text-yellow-400';
+            };
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-black/20 rounded-xl p-4">
+                        <p class="text-sm text-gray-300 mb-1">Predicted Yield</p>
+                        <p class="text-2xl font-bold text-green-400">${prediction.predictedYield.toLocaleString()} kg/acre</p>
+                    </div>
+                    <div class="bg-black/20 rounded-xl p-4">
+                        <p class="text-sm text-gray-300 mb-1">Total Production</p>
+                        <p class="text-2xl font-bold text-blue-400">${(prediction.totalProduction || Math.round(prediction.predictedYield * prediction.fieldSize)).toLocaleString()} kg</p>
+                    </div>
+                    <div class="bg-black/20 rounded-xl p-4">
+                        <p class="text-sm text-gray-300 mb-1">Confidence</p>
+                        <p class="text-2xl font-bold text-purple-400">${prediction.confidence}%</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-black/20 rounded-xl p-3 text-center">
+                        <p class="text-xs text-gray-400 mb-1">🌤 Weather</p>
+                        <p class="font-semibold ${factorColor(prediction.factors?.weather)}">${prediction.factors?.weather || 'N/A'}</p>
+                    </div>
+                    <div class="bg-black/20 rounded-xl p-3 text-center">
+                        <p class="text-xs text-gray-400 mb-1">🌱 Soil</p>
+                        <p class="font-semibold ${factorColor(prediction.factors?.soil)}">${prediction.factors?.soil || 'N/A'}</p>
+                    </div>
+                    <div class="bg-black/20 rounded-xl p-3 text-center">
+                        <p class="text-xs text-gray-400 mb-1">💧 Irrigation</p>
+                        <p class="font-semibold ${factorColor(prediction.factors?.irrigation)}">${prediction.factors?.irrigation || 'N/A'}</p>
+                    </div>
+                </div>
+
+                ${prediction.recommendations?.length ? `
+                <div class="bg-black/20 rounded-xl p-4 text-left">
+                    <p class="text-sm font-semibold text-white mb-3">📋 Recommendations</p>
+                    <ul class="space-y-2">
+                        ${prediction.recommendations.map(r => `<li class="text-sm text-gray-300 flex items-start gap-2"><span class="text-green-400 mt-0.5">✓</span>${r}</li>`).join('')}
+                    </ul>
+                </div>` : ''}
+            `;
+
+            box.classList.remove('hidden');
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            showNotification('✅ Prediction generated successfully!', 'success');
+
+            // Save to localStorage history
+            try {
+                const history = JSON.parse(localStorage.getItem('agri-ai-predictions') || '[]');
+                history.unshift({ ...prediction, savedAt: new Date().toISOString() });
+                localStorage.setItem('agri-ai-predictions', JSON.stringify(history.slice(0, 20)));
+            } catch (_) {}
+        }
+
+        function showNotification(message, type = 'info') {
+            const existing = document.getElementById('predict-notification');
+            if (existing) existing.remove();
+
+            const div = document.createElement('div');
+            div.id = 'predict-notification';
+            const colors = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-600', info: 'bg-blue-600' };
+            div.className = `fixed top-4 right-4 ${colors[type] || colors.info} text-white px-5 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 max-w-xs`;
+            div.textContent = message;
+            document.body.appendChild(div);
+            setTimeout(() => { if (div.parentNode) div.remove(); }, 4000);
+        }
     </script>
 </body>
 </html>

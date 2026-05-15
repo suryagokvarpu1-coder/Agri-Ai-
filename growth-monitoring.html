@@ -548,7 +548,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             window.AuthSystem.requireAuth();
+            initializeGrowthMonitoring();
         });
+
+        function closeCropModal() {
+            document.getElementById('crop-modal').classList.add('hidden');
+        }
     </script>
     
     <script src="growth-monitoring.js"></script>

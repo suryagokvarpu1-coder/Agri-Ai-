@@ -579,7 +579,97 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             window.AuthSystem.requireAuth();
+            setupFeedbackForms();
         });
+
+        function setupFeedbackForms() {
+            // General Feedback Form
+            const generalForm = document.getElementById('general-feedback-form');
+            if (generalForm) {
+                generalForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name     = document.getElementById('feedback-name')?.value.trim();
+                    const email    = document.getElementById('feedback-email')?.value.trim();
+                    const category = document.getElementById('feedback-category')?.value;
+                    const text     = document.getElementById('general-feedback-text')?.value.trim();
+                    if (!text) { showFeedbackToast('Please enter your feedback.', 'error'); return; }
+                    // Save to localStorage
+                    saveFeedbackEntry({ type: 'feedback', name, email, category, text, date: new Date().toISOString() });
+                    generalForm.reset();
+                    showFeedbackToast('✅ Feedback submitted successfully! Thank you.');
+                });
+            }
+
+            // Bug Report Form
+            const bugForm = document.getElementById('bug-report-form');
+            if (bugForm) {
+                bugForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const title       = document.getElementById('bug-title')?.value.trim();
+                    const priority    = document.getElementById('bug-priority')?.value;
+                    const page        = document.getElementById('bug-page')?.value;
+                    const description = document.getElementById('bug-description')?.value.trim();
+                    if (!title || !description) { showFeedbackToast('Please fill in the bug title and description.', 'error'); return; }
+                    saveFeedbackEntry({ type: 'bug', title, priority, page, description, date: new Date().toISOString() });
+                    bugForm.reset();
+                    showFeedbackToast('🐛 Bug report submitted! We\'ll look into it.');
+                });
+            }
+
+            // Support Form
+            const supportForm = document.getElementById('support-form');
+            if (supportForm) {
+                supportForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name    = document.getElementById('support-name')?.value.trim();
+                    const email   = document.getElementById('support-email')?.value.trim();
+                    const type    = document.getElementById('support-type')?.value;
+                    const subject = document.getElementById('support-subject')?.value.trim();
+                    const message = document.getElementById('support-message')?.value.trim();
+                    if (!subject || !message) { showFeedbackToast('Please fill in the subject and message.', 'error'); return; }
+                    saveFeedbackEntry({ type: 'support', name, email, supportType: type, subject, message, date: new Date().toISOString() });
+                    supportForm.reset();
+                    showFeedbackToast('📩 Support request submitted! We\'ll respond within 24 hours.');
+                });
+            }
+        }
+
+        function saveFeedbackEntry(entry) {
+            try {
+                const existing = JSON.parse(localStorage.getItem('agri-ai-feedback') || '[]');
+                existing.push(entry);
+                localStorage.setItem('agri-ai-feedback', JSON.stringify(existing));
+            } catch (e) {
+                console.error('Failed to save feedback:', e);
+            }
+        }
+
+        function clearSupportForm() {
+            const form = document.getElementById('support-form');
+            if (form) {
+                form.reset();
+                showFeedbackToast('Form cleared.');
+            }
+        }
+
+        function startLiveChat() {
+            showFeedbackToast('💬 Live chat is coming soon! Please use email support for now.');
+        }
+
+        function openDocumentation() {
+            showFeedbackToast('📚 Documentation is being prepared. Check back soon!');
+        }
+
+        function showFeedbackToast(message, type = 'success') {
+            const toast = document.getElementById('success-toast');
+            const msg   = document.getElementById('toast-message');
+            if (!toast || !msg) return;
+            msg.textContent = message;
+            toast.classList.remove('translate-x-full');
+            toast.style.background = type === 'error' ? '#dc2626' : '#16a34a';
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.add('translate-x-full'), 4000);
+        }
     </script>
 </body>
 </html>

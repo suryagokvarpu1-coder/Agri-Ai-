@@ -1,473 +1,291 @@
 /**
- * Agri-AI 3D Animation Engine
- * Three.js particle background + mouse-tracking card tilt + scroll reveals
+ * Agri-AI · 3D Animation Engine v3.0
+ * Three.js particle field + mouse tilt + scroll reveals + cursor trail + ripple
  */
-
 (function () {
-    'use strict';
+  'use strict';
 
-    // ── 1. Inject 3D CSS ──────────────────────────────────────────────────
-    function injectCSS() {
-        if (document.getElementById('agri-3d-css')) return;
-        const link = document.createElement('link');
-        link.id   = 'agri-3d-css';
-        link.rel  = 'stylesheet';
-        link.href = '3d-theme.css';
-        document.head.appendChild(link);
+  /* ── 1. Three.js Particle Background ─────────────────────────────── */
+  function initThreeJS() {
+    if (typeof THREE === 'undefined' || document.getElementById('threejs-canvas')) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.id = 'threejs-canvas';
+    document.body.insertBefore(canvas, document.body.firstChild);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 6;
+
+    /* Particles */
+    const N = window.innerWidth < 768 ? 500 : 1200;
+    const pos  = new Float32Array(N * 3);
+    const col  = new Float32Array(N * 3);
+    const vel  = new Float32Array(N * 3);
+    const sz   = new Float32Array(N);
+
+    const palette = [
+      [0.00, 0.84, 0.56], // #00d68f green
+      [0.49, 0.23, 0.93], // #7c3aed violet
+      [0.23, 0.51, 0.96], // #3b82f6 blue
+      [0.93, 0.28, 0.60], // #ec4899 pink
+      [0.00, 0.84, 0.56],
+      [0.49, 0.23, 0.93],
+    ];
+
+    for (let i = 0; i < N; i++) {
+      const i3 = i * 3;
+      pos[i3]   = (Math.random() - 0.5) * 18;
+      pos[i3+1] = (Math.random() - 0.5) * 18;
+      pos[i3+2] = (Math.random() - 0.5) * 12;
+      vel[i3]   = (Math.random() - 0.5) * 0.004;
+      vel[i3+1] = (Math.random() - 0.5) * 0.004 + 0.001;
+      vel[i3+2] = (Math.random() - 0.5) * 0.002;
+      const c = palette[Math.floor(Math.random() * palette.length)];
+      col[i3] = c[0]; col[i3+1] = c[1]; col[i3+2] = c[2];
+      sz[i] = Math.random() * 2.5 + 0.5;
     }
 
-    // ── 2. Three.js Particle Background ──────────────────────────────────
-    function initThreeJS() {
-        if (typeof THREE === 'undefined') return;
-        if (document.getElementById('threejs-canvas')) return;
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
 
-        const canvas = document.createElement('canvas');
-        canvas.id = 'threejs-canvas';
-        document.body.insertBefore(canvas, document.body.firstChild);
+    const mat = new THREE.PointsMaterial({
+      size: 0.055,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.7,
+      sizeAttenuation: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
 
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000, 0);
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
 
-        const scene  = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 5;
+    /* Mouse parallax */
+    let mx = 0, my = 0, tx = 0, ty = 0;
+    document.addEventListener('mousemove', e => {
+      mx = (e.clientX / window.innerWidth  - 0.5) * 0.25;
+      my = (e.clientY / window.innerHeight - 0.5) * 0.25;
+    });
 
-        // ── Particle System ──────────────────────────────────────────────
-        const PARTICLE_COUNT = window.innerWidth < 768 ? 600 : 1400;
-        const positions  = new Float32Array(PARTICLE_COUNT * 3);
-        const colors     = new Float32Array(PARTICLE_COUNT * 3);
-        const sizes      = new Float32Array(PARTICLE_COUNT);
-        const velocities = new Float32Array(PARTICLE_COUNT * 3);
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 
-        const palette = [
-            new THREE.Color('#667eea'), // indigo
-            new THREE.Color('#764ba2'), // purple
-            new THREE.Color('#f093fb'), // pink
-            new THREE.Color('#00ff88'), // neon green
-            new THREE.Color('#3b82f6'), // blue
-            new THREE.Color('#10b981'), // emerald
-        ];
+    /* Animate */
+    (function loop() {
+      requestAnimationFrame(loop);
+      tx += (mx - tx) * 0.04;
+      ty += (my - ty) * 0.04;
+      points.rotation.y = tx;
+      points.rotation.x = ty;
+      points.rotation.y += 0.0002;
 
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-            const i3 = i * 3;
-            positions[i3]     = (Math.random() - 0.5) * 20;
-            positions[i3 + 1] = (Math.random() - 0.5) * 20;
-            positions[i3 + 2] = (Math.random() - 0.5) * 15;
+      const p = geo.attributes.position.array;
+      for (let i = 0; i < N; i++) {
+        const i3 = i * 3;
+        p[i3]   += vel[i3];
+        p[i3+1] += vel[i3+1];
+        p[i3+2] += vel[i3+2];
+        if (p[i3]   >  9) p[i3]   = -9;
+        if (p[i3]   < -9) p[i3]   =  9;
+        if (p[i3+1] >  9) p[i3+1] = -9;
+        if (p[i3+1] < -9) p[i3+1] =  9;
+        if (p[i3+2] >  6) p[i3+2] = -6;
+        if (p[i3+2] < -6) p[i3+2] =  6;
+      }
+      geo.attributes.position.needsUpdate = true;
+      renderer.render(scene, camera);
+    })();
+  }
 
-            velocities[i3]     = (Math.random() - 0.5) * 0.003;
-            velocities[i3 + 1] = (Math.random() - 0.5) * 0.003 + 0.001;
-            velocities[i3 + 2] = (Math.random() - 0.5) * 0.002;
+  /* ── 2. Mouse-Tracking Card Tilt ──────────────────────────────────── */
+  function initTilt() {
+    if (window.matchMedia('(hover: none)').matches) return;
 
-            const color = palette[Math.floor(Math.random() * palette.length)];
-            colors[i3]     = color.r;
-            colors[i3 + 1] = color.g;
-            colors[i3 + 2] = color.b;
+    const MAX = 10;
 
-            sizes[i] = Math.random() * 3 + 0.5;
-        }
+    function attach(el) {
+      if (el._tilt) return;
+      el._tilt = true;
 
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
-        geometry.setAttribute('size',     new THREE.BufferAttribute(sizes, 1));
+      el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width  - 0.5;
+        const y = (e.clientY - r.top)  / r.height - 0.5;
+        el.style.transform = `perspective(800px) rotateX(${-y*MAX}deg) rotateY(${x*MAX}deg) translateZ(8px) scale(1.02)`;
+        el.style.boxShadow = `
+          ${-x*16}px ${y*16}px 40px rgba(0,0,0,0.5),
+          0 0 30px rgba(0,214,143,0.12),
+          ${-x*8}px ${y*8}px 20px rgba(124,58,237,0.08)
+        `;
+      });
 
-        const material = new THREE.PointsMaterial({
-            size: 0.06,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.75,
-            sizeAttenuation: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false,
-        });
-
-        const particles = new THREE.Points(geometry, material);
-        scene.add(particles);
-
-        // ── Connection Lines ─────────────────────────────────────────────
-        const lineGeometry = new THREE.BufferGeometry();
-        const linePositions = new Float32Array(PARTICLE_COUNT * 6);
-        lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-        const lineMaterial = new THREE.LineBasicMaterial({
-            color: 0x667eea,
-            transparent: true,
-            opacity: 0.08,
-            blending: THREE.AdditiveBlending,
-        });
-        const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-        scene.add(lines);
-
-        // ── Mouse Parallax ───────────────────────────────────────────────
-        let mouseX = 0, mouseY = 0;
-        let targetX = 0, targetY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth  - 0.5) * 0.3;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 0.3;
-        });
-
-        // ── Resize Handler ───────────────────────────────────────────────
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // ── Animation Loop ───────────────────────────────────────────────
-        let frame = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            frame++;
-
-            // Smooth mouse follow
-            targetX += (mouseX - targetX) * 0.05;
-            targetY += (mouseY - targetY) * 0.05;
-            particles.rotation.y = targetX;
-            particles.rotation.x = targetY;
-            lines.rotation.y     = targetX;
-            lines.rotation.x     = targetY;
-
-            // Move particles
-            const pos = geometry.attributes.position.array;
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                const i3 = i * 3;
-                pos[i3]     += velocities[i3];
-                pos[i3 + 1] += velocities[i3 + 1];
-                pos[i3 + 2] += velocities[i3 + 2];
-
-                // Wrap around
-                if (pos[i3]     >  10) pos[i3]     = -10;
-                if (pos[i3]     < -10) pos[i3]     =  10;
-                if (pos[i3 + 1] >  10) pos[i3 + 1] = -10;
-                if (pos[i3 + 1] < -10) pos[i3 + 1] =  10;
-                if (pos[i3 + 2] >  7.5) pos[i3 + 2] = -7.5;
-                if (pos[i3 + 2] < -7.5) pos[i3 + 2] =  7.5;
-            }
-            geometry.attributes.position.needsUpdate = true;
-
-            // Update connection lines every 3 frames (performance)
-            if (frame % 3 === 0) {
-                let lineIdx = 0;
-                const lp = lineGeometry.attributes.position.array;
-                for (let i = 0; i < Math.min(PARTICLE_COUNT, 200); i++) {
-                    const i3 = i * 3;
-                    for (let j = i + 1; j < Math.min(PARTICLE_COUNT, 200); j++) {
-                        const j3 = j * 3;
-                        const dx = pos[i3] - pos[j3];
-                        const dy = pos[i3+1] - pos[j3+1];
-                        const dz = pos[i3+2] - pos[j3+2];
-                        const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
-                        if (dist < 2.5 && lineIdx < lp.length - 5) {
-                            lp[lineIdx++] = pos[i3];
-                            lp[lineIdx++] = pos[i3+1];
-                            lp[lineIdx++] = pos[i3+2];
-                            lp[lineIdx++] = pos[j3];
-                            lp[lineIdx++] = pos[j3+1];
-                            lp[lineIdx++] = pos[j3+2];
-                        }
-                    }
-                }
-                lineGeometry.attributes.position.needsUpdate = true;
-                lineGeometry.setDrawRange(0, lineIdx / 3);
-            }
-
-            // Slow global rotation
-            particles.rotation.y += 0.0003;
-            lines.rotation.y     += 0.0003;
-
-            renderer.render(scene, camera);
-        }
-        animate();
+      el.addEventListener('mouseleave', () => {
+        el.style.transition = 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.5s ease';
+        el.style.transform  = '';
+        el.style.boxShadow  = '';
+        setTimeout(() => { el.style.transition = ''; }, 500);
+      });
     }
 
-    // ── 3. Mouse-Tracking Card Tilt ───────────────────────────────────────
-    function initCardTilt() {
-        const TILT_MAX = 12; // degrees
-
-        function applyTilt(el) {
-            if (el._tiltBound) return;
-            el._tiltBound = true;
-
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width  - 0.5;
-                const y = (e.clientY - rect.top)  / rect.height - 0.5;
-                const rotX = -y * TILT_MAX;
-                const rotY =  x * TILT_MAX;
-                el.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(10px) scale(1.02)`;
-                el.style.boxShadow = `
-                    ${-rotY * 2}px ${rotX * 2}px 40px rgba(0,0,0,0.5),
-                    0 0 30px rgba(102,126,234,0.3),
-                    ${-rotY}px ${rotX}px 20px rgba(240,147,251,0.15)
-                `;
-            });
-
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = '';
-                el.style.boxShadow = '';
-                el.style.transition = 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.5s ease';
-                setTimeout(() => { el.style.transition = ''; }, 500);
-            });
-        }
-
-        function attachTiltToCards() {
-            const selectors = [
-                '.bg-white', '.carbon-card', '.crop-card',
-                '.feedback-card', '.soil-type-card',
-                '.text-center.bg-gray-800', '.bg-gray-800.p-6',
-                '.bg-gray-800.p-8', '.add-crop-form'
-            ];
-            selectors.forEach(sel => {
-                document.querySelectorAll(sel).forEach(el => {
-                    // Skip on mobile
-                    if (window.matchMedia('(hover: none)').matches) return;
-                    applyTilt(el);
-                });
-            });
-        }
-
-        attachTiltToCards();
-
-        // Re-attach when new cards are added (growth monitoring, etc.)
-        const observer = new MutationObserver(() => attachTiltToCards());
-        observer.observe(document.body, { childList: true, subtree: true });
+    function scan() {
+      document.querySelectorAll(
+        '.bg-white, .carbon-card, .crop-card, .feedback-card, .soil-type-card, .text-center.bg-gray-800, .bg-gray-800.p-6, .bg-gray-800.p-8'
+      ).forEach(attach);
     }
 
-    // ── 4. Scroll Reveal Animations ───────────────────────────────────────
-    function initScrollReveal() {
-        // Add reveal classes to grid children
-        function tagRevealElements() {
-            const grids = document.querySelectorAll(
-                '.grid, section > div > div.grid, .space-y-10 > div'
-            );
-            grids.forEach(grid => {
-                Array.from(grid.children).forEach((child, i) => {
-                    if (!child.classList.contains('reveal-3d') &&
-                        !child.classList.contains('reveal-3d-left') &&
-                        !child.classList.contains('reveal-3d-right')) {
-                        child.classList.add('reveal-3d');
-                    }
-                });
-            });
+    scan();
+    new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+  }
 
-            // Also tag section headings
-            document.querySelectorAll('section .text-center').forEach(el => {
-                if (!el.classList.contains('reveal-3d')) {
-                    el.classList.add('reveal-3d');
-                }
-            });
+  /* ── 3. Scroll Reveal ─────────────────────────────────────────────── */
+  function initReveal() {
+    function tag() {
+      document.querySelectorAll('.grid > *, section .text-center, .space-y-10 > div').forEach(el => {
+        if (!el.classList.contains('reveal-3d')) el.classList.add('reveal-3d');
+      });
+    }
+
+    function check() {
+      document.querySelectorAll('.reveal-3d').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.93) {
+          el.classList.add('visible');
         }
-
-        function checkVisibility() {
-            document.querySelectorAll('.reveal-3d, .reveal-3d-left, .reveal-3d-right').forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
-                    el.classList.add('visible');
-                }
-            });
-        }
-
-        tagRevealElements();
-        checkVisibility(); // Run immediately for above-fold content
-
-        window.addEventListener('scroll', checkVisibility, { passive: true });
-
-        // Re-tag when DOM changes
-        const observer = new MutationObserver(() => {
-            tagRevealElements();
-            checkVisibility();
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
+      });
     }
 
-    // ── 5. Button Ripple Effect ───────────────────────────────────────────
-    function initRipple() {
-        document.addEventListener('click', (e) => {
-            const btn = e.target.closest('button, .login-button, .signup-button, .btn-primary, [type="submit"]');
-            if (!btn) return;
+    tag(); check();
+    window.addEventListener('scroll', check, { passive: true });
+    new MutationObserver(() => { tag(); check(); }).observe(document.body, { childList: true, subtree: true });
+  }
 
-            const rect   = btn.getBoundingClientRect();
-            const size   = Math.max(rect.width, rect.height);
-            const x      = e.clientX - rect.left - size / 2;
-            const y      = e.clientY - rect.top  - size / 2;
+  /* ── 4. Button Ripple ─────────────────────────────────────────────── */
+  function initRipple() {
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('button, a.btn-primary, .login-button, .signup-button');
+      if (!btn) return;
+      const r    = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const dot  = document.createElement('span');
+      dot.className = 'ripple';
+      dot.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      if (getComputedStyle(btn).position === 'static') btn.style.position = 'relative';
+      btn.style.overflow = 'hidden';
+      btn.appendChild(dot);
+      setTimeout(() => dot.remove(), 600);
+    });
+  }
 
-            const ripple = document.createElement('span');
-            ripple.className = 'ripple';
-            ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+  /* ── 5. Number Counter ────────────────────────────────────────────── */
+  function initCounters() {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(({ target, isIntersecting }) => {
+        if (!isIntersecting || target._counted) return;
+        target._counted = true;
+        const orig  = target.textContent.trim();
+        const match = orig.match(/^([\d.]+)([^\d.]*)$/);
+        if (!match) return;
+        const end = parseFloat(match[1]), suf = match[2] || '';
+        const t0  = performance.now();
+        const dur = 1600;
+        (function tick(now) {
+          const p = Math.min((now - t0) / dur, 1);
+          const e = 1 - Math.pow(1 - p, 3);
+          target.textContent = (end * e >= 1000
+            ? Math.round(end * e).toLocaleString()
+            : (end * e).toFixed(end < 10 ? 1 : 0)) + suf;
+          if (p < 1) requestAnimationFrame(tick);
+          else target.textContent = orig;
+        })(t0);
+      });
+    }, { threshold: 0.6 });
 
-            // Ensure button has relative positioning
-            const pos = getComputedStyle(btn).position;
-            if (pos === 'static') btn.style.position = 'relative';
-            btn.style.overflow = 'hidden';
-
-            btn.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 700);
-        });
+    function attach() {
+      document.querySelectorAll('.text-4xl.font-bold, .text-3xl.font-bold, .countdown-number').forEach(el => {
+        if (!el._counted) io.observe(el);
+      });
     }
+    attach();
+    new MutationObserver(attach).observe(document.body, { childList: true, subtree: true });
+  }
 
-    // ── 6. 3D Number Counter Animation ───────────────────────────────────
-    function initCounters() {
-        function animateCounter(el) {
-            if (el._counted) return;
-            el._counted = true;
+  /* ── 6. Cursor Trail ──────────────────────────────────────────────── */
+  function initCursor() {
+    if (window.matchMedia('(hover: none)').matches) return;
+    const N = 7;
+    const dots = Array.from({ length: N }, (_, i) => {
+      const d = document.createElement('div');
+      const s = (N - i) * 4 + 2;
+      d.className = 'cursor-trail-dot';
+      d.style.cssText = `width:${s}px;height:${s}px;opacity:${0.7 - i*0.08};transition:left ${i*0.04+0.04}s ease,top ${i*0.04+0.04}s ease;`;
+      document.body.appendChild(d);
+      return d;
+    });
+    document.addEventListener('mousemove', e => {
+      dots.forEach(d => { d.style.left = e.clientX + 'px'; d.style.top = e.clientY + 'px'; });
+    });
+  }
 
-            const text   = el.textContent.trim();
-            const match  = text.match(/^([\d.]+)([KMB+%]*)$/);
-            if (!match) return;
+  /* ── 7. Page Transition ───────────────────────────────────────────── */
+  function initTransitions() {
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href]');
+      if (!a) return;
+      const h = a.getAttribute('href');
+      if (!h || h[0] === '#' || h.startsWith('mailto') || h.startsWith('tel') ||
+          h.startsWith('http') || a.target === '_blank') return;
+      e.preventDefault();
+      document.body.style.cssText = 'opacity:0;transform:perspective(1000px) rotateX(-1.5deg) scale(0.99);transition:opacity 0.3s ease,transform 0.3s ease';
+      setTimeout(() => { window.location.href = h; }, 320);
+    });
+  }
 
-            const target = parseFloat(match[1]);
-            const suffix = match[2] || '';
-            const duration = 1800;
-            const start    = performance.now();
+  /* ── 8. Header Scroll Shadow ──────────────────────────────────────── */
+  function initHeader() {
+    const h = document.querySelector('header');
+    if (!h) return;
+    window.addEventListener('scroll', () => {
+      h.style.boxShadow = window.scrollY > 10
+        ? '0 1px 0 rgba(255,255,255,0.04), 0 8px 32px rgba(0,0,0,0.5), 0 0 40px rgba(0,214,143,0.06)'
+        : '0 1px 0 rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.3)';
+    }, { passive: true });
+  }
 
-            function update(now) {
-                const elapsed  = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                // Ease out cubic
-                const eased = 1 - Math.pow(1 - progress, 3);
-                const current = target * eased;
+  /* ── Bootstrap ────────────────────────────────────────────────────── */
+  function boot() {
+    initTransitions();
+    initRipple();
 
-                el.textContent = (current >= 1000
-                    ? Math.round(current).toLocaleString()
-                    : current.toFixed(current < 10 ? 1 : 0)) + suffix;
+    const ready = () => {
+      initReveal();
+      initTilt();
+      initCounters();
+      initCursor();
+      initHeader();
 
-                if (progress < 1) requestAnimationFrame(update);
-                else el.textContent = text; // restore exact original
-            }
-            requestAnimationFrame(update);
-        }
+      if (!window.THREE) {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js';
+        s.onload = () => setTimeout(initThreeJS, 80);
+        document.head.appendChild(s);
+      } else {
+        initThreeJS();
+      }
+    };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
+    document.readyState === 'loading'
+      ? document.addEventListener('DOMContentLoaded', ready)
+      : ready();
+  }
 
-        function attachCounters() {
-            document.querySelectorAll(
-                '.text-4xl.font-bold, .text-3xl.font-bold, .countdown-number'
-            ).forEach(el => {
-                if (!el._counted) observer.observe(el);
-            });
-        }
-
-        attachCounters();
-        const mo = new MutationObserver(attachCounters);
-        mo.observe(document.body, { childList: true, subtree: true });
-    }
-
-    // ── 7. Holographic Header Glow on Scroll ──────────────────────────────
-    function initHeaderScroll() {
-        const header = document.querySelector('header');
-        if (!header) return;
-
-        window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY > 20;
-            header.style.boxShadow = scrolled
-                ? '0 4px 30px rgba(0,0,0,0.7), 0 0 60px rgba(102,126,234,0.2), 0 1px 0 rgba(255,255,255,0.05)'
-                : '0 4px 30px rgba(0,0,0,0.5), 0 0 30px rgba(102,126,234,0.1)';
-        }, { passive: true });
-    }
-
-    // ── 8. 3D Page Transition ─────────────────────────────────────────────
-    function initPageTransitions() {
-        // Fade-in on load
-        document.body.style.opacity = '0';
-        document.body.style.transform = 'perspective(1000px) rotateX(2deg) scale(0.98)';
-        document.body.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(0.4,0,0.2,1)';
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                document.body.style.opacity = '1';
-                document.body.style.transform = 'perspective(1000px) rotateX(0deg) scale(1)';
-            });
-        });
-
-        // Fade-out on navigation
-        document.addEventListener('click', (e) => {
-            const link = e.target.closest('a[href]');
-            if (!link) return;
-            const href = link.getAttribute('href');
-            if (!href || href.startsWith('#') || href.startsWith('mailto:') ||
-                href.startsWith('tel:') || href.startsWith('http') ||
-                link.target === '_blank') return;
-
-            e.preventDefault();
-            document.body.style.opacity = '0';
-            document.body.style.transform = 'perspective(1000px) rotateX(-2deg) scale(0.98)';
-            setTimeout(() => { window.location.href = href; }, 350);
-        });
-    }
-
-    // ── 9. Neon Cursor Trail ──────────────────────────────────────────────
-    function initCursorTrail() {
-        if (window.matchMedia('(hover: none)').matches) return; // skip touch
-
-        const trail = [];
-        const TRAIL_LENGTH = 8;
-
-        for (let i = 0; i < TRAIL_LENGTH; i++) {
-            const dot = document.createElement('div');
-            const size = (TRAIL_LENGTH - i) * 3 + 2;
-            dot.style.cssText = `
-                position: fixed; pointer-events: none; z-index: 9999;
-                width: ${size}px; height: ${size}px;
-                border-radius: 50%;
-                background: radial-gradient(circle, rgba(102,126,234,${0.8 - i * 0.08}), transparent);
-                transform: translate(-50%, -50%);
-                transition: left ${i * 0.03 + 0.05}s ease, top ${i * 0.03 + 0.05}s ease;
-                mix-blend-mode: screen;
-            `;
-            document.body.appendChild(dot);
-            trail.push(dot);
-        }
-
-        document.addEventListener('mousemove', (e) => {
-            trail.forEach(dot => {
-                dot.style.left = e.clientX + 'px';
-                dot.style.top  = e.clientY + 'px';
-            });
-        });
-    }
-
-    // ── Bootstrap ─────────────────────────────────────────────────────────
-    function bootstrap() {
-        injectCSS();
-        initPageTransitions();
-        initRipple();
-        initHeaderScroll();
-
-        // Wait for DOM
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', onDOMReady);
-        } else {
-            onDOMReady();
-        }
-    }
-
-    function onDOMReady() {
-        initScrollReveal();
-        initCardTilt();
-        initCounters();
-        initCursorTrail();
-
-        // Load Three.js then init particle background
-        if (!window.THREE) {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js';
-            script.onload = () => {
-                setTimeout(initThreeJS, 100);
-            };
-            document.head.appendChild(script);
-        } else {
-            initThreeJS();
-        }
-    }
-
-    bootstrap();
-
+  boot();
 })();

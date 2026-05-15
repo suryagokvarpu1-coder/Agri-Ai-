@@ -3,6 +3,16 @@
  * Applies theme, performance, and other settings across all pages
  */
 
+// ── Inject premium UI theme on every page ────────────────────────────────
+(function injectTheme() {
+    if (document.getElementById('agri-ui-theme')) return;
+    const link = document.createElement('link');
+    link.id   = 'agri-ui-theme';
+    link.rel  = 'stylesheet';
+    link.href = 'ui-theme.css';
+    document.head.insertBefore(link, document.head.firstChild);
+})();
+
 // ── Inject 3D animation engine on every page ──────────────────────────────
 (function inject3D() {
     if (document.getElementById('agri-3d-script')) return;

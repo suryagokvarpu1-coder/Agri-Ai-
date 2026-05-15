@@ -22,34 +22,24 @@ class SidebarNavigation {
 
     createSidebarHTML() {
         const sidebarHTML = `
-            <!-- Side Navigation Overlay -->
-            <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleSidebar()"></div>
-            
-            <!-- Side Navigation -->
-            <nav id="sidebar" class="fixed left-0 top-0 h-full w-[85vw] max-w-xs sm:w-80 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 shadow-2xl overflow-y-auto" style="background: linear-gradient(180deg, rgba(5,5,20,0.98) 0%, rgba(10,8,30,0.98) 50%, rgba(5,5,20,0.98) 100%); border-right: 1px solid rgba(102,126,234,0.25); box-shadow: 4px 0 60px rgba(0,0,0,0.9), 0 0 80px rgba(102,126,234,0.08);">
-                <div class="p-5 sm:p-6">
-                    <!-- Logo Section -->
-                    <div class="flex items-center space-x-3 mb-8">
-                        <div class="p-2 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #667eea, #764ba2, #f093fb); box-shadow: 0 0 20px rgba(102,126,234,0.6), 0 0 40px rgba(240,147,251,0.3);">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                            </svg>
+            <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden" onclick="toggleSidebar()" style="backdrop-filter:blur(4px)"></div>
+            <nav id="sidebar" class="fixed left-0 top-0 h-full w-[85vw] max-w-xs sm:w-72 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto" style="background:rgba(4,4,10,.97);border-right:1px solid rgba(255,255,255,.07);box-shadow:4px 0 40px rgba(0,0,0,.8)">
+                <div class="p-5">
+                    <div class="flex items-center gap-2.5 mb-8">
+                        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#22c55e,#8b5cf6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(34,197,94,.4)">
+                            <svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                         </div>
-                        <h1 class="text-2xl font-bold text-white" style="background: linear-gradient(90deg,#667eea,#f093fb); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Agri-AI</h1>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.2rem;letter-spacing:-.04em;background:linear-gradient(135deg,#22c55e,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Agri-AI</span>
                     </div>
-                    
-                    <!-- Navigation Menu -->
-                    <div class="space-y-2" id="sidebar-menu">
+                    <div class="space-y-1" id="sidebar-menu">
                         ${this.generateMenuItems()}
                     </div>
                 </div>
             </nav>
         `;
-
-        // Insert sidebar at the beginning of body
         document.body.insertAdjacentHTML('afterbegin', sidebarHTML);
     }
-
+                    
     generateMenuItems() {
         const menuItems = [
             {

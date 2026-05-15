@@ -1,492 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="site_title">Login · Agri-AI</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="translations.js"></script>
-  <script src="global-settings.js"></script>
-  <script src="api-config.js"></script>
-  <script src="auth.js"></script>
-  <style>
-    /* Inline critical styles so page looks right before ui-theme.css loads */
-    body { background: #050508; color: #f1f5f9; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="site_title">Sign In · Agri-AI</title>
+<script src="translations.js"></script>
+<script src="global-settings.js"></script>
+<script src="api-config.js"></script>
+<script src="auth.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:#04040a;color:#f8fafc;min-height:100vh;display:flex;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(34,197,94,.08) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 80% 85%,rgba(139,92,246,.09) 0%,transparent 55%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
 
-    .login-wrap {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr;
-      position: relative;
-      z-index: 1;
-    }
+/* Split layout */
+.split{display:flex;min-height:100vh;width:100%;position:relative;z-index:1}
+.left{display:none;flex:1;background:linear-gradient(160deg,#080810 0%,#0e0e1a 100%);border-right:1px solid rgba(255,255,255,.06);padding:3rem;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+@media(min-width:1024px){.left{display:flex}}
+.left::before{content:'';position:absolute;top:-20%;left:-10%;width:60%;height:60%;background:radial-gradient(circle,rgba(34,197,94,.1) 0%,transparent 70%);pointer-events:none}
+.left::after{content:'';position:absolute;bottom:-15%;right:-5%;width:50%;height:50%;background:radial-gradient(circle,rgba(139,92,246,.1) 0%,transparent 70%);pointer-events:none}
 
-    @media (min-width: 1024px) {
-      .login-wrap { grid-template-columns: 1fr 1fr; }
-    }
+.logo-row{display:flex;align-items:center;gap:.75rem;position:relative;z-index:1}
+.logo-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#8b5cf6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(34,197,94,.4),0 0 40px rgba(34,197,94,.15)}
+.logo-text{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.04em;background:linear-gradient(135deg,#22c55e,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-    /* Left panel — branding */
-    .login-brand {
-      display: none;
-      background: linear-gradient(145deg, #0d0d14 0%, #12121e 100%);
-      border-right: 1px solid rgba(255,255,255,0.06);
-      padding: 3rem;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-    }
+.hero-block{position:relative;z-index:1}
+.hero-tag{display:inline-flex;align-items:center;gap:.4rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.15);border-radius:99px;padding:.25rem .75rem;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:#22c55e;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.25rem}
+.hero-h{font-family:'Space Grotesk',sans-serif;font-size:2.6rem;font-weight:800;line-height:1.08;letter-spacing:-.04em;color:#f8fafc}
+.hero-h span{background:linear-gradient(135deg,#22c55e,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-p{color:#475569;font-size:.95rem;line-height:1.75;margin-top:1rem;max-width:380px}
 
-    @media (min-width: 1024px) { .login-brand { display: flex; } }
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;position:relative;z-index:1}
+.stat-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:1.25rem}
+.stat-n{font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:800;background:linear-gradient(135deg,#22c55e,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.stat-l{font-size:.75rem;color:#475569;margin-top:.3rem;font-weight:500}
 
-    .login-brand::before {
-      content: '';
-      position: absolute;
-      top: -30%;
-      left: -20%;
-      width: 70%;
-      height: 70%;
-      background: radial-gradient(circle, rgba(0,214,143,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
+/* Right panel */
+.right{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;min-height:100vh}
+.card{width:100%;max-width:420px;background:rgba(8,8,16,.92);border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:2.5rem 2rem;box-shadow:0 0 0 1px rgba(255,255,255,.03),0 32px 80px rgba(0,0,0,.7);backdrop-filter:blur(40px);animation:cardIn .55s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-    .login-brand::after {
-      content: '';
-      position: absolute;
-      bottom: -20%;
-      right: -10%;
-      width: 60%;
-      height: 60%;
-      background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
-      pointer-events: none;
-    }
+.card-logo{display:flex;justify-content:center;margin-bottom:1.75rem}
+.card-logo-icon{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#22c55e,#8b5cf6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(34,197,94,.4),0 0 48px rgba(34,197,94,.15);animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 24px rgba(34,197,94,.4),0 0 48px rgba(34,197,94,.15)}50%{box-shadow:0 0 32px rgba(34,197,94,.6),0 0 64px rgba(34,197,94,.25)}}
 
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:1.65rem;font-weight:800;text-align:center;letter-spacing:-.03em;background:linear-gradient(135deg,#f8fafc 30%,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.4rem}
+.card-sub{text-align:center;font-size:.85rem;color:#475569;margin-bottom:1.75rem}
 
-    .brand-logo-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #00d68f, #7c3aed);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(0,214,143,0.4);
-    }
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-bottom:1.5rem}
+.pill{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.13);border-radius:99px;padding:.22rem .65rem;font-size:.72rem;color:#22c55e;display:flex;align-items:center;gap:.3rem}
 
-    .brand-logo-text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-      font-size: 1.5rem;
-      background: linear-gradient(135deg, #00d68f, #7c3aed, #ec4899);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -0.03em;
-    }
+.field{margin-bottom:1.1rem}
+.field-label{display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:600;color:#64748b;margin-bottom:.45rem;letter-spacing:.03em;text-transform:uppercase}
+.field-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:11px;color:#f8fafc;font-size:.9rem;padding:.75rem .95rem;outline:none;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;font-family:'Inter',sans-serif}
+.field-input::placeholder{color:#1e293b}
+.field-input:focus{border-color:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.12);background:rgba(34,197,94,.03)}
 
-    .brand-headline {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.04em;
-      color: #f1f5f9;
-      position: relative;
-      z-index: 1;
-    }
+.msg{border-radius:10px;padding:.7rem .9rem;font-size:.83rem;margin-bottom:.9rem;display:none}
+.msg.err{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);color:#fca5a5}
+.msg.ok{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.18);color:#22c55e}
 
-    .brand-headline span {
-      background: linear-gradient(135deg, #00d68f, #7c3aed);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+.submit-btn{width:100%;padding:.85rem;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:13px;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease;box-shadow:0 3px 18px rgba(34,197,94,.35);position:relative;overflow:hidden;margin-top:.4rem}
+.submit-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 7px 28px rgba(34,197,94,.5)}
+.submit-btn:active{transform:translateY(0) scale(.99)}
+.submit-btn span{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:.5rem}
 
-    .brand-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .brand-stat {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      padding: 1.25rem;
-    }
-
-    .brand-stat-num {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #00d68f, #7c3aed);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .brand-stat-label {
-      font-size: 0.8rem;
-      color: #64748b;
-      margin-top: 0.25rem;
-    }
-
-    /* Right panel — form */
-    .login-form-panel {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1.5rem;
-      min-height: 100vh;
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 420px;
-      background: rgba(13,13,20,0.9);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 28px;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 32px 80px rgba(0,0,0,0.7);
-      backdrop-filter: blur(40px);
-      animation: cardIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
-
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(20px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .login-logo-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1.75rem;
-    }
-
-    .login-logo {
-      width: 64px;
-      height: 64px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #00d68f, #7c3aed);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 24px rgba(0,214,143,0.4), 0 0 48px rgba(0,214,143,0.15);
-      animation: logoPulse 3s ease-in-out infinite;
-    }
-
-    @keyframes logoPulse {
-      0%,100% { box-shadow: 0 0 24px rgba(0,214,143,0.4), 0 0 48px rgba(0,214,143,0.15); }
-      50%      { box-shadow: 0 0 32px rgba(0,214,143,0.6), 0 0 64px rgba(0,214,143,0.25); }
-    }
-
-    .login-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 800;
-      text-align: center;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #f1f5f9 30%, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-    }
-
-    .login-subtitle {
-      text-align: center;
-      font-size: 0.875rem;
-      color: #64748b;
-      margin-bottom: 2rem;
-    }
-
-    .field-group { margin-bottom: 1.25rem; }
-
-    .field-label {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #94a3b8;
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-
-    .field-input {
-      width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      color: #f1f5f9;
-      font-size: 0.95rem;
-      padding: 0.8rem 1rem;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .field-input::placeholder { color: #334155; }
-
-    .field-input:focus {
-      border-color: #00d68f;
-      box-shadow: 0 0 0 3px rgba(0,214,143,0.12);
-      background: rgba(0,214,143,0.03);
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 0.875rem;
-      background: linear-gradient(135deg, #00d68f, #059669);
-      border: none;
-      border-radius: 14px;
-      color: #fff;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
-      box-shadow: 0 4px 20px rgba(0,214,143,0.35);
-      position: relative;
-      overflow: hidden;
-      margin-top: 0.5rem;
-    }
-
-    .login-btn:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 8px 32px rgba(0,214,143,0.5);
-    }
-
-    .login-btn:active { transform: translateY(0) scale(0.99); }
-
-    .login-btn span { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-
-    .msg-box {
-      border-radius: 10px;
-      padding: 0.75rem 1rem;
-      font-size: 0.875rem;
-      margin-bottom: 1rem;
-      display: none;
-    }
-
-    .msg-box.error {
-      background: rgba(239,68,68,0.08);
-      border: 1px solid rgba(239,68,68,0.2);
-      color: #fca5a5;
-    }
-
-    .msg-box.success {
-      background: rgba(0,214,143,0.08);
-      border: 1px solid rgba(0,214,143,0.2);
-      color: #00d68f;
-    }
-
-    .login-footer {
-      text-align: center;
-      margin-top: 1.5rem;
-      font-size: 0.875rem;
-      color: #475569;
-    }
-
-    .login-footer a {
-      color: #00d68f;
-      font-weight: 600;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .login-footer a:hover { color: #a78bfa; }
-
-    /* Divider */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin: 1.5rem 0;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(255,255,255,0.06);
-    }
-    .divider span { font-size: 0.75rem; color: #334155; white-space: nowrap; }
-
-    /* Feature pills */
-    .feature-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-    }
-    .pill {
-      background: rgba(0,214,143,0.08);
-      border: 1px solid rgba(0,214,143,0.15);
-      border-radius: 99px;
-      padding: 0.3rem 0.75rem;
-      font-size: 0.75rem;
-      color: #00d68f;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-  </style>
+.footer-link{text-align:center;margin-top:1.4rem;font-size:.83rem;color:#334155}
+.footer-link a{color:#22c55e;font-weight:600;text-decoration:none;transition:color .2s ease}
+.footer-link a:hover{color:#8b5cf6}
+</style>
 </head>
 <body>
-  <div class="login-wrap">
-
-    <!-- Left: Branding Panel -->
-    <div class="login-brand">
-      <div class="brand-logo">
-        <div class="brand-logo-icon">
-          <svg width="22" height="22" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-        </div>
-        <span class="brand-logo-text">Agri-AI</span>
-      </div>
-
-      <div>
-        <p style="font-size:0.8rem;color:#334155;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem;font-family:'JetBrains Mono',monospace;">AI-Powered Agriculture</p>
-        <h2 class="brand-headline">
-          Grow smarter<br>with <span>AI precision</span><br>farming
-        </h2>
-        <p style="color:#64748b;margin-top:1.25rem;font-size:0.95rem;line-height:1.7;max-width:380px;">
-          Real-time yield predictions, soil analysis, and carbon tracking — all powered by machine learning trained on global agricultural data.
-        </p>
-      </div>
-
-      <div class="brand-stats">
-        <div class="brand-stat">
-          <div class="brand-stat-num">95%</div>
-          <div class="brand-stat-label">Prediction Accuracy</div>
-        </div>
-        <div class="brand-stat">
-          <div class="brand-stat-num">50K+</div>
-          <div class="brand-stat-label">Farmers Served</div>
-        </div>
-        <div class="brand-stat">
-          <div class="brand-stat-num">100+</div>
-          <div class="brand-stat-label">Countries</div>
-        </div>
-        <div class="brand-stat">
-          <div class="brand-stat-num">24/7</div>
-          <div class="brand-stat-label">AI Support</div>
-        </div>
-      </div>
+<div class="split">
+  <!-- Left branding -->
+  <div class="left">
+    <div class="logo-row">
+      <div class="logo-icon"><svg width="20" height="20" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+      <span class="logo-text">Agri-AI</span>
     </div>
-
-    <!-- Right: Form Panel -->
-    <div class="login-form-panel">
-      <div class="login-card">
-
-        <div class="login-logo-wrap">
-          <div class="login-logo">
-            <svg width="28" height="28" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-          </div>
-        </div>
-
-        <h1 class="login-title" data-i18n="auth_login_title">Welcome back</h1>
-        <p class="login-subtitle" data-i18n="auth_login_subtitle">Sign in to your Agri-AI account</p>
-
-        <div class="feature-pills">
-          <span class="pill">🌾 Yield Prediction</span>
-          <span class="pill">🌱 Soil Analysis</span>
-          <span class="pill">📊 Carbon Tracking</span>
-        </div>
-
-        <div id="msg-error" class="msg-box error"></div>
-        <div id="msg-success" class="msg-box success"></div>
-
-        <form id="login-form">
-          <div class="field-group">
-            <label class="field-label" for="login-username">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-              <span data-i18n="auth_username">Username</span>
-            </label>
-            <input id="login-username" class="field-input" type="text" placeholder="Enter your username" autocomplete="username" required>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label" for="login-password">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-              <span data-i18n="auth_password">Password</span>
-            </label>
-            <input id="login-password" class="field-input" type="password" placeholder="Enter your password" autocomplete="current-password" required>
-          </div>
-
-          <button type="submit" class="login-btn" id="login-submit">
-            <span>
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-              Sign In
-            </span>
-          </button>
-        </form>
-
-        <div class="login-footer">
-          <span data-i18n="auth_no_account">Don't have an account?</span>
-          <a href="signup.html" data-i18n="auth_signup_here"> Sign up here</a>
-        </div>
-
-      </div>
+    <div class="hero-block">
+      <div class="hero-tag"><span>●</span> AI-Powered Agriculture</div>
+      <h2 class="hero-h">Grow smarter<br>with <span>AI precision</span><br>farming</h2>
+      <p class="hero-p">Real-time yield predictions, soil analysis, and carbon tracking — powered by machine learning trained on global agricultural data.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-n">95%</div><div class="stat-l">Prediction Accuracy</div></div>
+      <div class="stat-box"><div class="stat-n">50K+</div><div class="stat-l">Farmers Served</div></div>
+      <div class="stat-box"><div class="stat-n">100+</div><div class="stat-l">Countries</div></div>
+      <div class="stat-box"><div class="stat-n">24/7</div><div class="stat-l">AI Support</div></div>
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.AuthSystem.isLoggedIn()) { window.location.href = 'overview.html'; return; }
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const pre = urlParams.get('username');
-      if (pre) document.getElementById('login-username').value = pre;
-
-      document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const username = document.getElementById('login-username').value.trim();
-        const password = document.getElementById('login-password').value;
-        hideMsg();
-        setLoading(true);
-        setTimeout(() => {
-          const r = window.AuthSystem.login(username, password);
-          setLoading(false);
-          if (r.success) {
-            showMsg('success', '✓ ' + (r.message || 'Login successful!'));
-            setTimeout(() => { window.location.href = 'overview.html'; }, 1000);
-          } else {
-            showMsg('error', r.error || 'Login failed');
-          }
-        }, 350);
-      });
-
-      function showMsg(type, text) {
-        const el = document.getElementById('msg-' + type);
-        el.textContent = text;
-        el.style.display = 'block';
-      }
-      function hideMsg() {
-        ['error','success'].forEach(t => { document.getElementById('msg-'+t).style.display = 'none'; });
-      }
-      function setLoading(on) {
-        const btn = document.getElementById('login-submit');
-        const span = btn.querySelector('span');
-        btn.disabled = on;
-        btn.style.opacity = on ? '0.7' : '1';
-        span.innerHTML = on
-          ? '<svg class="animate-spin" width="18" height="18" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" class="opacity-75"/></svg> Signing in...'
-          : '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg> Sign In';
-      }
-    });
-  </script>
+  <!-- Right form -->
+  <div class="right">
+    <div class="card">
+      <div class="card-logo">
+        <div class="card-logo-icon"><svg width="26" height="26" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+      </div>
+      <div class="card-title" data-i18n="auth_login_title">Welcome back</div>
+      <div class="card-sub" data-i18n="auth_login_subtitle">Sign in to your Agri-AI account</div>
+      <div class="pills">
+        <span class="pill">🌾 Yield Prediction</span>
+        <span class="pill">🌱 Soil Analysis</span>
+        <span class="pill">📊 Carbon Tracking</span>
+      </div>
+      <div id="msg-err" class="msg err"></div>
+      <div id="msg-ok"  class="msg ok"></div>
+      <form id="login-form">
+        <div class="field">
+          <label class="field-label" for="u"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span data-i18n="auth_username">Username</span></label>
+          <input id="u" class="field-input" type="text" placeholder="Enter your username" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label class="field-label" for="p"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg><span data-i18n="auth_password">Password</span></label>
+          <input id="p" class="field-input" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="submit-btn" id="btn">
+          <span><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>Sign In</span>
+        </button>
+      </form>
+      <div class="footer-link"><span data-i18n="auth_no_account">Don't have an account?</span> <a href="signup.html" data-i18n="auth_signup_here">Sign up here</a></div>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  if(window.AuthSystem.isLoggedIn()){window.location.href='overview.html';return}
+  const pre=new URLSearchParams(location.search).get('username');
+  if(pre)document.getElementById('u').value=pre;
+  document.getElementById('login-form').addEventListener('submit',function(e){
+    e.preventDefault();
+    const username=document.getElementById('u').value.trim();
+    const password=document.getElementById('p').value;
+    hide();setLoad(true);
+    setTimeout(()=>{
+      const r=window.AuthSystem.login(username,password);
+      setLoad(false);
+      if(r.success){show('ok','✓ '+(r.message||'Login successful!'));setTimeout(()=>{window.location.href='overview.html'},900)}
+      else show('err',r.error||'Login failed');
+    },350);
+  });
+  function show(t,m){const el=document.getElementById('msg-'+t);el.textContent=m;el.style.display='block'}
+  function hide(){['err','ok'].forEach(t=>{document.getElementById('msg-'+t).style.display='none'})}
+  function setLoad(on){
+    const btn=document.getElementById('btn'),sp=btn.querySelector('span');
+    btn.disabled=on;btn.style.opacity=on?'.7':'1';
+    sp.innerHTML=on?'<svg class="spin" width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity=".25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" opacity=".75"/></svg>Signing in...'
+    :'<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>Sign In';
+  }
+});
+</script>
+<style>.spin{animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}</style>
 </body>
 </html>

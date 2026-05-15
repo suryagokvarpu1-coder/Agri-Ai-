@@ -3,14 +3,26 @@
  * Applies theme, performance, and other settings across all pages
  */
 
-// ── Inject premium UI theme on every page ────────────────────────────────
-(function injectTheme() {
-    if (document.getElementById('agri-ui-theme')) return;
-    const link = document.createElement('link');
-    link.id   = 'agri-ui-theme';
-    link.rel  = 'stylesheet';
-    link.href = 'ui-theme.css';
-    document.head.insertBefore(link, document.head.firstChild);
+// ── Inject CSS files on every page ───────────────────────────────────────
+(function injectStyles() {
+    const sheets = [
+        { id: 'agri-ui-theme',    href: 'ui-theme.css' },
+        { id: 'agri-3d-theme',    href: '3d-theme.css' },
+        { id: 'agri-page-shell',  href: 'page-shell.css' },
+    ];
+    sheets.forEach(({ id, href }) => {
+        if (document.getElementById(id)) return;
+        const link = document.createElement('link');
+        link.id = id; link.rel = 'stylesheet'; link.href = href;
+        document.head.insertBefore(link, document.head.firstChild);
+    });
+    // Google Fonts
+    if (!document.getElementById('agri-fonts')) {
+        const f = document.createElement('link');
+        f.id = 'agri-fonts'; f.rel = 'stylesheet';
+        f.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap';
+        document.head.insertBefore(f, document.head.firstChild);
+    }
 })();
 
 // ── Inject 3D animation engine on every page ──────────────────────────────
@@ -19,7 +31,6 @@
     const s = document.createElement('script');
     s.id  = 'agri-3d-script';
     s.src = '3d-animations.js';
-    // Append after DOM so it can find elements
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => document.body.appendChild(s));
     } else {

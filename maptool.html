@@ -1,535 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="site_title">Map Tool - Agri-AI Yield Optimizer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="translations.js"></script>
-    <script src="global-settings.js"></script>
-    <script src="api-config.js"></script>
-    <script src="auth.js"></script>
-    <script src="sidebar-navigation.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        
-        /* CSS Variables - Premium Color Palette */
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            --primary-gradient-alt: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-            --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
-            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-            --dark-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-            --light-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
-            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.08);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
-            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.16);
-            --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.24);
-            --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.3);
-        }
-        
-        /* Global Reset & Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #000000;
-            background-attachment: fixed;
-            color: #e2e8f0;
-            line-height: 1.7;
-            position: relative;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-        
-        /* Animated Background Pattern - Dark Theme */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 10% 80%, rgba(79, 172, 254, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-            animation: backgroundShift 25s ease infinite;
-        }
-        
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px);
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        @keyframes backgroundShift {
-            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
-            33% { transform: translate(30px, -30px) scale(1.1) rotate(5deg); opacity: 0.9; }
-            66% { transform: translate(-30px, 30px) scale(0.9) rotate(-5deg); opacity: 0.95; }
-        }
-        
-        #app-content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* Header Styling */
-        header {
-            background: rgba(0, 0, 0, 0.9) !important;
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: sticky;
-            top: 0;
-        }
-        
-        header h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.8px;
-            font-size: 1.75rem;
-            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
-        }
-        
-        /* Navigation Links */
-        nav a {
-            position: relative;
-            font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #cbd5e1;
-            padding: 0.5rem 0;
-        }
-        
-        nav a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 3px;
-            background: var(--primary-gradient);
-            border-radius: 3px;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.6);
-        }
-        
-        nav a:hover {
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
-        
-        nav a:hover::before {
-            width: 100%;
-        }
-        
-        nav a.active {
-            color: #ffffff;
-        }
-        
-        nav a.active::before {
-            width: 100%;
-        }
-        
-        /* Map Styling */
-        #map_section iframe {
-            border-radius: 28px;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(102, 126, 234, 0.1);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 4px solid rgba(255, 255, 255, 0.9);
-            filter: brightness(1.05) contrast(1.05);
-        }
-        
-        @media (hover: hover) {
-            #map_section iframe:hover {
-                transform: scale(1.03) translateY(-4px);
-                box-shadow: 0 32px 96px rgba(102, 126, 234, 0.3), 0 0 0 1px rgba(102, 126, 234, 0.2);
-                filter: brightness(1.1) contrast(1.1);
-            }
-        }
-
-        /* Responsive map iframe wrapper */
-        .map-iframe-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: 28px;
-        }
-
-        .map-iframe-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 28px;
-        }
-
-        @media (max-width: 640px) {
-            .map-iframe-wrapper {
-                padding-bottom: 75%; /* taller on phones */
-                border-radius: 16px;
-            }
-            .map-iframe-wrapper iframe {
-                border-radius: 16px;
-            }
-        }
-        
-        #map_section > div > div {
-            position: relative;
-            overflow: hidden;
-            border-radius: 28px;
-        }
-        
-        #map_section > div > div::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, transparent 100%);
-            pointer-events: none;
-            z-index: 1;
-            border-radius: 28px;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            line-height: 1.2;
-            color: #ffffff;
-        }
-        
-        p, span, li {
-            color: #cbd5e1;
-        }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="site_title">Map Tool · Agri-AI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="page-shell.css">
+<script src="translations.js"></script><script src="global-settings.js"></script>
+<script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
+<style>
+.map-wrap{position:relative;width:100%;padding-bottom:52%;height:0;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.07)}
+@media(max-width:640px){.map-wrap{padding-bottom:70%}}
+.map-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:16px}
+.filter-row{display:grid;grid-template-columns:repeat(2,1fr);gap:.875rem}
+@media(min-width:768px){.filter-row{grid-template-columns:repeat(4,1fr)}}
+.active-filter{display:inline-flex;align-items:center;gap:.4rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.15);border-radius:99px;padding:.2rem .65rem;font-size:.72rem;color:#22c55e}
+</style>
 </head>
 <body>
-    <div id="app-content">
-        <!-- Header with Toggle Button -->
-        <header class="bg-white shadow-md sticky top-0 z-30">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <!-- Toggle Button -->
-                <button onclick="toggleSidebar()" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
-                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-                
-                <!-- Logo (Center) -->
-                <div class="flex items-center space-x-3">
-                    <div class="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <h1 class="text-2xl font-bold">Agri-AI</h1>
-                </div>
-                
-                <!-- User Info (Right) -->
-                <div class="flex items-center space-x-3">
-                    <div class="hidden sm:block text-right">
-                        <p class="text-sm font-medium text-gray-900" id="header-username">Welcome</p>
-                        <p class="text-xs text-gray-500">Map Tool</p>
-                    </div>
-                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                        <span class="text-white text-sm font-bold" id="header-avatar">U</span>
-                    </div>
-                </div>
-            </div>
-        </header>
+<div id="app-content">
+<header class="page-header">
+  <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <div class="page-header-logo"><div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="page-header-logo-text">Agri-AI</span></div>
+  <div class="page-header-user"><div class="hidden sm:block text-right"><p class="text-sm font-semibold" style="color:#f8fafc" id="header-username">Welcome</p><p class="text-xs" style="color:#475569">Map Tool</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
+</header>
+<main class="page-main">
+  <div class="page-hero">
+    <div class="page-badge" data-i18n="badge_map"><span>●</span> Map Tool</div>
+    <h1 class="page-title" data-i18n="map_title">Interactive <span class="g">Agricultural Map</span></h1>
+    <p class="page-subtitle" data-i18n="map_subtitle">Explore agricultural regions worldwide with our interactive map tool. View real-time satellite imagery, weather patterns, and crop distribution data.</p>
+  </div>
 
-        <!-- Map Tool Section -->
-        <section id="map_section" class="py-10 md:py-20 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-10 md:mb-16">
-                    <h3 class="text-sm font-semibold text-purple-600 uppercase tracking-wide mb-4" data-i18n="badge_map">MAP TOOL</h3>
-                    <h2 data-i18n="map_title" class="text-3xl md:text-5xl font-bold text-white mb-6">Interactive Agricultural Map</h2>
-                    <p data-i18n="map_subtitle" class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
-                        Explore agricultural regions worldwide with our interactive map tool. View real-time satellite imagery, weather patterns, and crop distribution data.
-                    </p>
-                </div>
+  <!-- Map -->
+  <div class="map-wrap mb-8">
+    <iframe id="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.2799160891!2d-74.25987368715491!3d40.697670063539654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQxJzUxLjYiTiA3NMKwMDAnMDAuMCJX!5e0!3m2!1sen!2sus!4v1635959472!5m2!1sen!2sus" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
 
-                <!-- Map Container -->
-                <div class="bg-gray-50 rounded-3xl p-4 sm:p-8 shadow-2xl">
-                    <div class="map-iframe-wrapper">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.2799160891!2d-74.25987368715491!3d40.697670063539654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQxJzUxLjYiTiA3NMKwMDAnMDAuMCJX!5e0!3m2!1sen!2sus!4v1635959472!5m2!1sen!2sus" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
-                </div>
-
-                <!-- Map Features -->
-                <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-gray-800 p-8 rounded-2xl shadow-lg">
-                        <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <h4 data-i18n="map_satellite_title" class="text-xl font-bold text-white mb-4 text-center">Satellite Imagery</h4>
-                        <p class="text-gray-300 text-center">
-                            High-resolution satellite images updated daily to monitor crop health and growth patterns across different regions.
-                        </p>
-                    </div>
-
-                    <div class="bg-gray-800 p-8 rounded-2xl shadow-lg">
-                        <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
-                            </svg>
-                        </div>
-                        <h4 data-i18n="map_weather_title" class="text-xl font-bold text-white mb-4 text-center">Weather Overlay</h4>
-                        <p class="text-gray-300 text-center">
-                            Real-time weather data overlay showing temperature, precipitation, humidity, and wind patterns affecting agricultural areas.
-                        </p>
-                    </div>
-
-                    <div class="bg-gray-800 p-8 rounded-2xl shadow-lg">
-                        <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                        </div>
-                        <h4 data-i18n="map_analytics_title" class="text-xl font-bold text-white mb-4 text-center">Crop Analytics</h4>
-                        <p class="text-gray-300 text-center">
-                            Detailed crop distribution data, yield predictions, and agricultural statistics for different regions and crop types.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Map Controls -->
-                <div class="mt-16 bg-gray-800 p-8 rounded-2xl shadow-lg">
-                    <h3 data-i18n="map_controls_title" class="text-2xl font-bold text-white mb-6 text-center">Map Controls & Filters</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div>
-                            <label data-i18n="map_region_label" class="block text-sm font-medium text-gray-300 mb-2">Region</label>
-                            <select id="region-filter" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white">
-                                <option value="global">Global View</option>
-                                <option value="north-america">North America</option>
-                                <option value="south-america">South America</option>
-                                <option value="europe">Europe</option>
-                                <option value="asia">Asia</option>
-                                <option value="africa">Africa</option>
-                                <option value="oceania">Oceania</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label data-i18n="map_crop_label" class="block text-sm font-medium text-gray-300 mb-2">Crop Type</label>
-                            <select id="crop-filter" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white">
-                                <option value="all">All Crops</option>
-                                <option value="wheat">Wheat</option>
-                                <option value="corn">Corn</option>
-                                <option value="rice">Rice</option>
-                                <option value="soybeans">Soybeans</option>
-                                <option value="cotton">Cotton</option>
-                                <option value="barley">Barley</option>
-                                <option value="sugarcane">Sugarcane</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label data-i18n="map_layer_label" class="block text-sm font-medium text-gray-300 mb-2">Data Layer</label>
-                            <select id="layer-filter" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white">
-                                <option value="satellite">Satellite View</option>
-                                <option value="weather">Weather Data</option>
-                                <option value="soil">Soil Health</option>
-                                <option value="yield">Yield Predictions</option>
-                                <option value="historical">Historical Data</option>
-                                <option value="terrain">Terrain</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label data-i18n="map_time_label" class="block text-sm font-medium text-gray-300 mb-2">Time Period</label>
-                            <select id="time-filter" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white">
-                                <option value="current">Current</option>
-                                <option value="7days">Last 7 Days</option>
-                                <option value="30days">Last 30 Days</option>
-                                <option value="season">Last Season</option>
-                                <option value="year">Last Year</option>
-                                <option value="5years">Last 5 Years</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <button id="apply-filters-btn" data-i18n="map_apply_filters" class="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition duration-300">
-                            Apply Filters
-                        </button>
-                        <button id="reset-filters-btn" data-i18n="map_reset_filters" class="w-full sm:w-auto bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition duration-300">
-                            Reset Filters
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Filter Status Display -->
-                <div id="filter-status" class="mt-8 bg-gray-900 p-6 rounded-2xl shadow-lg hidden">
-                    <h4 data-i18n="map_active_filters" class="text-lg font-bold text-white mb-4">Active Filters</h4>
-                    <div id="active-filters" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <!-- Active filters will be displayed here -->
-                    </div>
-                </div>
-
-                <!-- Map Data Display -->
-                <div id="map-data-display" class="mt-8 bg-gray-900 p-6 rounded-2xl shadow-lg hidden">
-                    <h4 data-i18n="map_data_info" class="text-lg font-bold text-white mb-4">Map Data Information</h4>
-                    <div id="map-info" class="text-gray-300">
-                        <!-- Map information will be displayed here -->
-                    </div>
-                </div>
-            </div>
-        </section>
+  <!-- Filters -->
+  <div class="card card-p-lg mb-6">
+    <h3 class="section-title mb-4" data-i18n="map_controls_title">Map Controls & Filters</h3>
+    <div class="filter-row mb-5">
+      <div class="form-group" style="margin-bottom:0"><label class="form-label" data-i18n="map_region_label">Region</label>
+        <select id="region-filter" class="form-input form-select">
+          <option value="global">Global View</option><option value="north-america">North America</option>
+          <option value="south-america">South America</option><option value="europe">Europe</option>
+          <option value="asia">Asia</option><option value="africa">Africa</option><option value="oceania">Oceania</option>
+        </select></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label" data-i18n="map_crop_label">Crop Type</label>
+        <select id="crop-filter" class="form-input form-select">
+          <option value="all">All Crops</option><option value="wheat">Wheat</option><option value="corn">Corn</option>
+          <option value="rice">Rice</option><option value="soybeans">Soybeans</option>
+        </select></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label" data-i18n="map_layer_label">Data Layer</label>
+        <select id="layer-filter" class="form-input form-select">
+          <option value="satellite">Satellite View</option><option value="weather">Weather Data</option>
+          <option value="soil">Soil Health</option><option value="yield">Yield Predictions</option>
+        </select></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label" data-i18n="map_time_label">Time Period</label>
+        <select id="time-filter" class="form-input form-select">
+          <option value="current">Current</option><option value="7days">Last 7 Days</option>
+          <option value="30days">Last 30 Days</option><option value="year">Last Year</option>
+        </select></div>
     </div>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button id="apply-filters-btn" class="btn-primary" data-i18n="map_apply_filters"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>Apply Filters</button>
+      <button id="reset-filters-btn" class="btn-sec" data-i18n="map_reset_filters">Reset</button>
+    </div>
+  </div>
 
-    <!-- Authentication Check -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            window.AuthSystem.requireAuth();
-            initMapController();
-        });
+  <!-- Active filters display -->
+  <div id="filter-status" class="hidden card card-p mb-6">
+    <p class="text-xs font-semibold mb-3" style="color:#475569;letter-spacing:.08em;text-transform:uppercase" data-i18n="map_active_filters">Active Filters</p>
+    <div id="active-filters" class="flex flex-wrap gap-2"></div>
+  </div>
 
-        function initMapController() {
-            const regionData = {
-                'global':        { name: 'Global View',      lat: 0,   lng: 0,    zoom: 2 },
-                'north-america': { name: 'North America',    lat: 45,  lng: -100, zoom: 4 },
-                'south-america': { name: 'South America',    lat: -15, lng: -60,  zoom: 4 },
-                'europe':        { name: 'Europe',           lat: 50,  lng: 10,   zoom: 4 },
-                'asia':          { name: 'Asia',             lat: 30,  lng: 100,  zoom: 3 },
-                'africa':        { name: 'Africa',           lat: 0,   lng: 20,   zoom: 3 },
-                'oceania':       { name: 'Oceania',          lat: -25, lng: 140,  zoom: 4 }
-            };
-
-            const mapUrls = {
-                'global':        'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d0!2d0!3m2!1i1024!2i768!4f2!5e0!3m2!1sen!2sus!4v1635959472',
-                'north-america': 'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d-100!2d45!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472',
-                'south-america': 'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d-60!2d-15!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472',
-                'europe':        'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d10!2d50!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472',
-                'asia':          'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d100!2d30!3m2!1i1024!2i768!4f3!5e0!3m2!1sen!2sus!4v1635959472',
-                'africa':        'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d20!2d0!3m2!1i1024!2i768!4f3!5e0!3m2!1sen!2sus!4v1635959472',
-                'oceania':       'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d140!2d-25!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472'
-            };
-
-            let currentFilters = { region: 'global', crop: 'all', layer: 'satellite', time: 'current' };
-
-            // Restore saved filters
-            try {
-                const saved = JSON.parse(localStorage.getItem('agri-ai-map-filters') || '{}');
-                currentFilters = Object.assign(currentFilters, saved);
-                ['region','crop','layer','time'].forEach(id => {
-                    const el = document.getElementById(id + '-filter');
-                    if (el && currentFilters[id]) el.value = currentFilters[id];
-                });
-            } catch (_) {}
-
-            function applyFilters() {
-                currentFilters = {
-                    region: document.getElementById('region-filter')?.value || 'global',
-                    crop:   document.getElementById('crop-filter')?.value   || 'all',
-                    layer:  document.getElementById('layer-filter')?.value  || 'satellite',
-                    time:   document.getElementById('time-filter')?.value   || 'current'
-                };
-                localStorage.setItem('agri-ai-map-filters', JSON.stringify(currentFilters));
-
-                // Update map iframe src based on region
-                const iframe = document.querySelector('iframe');
-                if (iframe && mapUrls[currentFilters.region]) {
-                    iframe.src = mapUrls[currentFilters.region];
-                }
-
-                // Show active filters panel
-                const statusDiv = document.getElementById('filter-status');
-                const filtersDiv = document.getElementById('active-filters');
-                if (statusDiv && filtersDiv) {
-                    statusDiv.classList.remove('hidden');
-                    const regionName = regionData[currentFilters.region]?.name || currentFilters.region;
-                    filtersDiv.innerHTML = `
-                        <div class="bg-gray-800 p-3 rounded-lg"><p class="text-xs text-blue-400 font-semibold mb-1">Region</p><p class="text-gray-300 text-sm">${regionName}</p></div>
-                        <div class="bg-gray-800 p-3 rounded-lg"><p class="text-xs text-blue-400 font-semibold mb-1">Crop</p><p class="text-gray-300 text-sm capitalize">${currentFilters.crop}</p></div>
-                        <div class="bg-gray-800 p-3 rounded-lg"><p class="text-xs text-blue-400 font-semibold mb-1">Layer</p><p class="text-gray-300 text-sm capitalize">${currentFilters.layer}</p></div>
-                        <div class="bg-gray-800 p-3 rounded-lg"><p class="text-xs text-blue-400 font-semibold mb-1">Time</p><p class="text-gray-300 text-sm capitalize">${currentFilters.time}</p></div>
-                    `;
-                }
-
-                showMapNotification('✅ Filters applied!');
-            }
-
-            function resetFilters() {
-                currentFilters = { region: 'global', crop: 'all', layer: 'satellite', time: 'current' };
-                localStorage.removeItem('agri-ai-map-filters');
-
-                ['region','crop','layer','time'].forEach(id => {
-                    const el = document.getElementById(id + '-filter');
-                    if (el) el.value = currentFilters[id];
-                });
-
-                const iframe = document.querySelector('iframe');
-                if (iframe) iframe.src = mapUrls['global'];
-
-                const statusDiv = document.getElementById('filter-status');
-                if (statusDiv) statusDiv.classList.add('hidden');
-
-                showMapNotification('🔄 Filters reset to default.');
-            }
-
-            // Bind buttons
-            document.getElementById('apply-filters-btn')?.addEventListener('click', applyFilters);
-            document.getElementById('reset-filters-btn')?.addEventListener('click', resetFilters);
-
-            // Live update map on region change
-            document.getElementById('region-filter')?.addEventListener('change', (e) => {
-                const iframe = document.querySelector('iframe');
-                if (iframe && mapUrls[e.target.value]) iframe.src = mapUrls[e.target.value];
-            });
-        }
-
-        function showMapNotification(message) {
-            const existing = document.getElementById('map-notification');
-            if (existing) existing.remove();
-            const div = document.createElement('div');
-            div.id = 'map-notification';
-            div.className = 'fixed top-4 right-4 bg-blue-600 text-white px-5 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
-            div.textContent = message;
-            document.body.appendChild(div);
-            setTimeout(() => { if (div.parentNode) div.remove(); }, 3000);
-        }
-    </script>
-</body>
-</html>
+  <!-- Map features -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="feat-card"><div class="icon-box" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.15)"><svg width="20" height="20" style="color:#22c55e" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_satellite_title">Satellite Imagery</h4><p class="text-sm" style="color:#64748b;line-height:1.65">High-resolution satellite images updated daily to monitor crop health and growth patterns across different regions.</p></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.15)"><svg width="20" height="20" style="color:#60a5fa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_weather_title">Weather Overlay</h4><p class="text-sm" style="color:#64748b;line-height:1.65">Real-time weather data overlay showing temperature, precipitation, humidity, and wind patterns affecting agricultural areas.</p></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.15)"><svg width="20" height="20" style="color:#fbbf24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_analytics_title">Crop Analytics</h4><p class="text-sm" style="color:#64748b;line-height:1.65">Detailed crop distribution data, yield predictions, and agricultural statistics for different regions and crop types.</p></div>
+  </div>
+</main>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  window.AuthSystem.requireAuth();
+  const mapUrls={global:'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d0!2d0!3m2!1i1024!2i768!4f2!5e0!3m2!1sen!2sus!4v1635959472','north-america':'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d-100!2d45!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472','south-america':'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d-60!2d-15!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472',europe:'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d10!2d50!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472',asia:'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d100!2d30!3m2!1i1024!2i768!4f3!5e0!3m2!1sen!2sus!4v1635959472',africa:'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d20!2d0!3m2!1i1024!2i768!4f3!5e0!3m2!1sen!2sus!4v1635959472',oceania:'https://www.google.com/maps/embed?pb=!1m2!1m1!1s0x0%3A0x0!2m2!1d140!2d-25!3m2!1i1024!2i768!4f4!5e0!3m2!1sen!2sus!4v1635959472'};
+  let cf={region:'global',crop:'all',layer:'satellite',time:'current'};
+  try{const s=JSON.parse(localStorage.getItem('agri-ai-map-filters')||'{}');cf=Object.assign(cf,s);['region','crop','layer','time'].forEach(id=>{const el=document.getElementById(id+'-filter');if(el&&cf[id])el.value=cf[id]})}catch(_){}
+  document.getElementById('region-filter').addEventListener('change',e=>{const iframe=document.getElementById('map-iframe');if(iframe&&mapUrls[e.target.value])iframe.src=mapUrls[e.target.value]});
+  document.getElementById('apply-filters-btn').addEventListener('click',()=>{
+    cf={region:document.getElementById('region-filter').value,crop:document.getElementById('crop-filter').value,layer:document.getElementById('layer-filter').value,time:document.getElementById('time-filter').value};
+    localStorage.setItem('agri-ai-map-filters',JSON.stringify(cf));
+    const iframe=document.getElementById('map-iframe');if(iframe&&mapUrls[cf.region])iframe.src=mapUrls[cf.region];
+    const fs=document.getElementById('filter-status'),af=document.getElementById('active-filters');
+    fs.classList.remove('hidden');
+    af.innerHTML=Object.entries(cf).map(([k,v])=>`<span class="active-filter">${k}: ${v}</span>`).join('');
+    showN('Filters applied!');
+  });
+  document.getElementById('reset-filters-btn').addEventListener('click',()=>{
+    cf={region:'global',crop:'all',layer:'satellite',time:'current'};
+    localStorage.removeItem('agri-ai-map-filters');
+    ['region','crop','layer','time'].forEach(id=>{const el=document.getElementById(id+'-filter');if(el)el.value=cf[id]});
+    const iframe=document.getElementById('map-iframe');if(iframe)iframe.src=mapUrls['global'];
+    document.getElementById('filter-status').classList.add('hidden');
+    showN('Filters reset');
+  });
+});
+function showN(m){const d=document.createElement('div');d.className='notif';d.innerHTML=`<span style="color:#22c55e">✓</span>${m}`;document.body.appendChild(d);setTimeout(()=>d.remove(),3000)}
+function showMapNotification(m){showN(m)}
+</script>
+</body></html>

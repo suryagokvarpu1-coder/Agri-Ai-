@@ -494,28 +494,41 @@ class TranslationSystem {
     }
 
     init() {
-        this.applyTranslations();
-        setTimeout(() => { this.setupLanguageSelector(); }, 100);
+        // Apply translations as soon as possible — before DOMContentLoaded if DOM is ready
+        if (typeof document !== 'undefined') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => this._initAfterDOM());
+            } else {
+                this._initAfterDOM();
+            }
+        }
+    }
 
+    _initAfterDOM() {
+        // First pass — translate data-i18n elements immediately
+        this.applyTranslations();
+
+        // Second pass after a short delay — catches sidebar and any late-injected content
+        setTimeout(() => {
+            this.applyTranslations();
+            this.setupLanguageSelector();
+        }, 80);
+
+        // Third pass after sidebar fully renders
+        setTimeout(() => {
+            this.applyTranslations();
+            this.setupLanguageSelector();
+        }, 300);
+
+        // Watch for dynamically added content (sidebar, modals, etc.)
         if (typeof MutationObserver !== 'undefined') {
-            const observer = new MutationObserver((mutations) => {
-                let shouldReapply = false;
-                mutations.forEach((mutation) => {
-                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                        mutation.addedNodes.forEach((node) => {
-                            if (node.nodeType === Node.ELEMENT_NODE) {
-                                if ((node.hasAttribute && node.hasAttribute('data-i18n')) ||
-                                    (node.querySelector && node.querySelector('[data-i18n]'))) {
-                                    shouldReapply = true;
-                                }
-                            }
-                        });
-                    }
-                });
-                if (shouldReapply) {
+            let debounceTimer = null;
+            const observer = new MutationObserver(() => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
                     this.applyTranslations();
                     this.setupLanguageSelector();
-                }
+                }, 50);
             });
             observer.observe(document.body, { childList: true, subtree: true });
         }
@@ -538,10 +551,21 @@ class TranslationSystem {
         if (typeof localStorage !== 'undefined') {
             localStorage.setItem('agri-ai-language', languageCode);
         }
+
+        // Clear previously translated markers so DOM walker re-runs fresh
+        if (typeof document !== 'undefined') {
+            document.querySelectorAll('[data-translated]').forEach(el => {
+                el.removeAttribute('data-translated');
+            });
+        }
+
         this.applyTranslations();
+        this.setupLanguageSelector();
+
         if (typeof document !== 'undefined') {
             document.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: languageCode } }));
         }
+        console.log(`🌐 Language changed to: ${languageCode}`);
     }
 
     applyTranslations() {
@@ -822,19 +846,24 @@ class TranslationSystem {
 
     setupLanguageSelector() {
         if (typeof document === 'undefined') return;
+
         const selectors = document.querySelectorAll('#language-select, .language-selector');
         selectors.forEach(selector => {
-            if (!selector) return;
+            if (!selector || selector.dataset.listenerAttached) return;
+
+            // Populate options
             this.populateLanguageSelector(selector);
-            const newSelector = selector.cloneNode(true);
-            selector.parentNode.replaceChild(newSelector, selector);
-            newSelector.addEventListener('change', (e) => { this.setLanguage(e.target.value); });
-        });
-        document.addEventListener('languageChanged', (e) => {
-            const lang = e.detail.language;
-            document.querySelectorAll('#language-select, .language-selector').forEach(s => {
-                if (s.value !== lang) s.value = lang;
+
+            // Attach listener once
+            selector.addEventListener('change', (e) => {
+                this.setLanguage(e.target.value);
             });
+            selector.dataset.listenerAttached = 'true';
+        });
+
+        // Sync all selectors to current language
+        document.querySelectorAll('#language-select, .language-selector').forEach(s => {
+            if (s.value !== this.currentLanguage) s.value = this.currentLanguage;
         });
     }
 

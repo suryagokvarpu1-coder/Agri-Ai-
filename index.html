@@ -3,76 +3,32 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agri-AI</title>
-<script src="translations.js"></script>
-<script src="global-settings.js"></script>
-<script src="api-config.js"></script>
-<script src="auth.js"></script>
+<script src="translations.js"></script><script src="global-settings.js"></script>
+<script src="api-config.js"></script><script src="auth.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Inter',-apple-system,sans-serif;
-  background:#04040a;
-  color:#f8fafc;
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;
-  position:relative;overflow:hidden;
-}
-body::before{
-  content:'';position:fixed;inset:0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(34,197,94,.07) 0%,transparent 55%),
-    radial-gradient(ellipse 60% 50% at 80% 85%,rgba(139,92,246,.08) 0%,transparent 55%);
-  pointer-events:none;
-}
-.loader{
-  position:relative;z-index:1;
-  display:flex;flex-direction:column;align-items:center;gap:1.5rem;
-  animation:fadeIn .6s ease both;
-}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.logo-wrap{
-  width:72px;height:72px;border-radius:20px;
-  background:linear-gradient(135deg,#22c55e,#8b5cf6);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 32px rgba(34,197,94,.35),0 0 64px rgba(139,92,246,.2);
-  animation:pulse 2s ease infinite;
-}
-@keyframes pulse{0%,100%{box-shadow:0 0 32px rgba(34,197,94,.35),0 0 64px rgba(139,92,246,.2)}50%{box-shadow:0 0 48px rgba(34,197,94,.5),0 0 80px rgba(139,92,246,.3)}}
-.brand{
-  font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:800;letter-spacing:-.04em;
-  background:linear-gradient(135deg,#22c55e,#8b5cf6,#ec4899);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.spinner{
-  width:32px;height:32px;border-radius:50%;
-  border:3px solid rgba(34,197,94,.15);
-  border-top-color:#22c55e;
-  animation:spin .8s linear infinite;
-}
+body{font-family:'Inter',-apple-system,sans-serif;background:#020207;color:#f1f5f9;min-height:100vh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(16,185,129,.07) 0%,transparent 60%);pointer-events:none}
+.wrap{text-align:center;position:relative;z-index:1}
+.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#10b981,#8b5cf6);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 0 24px rgba(16,185,129,.4),0 0 48px rgba(16,185,129,.15);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 24px rgba(16,185,129,.4),0 0 48px rgba(16,185,129,.15)}50%{box-shadow:0 0 32px rgba(16,185,129,.6),0 0 64px rgba(16,185,129,.25)}}
+.name{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.75rem;letter-spacing:-.04em;background:linear-gradient(135deg,#10b981,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+.sub{font-size:.9rem;color:#475569;margin-bottom:2rem}
+.spinner{width:32px;height:32px;border-radius:50%;border:3px solid rgba(16,185,129,.15);border-top-color:#10b981;animation:spin .8s linear infinite;margin:0 auto}
 @keyframes spin{to{transform:rotate(360deg)}}
-.status{font-size:.85rem;color:#475569;letter-spacing:.02em}
 </style>
 </head>
 <body>
-<div class="loader">
-  <div class="logo-wrap">
-    <svg width="32" height="32" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-    </svg>
-  </div>
-  <div class="brand">Agri-AI</div>
+<div class="wrap">
+  <div class="logo"><svg width="28" height="28" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+  <div class="name">Agri-AI</div>
+  <div class="sub">AI-Powered Agriculture Platform</div>
   <div class="spinner"></div>
-  <p class="status" id="status-text">Loading...</p>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
-  if(window.AuthSystem&&window.AuthSystem.isLoggedIn()){
-    document.getElementById('status-text').textContent='Redirecting to dashboard...';
-    window.location.href='overview.html';
-  }else{
-    document.getElementById('status-text').textContent='Redirecting to sign up...';
-    setTimeout(()=>{window.location.href='signup.html'},800);
-  }
+  if(window.AuthSystem.isLoggedIn()){window.location.href='overview.html'}
+  else{setTimeout(()=>{window.location.href='signup.html'},800)}
 });
 </script>
 </body>

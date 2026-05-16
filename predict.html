@@ -11,14 +11,14 @@
 .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
 @media(max-width:640px){.result-grid{grid-template-columns:1fr 1fr}}
 .result-metric{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.1rem;text-align:center}
-.result-metric-val{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#22c55e,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.result-metric-val{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#10b981,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
 .result-metric-label{font-size:.72rem;color:#475569;margin-top:.3rem;font-weight:500}
 .factor-pill{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.65rem .9rem;font-size:.82rem}
 .factor-label{color:#64748b;font-weight:500}
-.factor-val{font-weight:600;color:#f8fafc}
+.factor-val{font-weight:600;color:#f1f5f9}
 .rec-item{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
 .rec-item:last-child{border-bottom:none}
-.rec-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;margin-top:.45rem;flex-shrink:0}
+.rec-dot{width:6px;height:6px;border-radius:50%;background:#10b981;margin-top:.45rem;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -26,7 +26,7 @@
 <header class="page-header">
   <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="page-header-logo"><div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="page-header-logo-text">Agri-AI</span></div>
-  <div class="page-header-user"><div class="hidden sm:block text-right"><p class="text-sm font-semibold" style="color:#f8fafc" id="header-username">Welcome</p><p class="text-xs" style="color:#475569">Predict Yield</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
+  <div class="page-header-user"><div class="hidden sm:block text-right"><p style="font-size:.875rem;font-weight:600;color:#f1f5f9" id="header-username">Welcome</p><p style="font-size:.75rem;color:#475569">Predict Yield</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
 </header>
 <main class="page-main" style="max-width:860px">
   <div class="page-hero">
@@ -34,7 +34,6 @@
     <h1 class="page-title" data-i18n="predict_title">AI-Powered <span class="g">Yield Prediction</span></h1>
     <p class="page-subtitle" data-i18n="predict_subtitle">Get accurate crop yield predictions using advanced machine learning algorithms. Enter your farm details below.</p>
   </div>
-
   <div class="card card-p-lg mb-6">
     <form id="prediction-form">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -51,30 +50,14 @@
       <button type="submit" id="predict-button" class="btn-primary full"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><span data-i18n="predict_generate">Generate Prediction</span></button>
     </form>
   </div>
-
-  <!-- Loading -->
-  <div id="loading-state" class="hidden text-center py-10">
-    <div class="spinner mb-4"></div>
-    <p style="color:#64748b;font-size:.9rem" data-i18n="predict_processing">Analyzing data and generating prediction...</p>
-  </div>
-
-  <!-- Results -->
-  <div id="result-box" class="hidden">
-    <div class="result-box">
-      <h3 class="section-title mb-5" data-i18n="predict_results_title">Yield Prediction Results</h3>
-      <div id="prediction-results"></div>
-    </div>
-  </div>
+  <div id="loading-state" class="hidden text-center py-10"><div class="spinner mb-4"></div><p style="color:#64748b;font-size:.9rem" data-i18n="predict_processing">Analyzing data and generating prediction...</p></div>
+  <div id="result-box" class="hidden"><div class="result-box"><h3 class="section-title mb-5" data-i18n="predict_results_title">Yield Prediction Results</h3><div id="prediction-results"></div></div></div>
 </main>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded',()=>{
-  window.AuthSystem.requireAuth();
-  setupPredictionForm();
-});
+document.addEventListener('DOMContentLoaded',()=>{window.AuthSystem.requireAuth();setupPredictionForm()});
 function setupPredictionForm(){
-  const form=document.getElementById('prediction-form');
-  if(!form)return;
+  const form=document.getElementById('prediction-form');if(!form)return;
   form.addEventListener('submit',async function(e){
     e.preventDefault();
     const data=Object.fromEntries(new FormData(form));
@@ -98,11 +81,10 @@ function calcPrediction(d){
   const soilM={loam:1.00,clay:.88,silt:.95,sandy:.72,peat:.80,chalk:.75};
   const irrigM={drip:1.20,sprinkler:1.10,'center-pivot':1.12,flood:.95,rainfed:.75};
   const fertM={high:1.18,organic:1.05,medium:1.00,low:.82,none:.60};
-  const crop=d.crop||'wheat';
-  const bY=(base[crop]||1800);
+  const crop=d.crop||'wheat';const bY=base[crop]||1800;
   const sM=soilM[d.soilType]||1;const iM=irrigM[d.irrigation]||.85;const fM=fertM[d.fertilizer]||1;
-  let prev=parseFloat(d.previousYield)||0;
-  let hAdj=1;if(prev>0){const r=(prev*1000)/bY;hAdj=.7+(r*.3)}
+  let prev=parseFloat(d.previousYield)||0;let hAdj=1;
+  if(prev>0){const r=(prev*1000)/bY;hAdj=.7+(r*.3)}
   let y=Math.round(Math.max(bY*.4,Math.min(bY*1.5,bY*sM*iM*fM*hAdj)));
   const fs=parseFloat(d.fieldSize)||1;
   const conf=Math.min(94,72+(prev>0?8:0)+(d.soilType!=='loam'?3:0)+(d.irrigation!=='rainfed'?4:0));
@@ -120,7 +102,7 @@ function calcPrediction(d){
 }
 function displayResults(p){
   const c=document.getElementById('prediction-results');
-  const fc=v=>v==='Excellent'||v==='Optimal'||v==='High'?'#22c55e':v==='Good'||v==='Adequate'||v==='Standard'?'#60a5fa':'#fbbf24';
+  const fc=v=>v==='Excellent'||v==='Optimal'||v==='High'?'#10b981':v==='Good'||v==='Adequate'||v==='Standard'?'#60a5fa':'#fbbf24';
   c.innerHTML=`
     <div class="result-grid">
       <div class="result-metric"><div class="result-metric-val">${p.predictedYield.toLocaleString()}</div><div class="result-metric-label">kg / acre</div></div>
@@ -133,7 +115,7 @@ function displayResults(p){
       <div class="factor-pill"><span class="factor-label">🌿 Fertilizer</span><span class="factor-val" style="color:${fc(p.factors.fertilizer)}">${p.factors.fertilizer}</span></div>
     </div>
     <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem">
-      <p style="font-size:.78rem;font-weight:600;color:#64748b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem">📋 Recommendations</p>
+      <p style="font-size:.75rem;font-weight:600;color:#475569;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem">📋 Recommendations</p>
       ${p.recommendations.map(r=>`<div class="rec-item"><div class="rec-dot"></div><span style="font-size:.85rem;color:#94a3b8;line-height:1.6">${r}</span></div>`).join('')}
     </div>`;
   document.getElementById('result-box').classList.remove('hidden');
@@ -142,12 +124,10 @@ function displayResults(p){
   try{const h=JSON.parse(localStorage.getItem('agri-ai-predictions')||'[]');h.unshift({...p,savedAt:new Date().toISOString()});localStorage.setItem('agri-ai-predictions',JSON.stringify(h.slice(0,20)))}catch(_){}
 }
 function showN(m,t){
-  const d=document.createElement('div');
-  d.className='notif';
-  d.style.borderColor=t==='ok'?'rgba(34,197,94,.2)':'rgba(239,68,68,.2)';
-  d.innerHTML=`<span style="color:${t==='ok'?'#22c55e':'#f87171'}">${t==='ok'?'✓':'✗'}</span>${m}`;
-  document.body.appendChild(d);
-  setTimeout(()=>d.remove(),4000);
+  const d=document.createElement('div');d.className='notif';
+  d.style.borderColor=t==='ok'?'rgba(16,185,129,.2)':'rgba(239,68,68,.2)';
+  d.innerHTML=`<span style="color:${t==='ok'?'#10b981':'#f87171'}">${t==='ok'?'✓':'✗'}</span>${m}`;
+  document.body.appendChild(d);setTimeout(()=>d.remove(),4000);
 }
 </script>
 </body></html>

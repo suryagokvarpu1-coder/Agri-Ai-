@@ -8,27 +8,31 @@
 <script src="translations.js"></script><script src="global-settings.js"></script>
 <script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
 <style>
-.crop-card{background:rgba(8,8,16,.9);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:1.5rem;transition:border-color .2s ease,transform .35s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
-.crop-card:hover{border-color:rgba(34,197,94,.2);transform:translateY(-3px)}
-.crop-card.active{border-color:rgba(34,197,94,.25)}
-.countdown-timer{background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(139,92,246,.1));border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:1.25rem;text-align:center;margin-bottom:1rem}
-.countdown-number{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;font-weight:800;color:#22c55e;text-shadow:0 0 16px rgba(34,197,94,.4);line-height:1}
-.stage-progress{background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden;height:6px;margin:.5rem 0}
-.stage-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#22c55e,#8b5cf6);transition:width 1s ease}
-.status-badge{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;border-radius:99px;padding:.2rem .65rem}
-.status-germination{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
-.status-vegetative{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2)}
-.status-flowering{background:rgba(245,158,11,.1);color:#fbbf24;border:1px solid rgba(245,158,11,.2)}
-.status-fruiting{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
-.status-harvest{background:rgba(139,92,246,.1);color:#a78bfa;border:1px solid rgba(139,92,246,.2)}
-.status-seedling{background:rgba(20,184,166,.1);color:#2dd4bf;border:1px solid rgba(20,184,166,.2)}
-.growth-stage{background:rgba(8,8,16,.9);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.1rem;transition:border-color .2s ease}
-.growth-stage.completed{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.04)}
-.growth-stage.current{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)}
+.crop-card{background:rgba(7,7,15,.9);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:1.5rem;transition:border-color .2s ease,transform .35s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
+.crop-card:hover{border-color:rgba(16,185,129,.2);transform:translateY(-3px)}
+.crop-card.active{border-color:rgba(16,185,129,.25)}
+.stage-progress{background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden;height:10px;margin:1rem 0}
+.stage-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#10b981,#8b5cf6);transition:width 1s ease;position:relative;overflow:hidden}
+.stage-progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shine 2s ease infinite}
+@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.countdown-timer{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(139,92,246,.1));border:1px solid rgba(16,185,129,.15);border-radius:16px;padding:1.5rem;text-align:center;margin-bottom:1rem}
+.countdown-number{font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:800;color:#10b981;text-shadow:0 0 16px rgba(16,185,129,.4);line-height:1}
+.status-badge{padding:.2rem .65rem;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.04em}
+.status-germination{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.25)}
+.status-vegetative{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.status-flowering{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.25)}
+.status-fruiting{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.status-harvest{background:rgba(139,92,246,.15);color:#a78bfa;border:1px solid rgba(139,92,246,.25)}
+.status-seedling{background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.25)}
+.growth-stage{background:rgba(7,7,15,.9);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.25rem;transition:all .2s ease}
+.growth-stage.completed{border-color:rgba(16,185,129,.25);background:rgba(16,185,129,.04)}
+.growth-stage.current{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.04)}
 .growth-stage.upcoming{opacity:.55}
-#crop-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:50;display:none;align-items:center;justify-content:center;padding:1rem}
-#crop-modal.open{display:flex}
-.modal-box{background:rgba(8,8,16,.97);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:2rem;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.8)}
+.form-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#f1f5f9;font-size:.88rem;padding:.7rem .9rem;outline:none;transition:border-color .2s ease,box-shadow .2s ease;font-family:'Inter',sans-serif}
+.form-input::placeholder{color:#1e293b}
+.form-input:focus{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.12);background:rgba(16,185,129,.03)}
+.form-select option{background:#0c0c18;color:#f1f5f9}
+.add-crop-form{background:rgba(7,7,15,.9);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:1.75rem;margin-bottom:2rem}
 </style>
 </head>
 <body>
@@ -36,71 +40,52 @@
 <header class="page-header">
   <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="page-header-logo"><div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="page-header-logo-text">Agri-AI</span></div>
-  <div class="page-header-user"><div class="hidden sm:block text-right"><p class="text-sm font-semibold" style="color:#f8fafc" id="header-username">Welcome</p><p class="text-xs" style="color:#475569">Growth Monitor</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
+  <div class="page-header-user"><div class="hidden sm:block text-right"><p style="font-size:.875rem;font-weight:600;color:#f1f5f9" id="header-username">Welcome</p><p style="font-size:.75rem;color:#475569">Growth Monitor</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
 </header>
 <main class="page-main">
   <div class="page-hero">
-    <div class="page-badge" data-i18n="growth_monitoring_title"><span>●</span> Growth Monitor</div>
-    <h1 class="page-title">Growth Stage <span class="g">Monitoring</span></h1>
-    <p class="page-subtitle" data-i18n="growth_monitoring_subtitle">Track your crops from germination to harvest with AI-powered growth stage detection and precise "Days to Maturity" countdown timers.</p>
+    <div class="page-badge"><span>●</span> Growth Monitor</div>
+    <h1 class="page-title" data-i18n="growth_monitoring_title">Growth Stage <span class="g">Monitoring</span></h1>
+    <p class="page-subtitle" data-i18n="growth_monitoring_subtitle">Track your crops from germination to harvest with AI-powered growth stage detection and precise countdown timers.</p>
   </div>
-
-  <!-- Add crop form -->
-  <div class="card card-p-lg mb-6">
-    <h3 class="section-title mb-4" data-i18n="growth_add_crop">Add New Crop to Monitor</h3>
+  <div class="add-crop-form">
+    <h3 class="section-title mb-5" data-i18n="growth_add_crop">Add New Crop to Monitor</h3>
     <form id="add-crop-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="form-group" style="margin-bottom:0"><label class="form-label" data-i18n="growth_crop_name">Crop Name</label><input type="text" id="crop-name" class="form-input" placeholder="e.g., Tomatoes" required></div>
-      <div class="form-group" style="margin-bottom:0"><label class="form-label" data-i18n="growth_variety">Variety</label>
-        <select id="crop-variety" class="form-input form-select" required>
-          <option value="">Select Variety</option>
-          <option value="determinate">Determinate</option><option value="indeterminate">Indeterminate</option>
-          <option value="cherry">Cherry</option><option value="beefsteak">Beefsteak</option>
-          <option value="roma">Roma</option><option value="heirloom">Heirloom</option>
-        </select></div>
-      <div class="form-group" style="margin-bottom:0"><label class="form-label">Planting Date</label><input type="date" id="planting-date" class="form-input" required></div>
-      <div class="form-group" style="margin-bottom:0"><label class="form-label">Field Location</label><input type="text" id="field-location" class="form-input" placeholder="e.g., North Field A" required></div>
-      <div class="sm:col-span-2 lg:col-span-4">
-        <button type="submit" class="btn-primary"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>Start Monitoring Crop</button>
-      </div>
+      <div><label style="font-size:.73rem;font-weight:600;color:#64748b;display:block;margin-bottom:.4rem;letter-spacing:.03em;text-transform:uppercase" data-i18n="growth_crop_name">Crop Name</label><input type="text" id="crop-name" class="form-input" placeholder="e.g., Tomatoes" required></div>
+      <div><label style="font-size:.73rem;font-weight:600;color:#64748b;display:block;margin-bottom:.4rem;letter-spacing:.03em;text-transform:uppercase" data-i18n="growth_variety">Variety</label><select id="crop-variety" class="form-input form-select" required><option value="">Select Variety</option><option value="determinate">Determinate</option><option value="indeterminate">Indeterminate</option><option value="cherry">Cherry</option><option value="beefsteak">Beefsteak</option><option value="roma">Roma</option><option value="heirloom">Heirloom</option></select></div>
+      <div><label style="font-size:.73rem;font-weight:600;color:#64748b;display:block;margin-bottom:.4rem;letter-spacing:.03em;text-transform:uppercase">Planting Date</label><input type="date" id="planting-date" class="form-input" required></div>
+      <div><label style="font-size:.73rem;font-weight:600;color:#64748b;display:block;margin-bottom:.4rem;letter-spacing:.03em;text-transform:uppercase">Field Location</label><input type="text" id="field-location" class="form-input" placeholder="e.g., North Field A" required></div>
+      <div class="sm:col-span-2 lg:col-span-4"><button type="submit" class="btn-primary"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>Start Monitoring Crop</button></div>
     </form>
   </div>
-
-  <!-- Crops grid -->
-  <div id="crops-grid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5"></div>
-
-  <!-- Empty state -->
-  <div id="empty-state" class="card card-p-lg text-center" style="padding:4rem 2rem">
-    <div style="width:64px;height:64px;border-radius:18px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.75rem">🌱</div>
-    <h3 class="section-title mb-2">No Crops Being Monitored</h3>
-    <p style="font-size:.875rem;color:#475569">Add your first crop above to start tracking its growth stages and countdown to harvest.</p>
+  <div id="crops-grid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+  <div id="empty-state" class="text-center py-16">
+    <svg width="64" height="64" fill="none" stroke="#334155" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 1.25rem"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+    <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700;color:#475569;margin-bottom:.5rem">No Crops Being Monitored</h3>
+    <p style="color:#334155;font-size:.875rem">Add your first crop above to start tracking its growth stages and countdown to harvest.</p>
   </div>
 </main>
 </div>
-
-<!-- Modal -->
-<div id="crop-modal">
-  <div class="modal-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
-      <h3 id="modal-title" class="section-title" style="margin-bottom:0">Crop Details</h3>
-      <button onclick="closeCropModal()" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;transition:all .2s ease" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.05)'"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+<div id="crop-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm z-50 hidden" style="display:none">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div style="background:rgba(7,7,15,.97);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:2rem;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.8)">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="modal-title" style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;color:#f1f5f9">Crop Details</h3>
+        <button onclick="closeCropModal()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;transition:all .2s ease" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.06)'"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+      <div id="modal-content"></div>
     </div>
-    <div id="modal-content"></div>
   </div>
 </div>
-
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
   window.AuthSystem.requireAuth();
   initializeGrowthMonitoring();
 });
-function closeCropModal(){document.getElementById('crop-modal').classList.remove('open')}
-</script>
-<script src="growth-monitoring.js"></script>
-<script>
-const _orig=window.openCropModal;
-window.openCropModal=function(id){
-  if(window.growthMonitoringSystem)window.growthMonitoringSystem.openCropModal(id);
-  document.getElementById('crop-modal').classList.add('open');
+function closeCropModal(){
+  const m=document.getElementById('crop-modal');
+  m.classList.add('hidden');m.style.display='none';
 }
 </script>
+<script src="growth-monitoring.js"></script>
 </body></html>

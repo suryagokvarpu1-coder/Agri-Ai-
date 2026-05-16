@@ -7,22 +7,26 @@
 <link rel="stylesheet" href="page-shell.css">
 <script src="translations.js"></script><script src="global-settings.js"></script>
 <script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
+<style>
+.testimonial-card{background:rgba(7,7,15,.9);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:1.5rem;transition:border-color .2s ease,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.testimonial-card:hover{border-color:rgba(16,185,129,.18);transform:translateY(-3px)}
+</style>
 </head>
 <body>
 <div id="app-content">
 <header class="page-header">
   <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="page-header-logo"><div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="page-header-logo-text">Agri-AI</span></div>
-  <div class="page-header-user"><div class="hidden sm:block text-right"><p class="text-sm font-semibold" style="color:#f8fafc" id="header-username">Welcome</p><p class="text-xs" style="color:#475569">Impact</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
+  <div class="page-header-user"><div class="hidden sm:block text-right"><p style="font-size:.875rem;font-weight:600;color:#f1f5f9" id="header-username">Welcome</p><p style="font-size:.75rem;color:#475569">Impact</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
 </header>
 <main class="page-main">
   <div class="page-hero text-center" style="max-width:680px;margin:0 auto 3rem">
     <div class="page-badge" data-i18n="badge_impact"><span>●</span> Global Impact</div>
-    <h1 class="page-title">Transforming Agriculture <span class="g">Worldwide</span></h1>
+    <h1 class="page-title" data-i18n="impact_title">Transforming Agriculture <span class="g">Worldwide</span></h1>
     <p class="page-subtitle" style="margin:0 auto" data-i18n="impact_subtitle">Our AI-powered platform is making a real difference in agricultural communities around the globe, helping farmers increase yields, reduce waste, and build sustainable farming practices.</p>
   </div>
 
-  <!-- Stats — numbers have NO data-i18n, only labels below do -->
+  <!-- Stats — numbers NOT translated, only labels -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
     <div class="stat-card"><div class="stat-num">50K+</div><div class="stat-label" data-i18n="impact_farmers">Farmers Helped</div></div>
     <div class="stat-card"><div class="stat-num">25%</div><div class="stat-label" data-i18n="impact_yield">Yield Increase</div></div>
@@ -31,93 +35,40 @@
   </div>
 
   <!-- Impact areas -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
-    <div class="feat-card">
-      <div class="icon-box" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.15)"><svg width="20" height="20" style="color:#22c55e" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      <h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif">Environmental Sustainability</h4>
-      <p class="text-sm mb-3" style="color:#64748b;line-height:1.65">Reducing water usage by 30% and minimizing chemical fertilizer application through precision agriculture recommendations.</p>
-      <div style="display:flex;flex-direction:column;gap:.3rem">
-        <span style="font-size:.75rem;color:#475569">• 2.5M tons CO₂ reduced</span>
-        <span style="font-size:.75rem;color:#475569">• 500M gallons water saved</span>
-        <span style="font-size:.75rem;color:#475569">• 40% less pesticide use</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="icon-box" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.15)"><svg width="20" height="20" style="color:#60a5fa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      <h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif">Economic Growth</h4>
-      <p class="text-sm mb-3" style="color:#64748b;line-height:1.65">Increasing farmer incomes through better yield predictions and optimized resource allocation strategies.</p>
-      <div style="display:flex;flex-direction:column;gap:.3rem">
-        <span style="font-size:.75rem;color:#475569">• $2.8B additional farm revenue</span>
-        <span style="font-size:.75rem;color:#475569">• 35% increase in profit margins</span>
-        <span style="font-size:.75rem;color:#475569">• 150K jobs created</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="icon-box" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.15)"><svg width="20" height="20" style="color:#fbbf24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
-      <h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif">Food Security</h4>
-      <p class="text-sm mb-3" style="color:#64748b;line-height:1.65">Contributing to global food security by helping farmers produce more food with fewer resources.</p>
-      <div style="display:flex;flex-direction:column;gap:.3rem">
-        <span style="font-size:.75rem;color:#475569">• 15M tons additional food</span>
-        <span style="font-size:.75rem;color:#475569">• 25% reduction in food waste</span>
-        <span style="font-size:.75rem;color:#475569">• 5M people fed annually</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="icon-box" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.15)"><svg width="20" height="20" style="color:#a78bfa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
-      <h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif">Digital Inclusion</h4>
-      <p class="text-sm mb-3" style="color:#64748b;line-height:1.65">Bridging the digital divide by providing accessible AI technology to farmers in developing regions.</p>
-      <div style="display:flex;flex-direction:column;gap:.3rem">
-        <span style="font-size:.75rem;color:#475569">• 80% of users in rural areas</span>
-        <span style="font-size:.75rem;color:#475569">• 45 languages supported</span>
-        <span style="font-size:.75rem;color:#475569">• Mobile-first design</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="icon-box" style="background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.15)"><svg width="20" height="20" style="color:#f472b6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
-      <h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif">Knowledge Transfer</h4>
-      <p class="text-sm mb-3" style="color:#64748b;line-height:1.65">Empowering farmers with modern agricultural knowledge and best practices through our platform.</p>
-      <div style="display:flex;flex-direction:column;gap:.3rem">
-        <span style="font-size:.75rem;color:#475569">• 200K farmers trained</span>
-        <span style="font-size:.75rem;color:#475569">• 1,500 educational resources</span>
-        <span style="font-size:.75rem;color:#475569">• 95% knowledge retention</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="icon-box" style="background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.15)"><svg width="20" height="20" style="color:#2dd4bf" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
-      <h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif">Community Impact</h4>
-      <p class="text-sm mb-3" style="color:#64748b;line-height:1.65">Building stronger agricultural communities through knowledge sharing and collaborative farming practices.</p>
-      <div style="display:flex;flex-direction:column;gap:.3rem">
-        <span style="font-size:.75rem;color:#475569">• 5,000 farming cooperatives</span>
-        <span style="font-size:.75rem;color:#475569">• 85% community satisfaction</span>
-        <span style="font-size:.75rem;color:#475569">• 300% knowledge sharing increase</span>
-      </div>
-    </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+    <div class="feat-card"><div class="icon-box" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.15)"><svg width="20" height="20" style="color:#10b981" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Environmental Sustainability</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65;margin-bottom:.75rem">Reducing water usage by 30% and minimizing chemical fertilizer application through precision agriculture recommendations.</p><ul style="font-size:.78rem;color:#475569;space-y:.3rem"><li>• 2.5M tons CO₂ emissions reduced</li><li>• 500M gallons water saved</li><li>• 40% reduction in pesticide use</li></ul></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.15)"><svg width="20" height="20" style="color:#60a5fa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Economic Growth</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65;margin-bottom:.75rem">Increasing farmer incomes through better yield predictions and optimized resource allocation strategies.</p><ul style="font-size:.78rem;color:#475569"><li>• $2.8B additional farm revenue</li><li>• 35% increase in profit margins</li><li>• 150K jobs created</li></ul></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.15)"><svg width="20" height="20" style="color:#fbbf24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Food Security</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65;margin-bottom:.75rem">Contributing to global food security by helping farmers produce more food with fewer resources.</p><ul style="font-size:.78rem;color:#475569"><li>• 15M tons additional food produced</li><li>• 25% reduction in food waste</li><li>• 5M people fed annually</li></ul></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.15)"><svg width="20" height="20" style="color:#a78bfa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Digital Inclusion</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65;margin-bottom:.75rem">Bridging the digital divide by providing accessible AI technology to farmers in developing regions.</p><ul style="font-size:.78rem;color:#475569"><li>• 80% of users in rural areas</li><li>• 45 languages supported</li><li>• Mobile-first design</li></ul></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.15)"><svg width="20" height="20" style="color:#f472b6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Knowledge Transfer</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65;margin-bottom:.75rem">Empowering farmers with modern agricultural knowledge and best practices through our platform.</p><ul style="font-size:.78rem;color:#475569"><li>• 200K farmers trained</li><li>• 1,500 educational resources</li><li>• 95% knowledge retention rate</li></ul></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.15)"><svg width="20" height="20" style="color:#2dd4bf" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Community Impact</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65;margin-bottom:.75rem">Building stronger agricultural communities through knowledge sharing and collaborative farming practices.</p><ul style="font-size:.78rem;color:#475569"><li>• 5,000 farming cooperatives</li><li>• 85% community satisfaction</li><li>• 300% knowledge sharing increase</li></ul></div>
   </div>
 
-  <!-- Success stories -->
+  <!-- Success Stories -->
   <div>
-    <p class="section-label text-center mb-6">Success Stories</p>
+    <h3 class="section-title mb-2">Success Stories</h3>
+    <p style="font-size:.85rem;color:#475569;margin-bottom:1.5rem">Real farmers, real results from around the world</p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <div class="card card-p">
+      <div class="testimonial-card">
         <div style="display:flex;align-items:center;gap:.875rem;margin-bottom:1rem">
-          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#22c55e88);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:.95rem;flex-shrink:0">R</div>
-          <div><p style="font-weight:600;font-size:.875rem;color:#f8fafc;font-family:'Space Grotesk',sans-serif">Rajesh Kumar</p><p style="font-size:.75rem;color:#475569">Wheat Farmer, India</p></div>
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:1rem;flex-shrink:0">R</div>
+          <div><h5 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;color:#f1f5f9">Rajesh Kumar</h5><p style="font-size:.75rem;color:#475569">Wheat Farmer, India</p></div>
         </div>
-        <p style="font-size:.875rem;color:#64748b;line-height:1.65;font-style:italic">"Using Agri-AI, I increased my wheat yield by 40% while reducing water usage by 25%. The predictions helped me optimize planting times and fertilizer application."</p>
+        <p style="font-size:.85rem;color:#64748b;line-height:1.65">"Using Agri-AI, I increased my wheat yield by 40% while reducing water usage by 25%. The predictions helped me optimize planting times and fertilizer application."</p>
       </div>
-      <div class="card card-p">
+      <div class="testimonial-card">
         <div style="display:flex;align-items:center;gap:.875rem;margin-bottom:1rem">
-          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#8b5cf688);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:.95rem;flex-shrink:0">M</div>
-          <div><p style="font-weight:600;font-size:.875rem;color:#f8fafc;font-family:'Space Grotesk',sans-serif">Maria Santos</p><p style="font-size:.75rem;color:#475569">Corn Farmer, Brazil</p></div>
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:1rem;flex-shrink:0">M</div>
+          <div><h5 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;color:#f1f5f9">Maria Santos</h5><p style="font-size:.75rem;color:#475569">Corn Farmer, Brazil</p></div>
         </div>
-        <p style="font-size:.875rem;color:#64748b;line-height:1.65;font-style:italic">"The AI recommendations saved my crop during an unexpected drought. Early warning systems and irrigation optimization increased my profits by 60%."</p>
+        <p style="font-size:.85rem;color:#64748b;line-height:1.65">"The AI recommendations saved my crop during an unexpected drought. Early warning systems and irrigation optimization increased my profits by 60%."</p>
       </div>
-      <div class="card card-p">
+      <div class="testimonial-card">
         <div style="display:flex;align-items:center;gap:.875rem;margin-bottom:1rem">
-          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#f59e0b88);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:.95rem;flex-shrink:0">J</div>
-          <div><p style="font-weight:600;font-size:.875rem;color:#f8fafc;font-family:'Space Grotesk',sans-serif">John Mitchell</p><p style="font-size:.75rem;color:#475569">Soybean Farmer, USA</p></div>
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:1rem;flex-shrink:0">J</div>
+          <div><h5 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;color:#f1f5f9">John Mitchell</h5><p style="font-size:.75rem;color:#475569">Soybean Farmer, USA</p></div>
         </div>
-        <p style="font-size:.875rem;color:#64748b;line-height:1.65;font-style:italic">"Precision agriculture recommendations helped me reduce fertilizer costs by 30% while maintaining high yields. The ROI has been incredible."</p>
+        <p style="font-size:.85rem;color:#64748b;line-height:1.65">"Precision agriculture recommendations helped me reduce fertilizer costs by 30% while maintaining high yields. The ROI has been incredible."</p>
       </div>
     </div>
   </div>

@@ -8,16 +8,16 @@
 <script src="translations.js"></script><script src="global-settings.js"></script>
 <script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
 <style>
-.upload-zone{border:2px dashed rgba(34,197,94,.2);border-radius:18px;padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .2s ease;background:rgba(8,8,16,.9)}
-.upload-zone:hover,.upload-zone.drag{border-color:#22c55e;background:rgba(34,197,94,.04)}
+.upload-zone{border:2px dashed rgba(16,185,129,.2);border-radius:18px;padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .2s ease;background:rgba(7,7,15,.9)}
+.upload-zone:hover,.upload-zone.drag{border-color:#10b981;background:rgba(16,185,129,.04)}
 .soil-bar-track{background:rgba(255,255,255,.05);border-radius:99px;height:8px;overflow:hidden;margin:.4rem 0}
 .soil-bar-fill{height:100%;border-radius:99px;transition:width 1s ease;position:relative;overflow:hidden}
 .soil-bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shine 2s ease infinite}
 @keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
 .crop-chip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.6rem .75rem;text-align:center;transition:border-color .2s ease}
-.crop-chip:hover{border-color:rgba(34,197,94,.2)}
+.crop-chip:hover{border-color:rgba(16,185,129,.2)}
 .suitability-bar{background:rgba(255,255,255,.05);border-radius:99px;height:4px;margin:.3rem 0;overflow:hidden}
-.suitability-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#22c55e,#16a34a)}
+.suitability-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#10b981,#059669)}
 </style>
 </head>
 <body>
@@ -25,30 +25,28 @@
 <header class="page-header">
   <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="page-header-logo"><div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="page-header-logo-text">Agri-AI</span></div>
-  <div class="page-header-user"><div class="hidden sm:block text-right"><p class="text-sm font-semibold" style="color:#f8fafc" id="header-username">Welcome</p><p class="text-xs" style="color:#475569">Soil Analysis</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
+  <div class="page-header-user"><div class="hidden sm:block text-right"><p style="font-size:.875rem;font-weight:600;color:#f1f5f9" id="header-username">Welcome</p><p style="font-size:.75rem;color:#475569">Soil Analysis</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
 </header>
 <main class="page-main" style="max-width:900px">
   <div class="page-hero">
-    <div class="page-badge" data-i18n="soil_analysis_title"><span>●</span> Soil Analysis</div>
+    <div class="page-badge"><span>●</span> Soil Analysis</div>
     <h1 class="page-title">AI <span class="g">Soil Texture</span> Analysis</h1>
     <p class="page-subtitle" data-i18n="soil_analysis_subtitle">Upload a macro photograph of your soil sample. Our AI analyzes pixel colors against the Munsell Soil Color Chart to determine soil type and recommend crops.</p>
   </div>
-
-  <!-- Upload -->
   <div class="card card-p-lg mb-6">
     <h3 class="section-title mb-4" data-i18n="soil_upload_title">Upload Soil Sample Photo</h3>
     <div id="upload-area" class="upload-zone">
       <div id="upload-content">
-        <svg width="48" height="48" fill="none" stroke="#22c55e" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 1rem;opacity:.6"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-        <p style="color:#f8fafc;font-weight:600;margin-bottom:.4rem" data-i18n="soil_upload_subtitle">Drop your soil photo here</p>
+        <svg width="48" height="48" fill="none" stroke="#10b981" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 1rem;opacity:.6"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+        <p style="color:#f1f5f9;font-weight:600;margin-bottom:.4rem" data-i18n="soil_upload_subtitle">Drop your soil photo here</p>
         <p style="color:#475569;font-size:.85rem;margin-bottom:1rem">or click to browse files</p>
         <p style="color:#334155;font-size:.75rem">Supports: JPG, PNG, WEBP · Max 10MB</p>
         <button type="button" onclick="document.getElementById('soil-image').click()" class="btn-primary" style="margin-top:1rem;padding:.6rem 1.25rem;font-size:.85rem">Choose File</button>
       </div>
       <input type="file" id="soil-image" accept="image/*" style="display:none">
     </div>
-    <div style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.12);border-radius:12px;padding:1rem;margin-top:1rem">
-      <p style="font-size:.78rem;font-weight:600;color:#22c55e;margin-bottom:.6rem">📸 Tips for best results</p>
+    <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.12);border-radius:12px;padding:1rem;margin-top:1rem">
+      <p style="font-size:.78rem;font-weight:600;color:#10b981;margin-bottom:.6rem">📸 Tips for best results</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <p style="font-size:.78rem;color:#475569">✓ Take close-up macro shots (2–4 inches from soil)</p>
         <p style="font-size:.78rem;color:#475569">✓ Use natural daylight for accurate colors</p>
@@ -57,34 +55,29 @@
       </div>
     </div>
   </div>
-
-  <!-- Loading -->
   <div id="loading-state" class="hidden text-center py-10">
     <div class="spinner mb-4"></div>
     <p style="color:#64748b;font-size:.9rem">Analyzing soil texture...</p>
     <p id="analysis-step" style="color:#334155;font-size:.8rem;margin-top:.5rem">Step 1: Processing image...</p>
   </div>
-
-  <!-- Results -->
   <div id="analysis-results" class="hidden">
-    <!-- Composition -->
     <div class="card card-p-lg mb-5">
       <h3 class="section-title mb-5" data-i18n="soil_results_title">Soil Texture Analysis Results</h3>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:14px;padding:1.1rem">
-          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem"><div style="width:10px;height:10px;border-radius:50%;background:#f59e0b"></div><span style="font-weight:600;color:#f8fafc;font-size:.9rem" data-i18n="soil_sandy">Sandy Soil</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem"><div style="width:10px;height:10px;border-radius:50%;background:#f59e0b"></div><span style="font-weight:600;color:#f1f5f9;font-size:.9rem" data-i18n="soil_sandy">Sandy Soil</span></div>
           <div class="soil-bar-track"><div id="sandy-progress" class="soil-bar-fill" style="width:0%;background:linear-gradient(90deg,#f59e0b,#d97706)"></div></div>
           <p id="sandy-percentage" style="font-size:.8rem;color:#94a3b8;margin-top:.3rem">0%</p>
           <p style="font-size:.72rem;color:#475569;margin-top:.3rem">Large particles, good drainage</p>
         </div>
-        <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:1.1rem">
-          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem"><div style="width:10px;height:10px;border-radius:50%;background:#22c55e"></div><span style="font-weight:600;color:#f8fafc;font-size:.9rem" data-i18n="soil_loamy">Loamy Soil</span></div>
-          <div class="soil-bar-track"><div id="loamy-progress" class="soil-bar-fill" style="width:0%;background:linear-gradient(90deg,#22c55e,#16a34a)"></div></div>
+        <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15);border-radius:14px;padding:1.1rem">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem"><div style="width:10px;height:10px;border-radius:50%;background:#10b981"></div><span style="font-weight:600;color:#f1f5f9;font-size:.9rem" data-i18n="soil_loamy">Loamy Soil</span></div>
+          <div class="soil-bar-track"><div id="loamy-progress" class="soil-bar-fill" style="width:0%;background:linear-gradient(90deg,#10b981,#059669)"></div></div>
           <p id="loamy-percentage" style="font-size:.8rem;color:#94a3b8;margin-top:.3rem">0%</p>
           <p style="font-size:.72rem;color:#475569;margin-top:.3rem">Balanced mixture, ideal for crops</p>
         </div>
         <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:14px;padding:1.1rem">
-          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem"><div style="width:10px;height:10px;border-radius:50%;background:#ef4444"></div><span style="font-weight:600;color:#f8fafc;font-size:.9rem" data-i18n="soil_clay">Clay Soil</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem"><div style="width:10px;height:10px;border-radius:50%;background:#ef4444"></div><span style="font-weight:600;color:#f1f5f9;font-size:.9rem" data-i18n="soil_clay">Clay Soil</span></div>
           <div class="soil-bar-track"><div id="clay-progress" class="soil-bar-fill" style="width:0%;background:linear-gradient(90deg,#ef4444,#dc2626)"></div></div>
           <p id="clay-percentage" style="font-size:.8rem;color:#94a3b8;margin-top:.3rem">0%</p>
           <p style="font-size:.72rem;color:#475569;margin-top:.3rem">Fine particles, high water retention</p>
@@ -93,23 +86,16 @@
       <div id="primary-soil-type" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.25rem">
         <p style="font-size:.75rem;font-weight:600;color:#475569;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem">Primary Soil Type Detected</p>
         <div style="display:flex;align-items:center;gap:1rem">
-          <div id="soil-type-icon" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:rgba(34,197,94,.1)">🌱</div>
-          <div>
-            <h4 id="detected-soil-type" style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;color:#f8fafc">Analyzing...</h4>
-            <p id="soil-confidence" style="font-size:.8rem;color:#475569;margin-top:.2rem">Confidence: --</p>
-          </div>
+          <div id="soil-type-icon" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:rgba(16,185,129,.1)">🌱</div>
+          <div><h4 id="detected-soil-type" style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;color:#f1f5f9">Analyzing...</h4><p id="soil-confidence" style="font-size:.8rem;color:#475569;margin-top:.2rem">Confidence: --</p></div>
         </div>
         <p id="soil-description" style="font-size:.85rem;color:#64748b;margin-top:.875rem;line-height:1.65">Analysis in progress...</p>
       </div>
     </div>
-
-    <!-- Crop Recommendations -->
     <div class="card card-p-lg mb-5">
       <h3 class="section-title mb-4">Recommended Crops for Your Soil</h3>
       <div id="crop-recommendations" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
     </div>
-
-    <!-- Tips -->
     <div class="card card-p-lg">
       <h3 class="section-title mb-4">Soil Improvement Tips</h3>
       <div id="soil-tips"></div>

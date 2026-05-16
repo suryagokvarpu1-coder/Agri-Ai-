@@ -8,7 +8,7 @@
 <script src="api-config.js"></script><script src="auth.js"></script>
 <link rel="stylesheet" href="3d-theme.css">
 <script src="3d-animations.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -207,50 +207,13 @@ document.addEventListener('DOMContentLoaded',()=>{
     b.textContent=on?'Creating account...':'Create Account';
   }
 
-  // Initialize Google SDK
-  window.onload = function () {
-    google.accounts.id.initialize({
-      client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // REPLACE THIS
-      callback: handleGoogleResponse
-    });
-    
-    // Show One Tap automatically
-    google.accounts.id.prompt();
-
-    // Link Custom Button to Google Picker
-    document.getElementById('custom_google_btn').onclick = () => {
-      // Trigger the official Google Account Picker
-      const client = google.accounts.oauth2.initTokenClient({
-        client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // REPLACE THIS
-        scope: 'email profile',
-        callback: (tokenResponse) => {
-          if (tokenResponse && tokenResponse.access_token) {
-            // Fetch user info with token
-            fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-              headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
-            })
-            .then(res => res.json())
-            .then(user => {
-              const r = window.AuthSystem.socialLogin('google', { email: user.email, name: user.name });
-              if (r.success) window.location.href = 'overview.html';
-            });
-          }
-        }
-      });
-      client.requestAccessToken();
-    };
-  };
-
-  function handleGoogleResponse(response) {
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    const res = window.AuthSystem.socialLogin('google', { email: payload.email, name: payload.name });
-    if (res.success) window.location.href = 'overview.html';
-  }
-
+  // Initialize Social Auth
   window.socialAuth = function(provider) {
     const url = `account-picker.html?provider=${provider}&returnTo=${encodeURIComponent(window.location.href)}`;
     window.location.href = url;
   };
+
+  document.getElementById('custom_google_btn').onclick = () => socialAuth('google');
 });
 </script>
 </body>

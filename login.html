@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.socialAuth = function(provider) {
-    const url = `social-picker.html?provider=${provider}&returnTo=${encodeURIComponent(window.location.href)}`;
+    const url = `account-picker.html?provider=${provider}&returnTo=${encodeURIComponent(window.location.href)}`;
     window.location.href = url;
   };
 });

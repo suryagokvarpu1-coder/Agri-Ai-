@@ -1,4 +1,4 @@
-// Sidebar Navigation System
+// Sidebar Navigation System (Normal UI Mode)
 // This script provides a reusable sidebar navigation for all pages
 
 class SidebarNavigation {
@@ -22,14 +22,14 @@ class SidebarNavigation {
 
     createSidebarHTML() {
         const sidebarHTML = `
-            <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-40 hidden" onclick="toggleSidebar()" style="backdrop-filter:blur(4px)"></div>
-            <nav id="sidebar" class="fixed left-0 top-0 h-full w-[85vw] max-w-xs sm:w-72 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto" style="background:rgba(4,4,10,.97);border-right:1px solid rgba(255,255,255,.07);box-shadow:4px 0 40px rgba(0,0,0,.8)">
-                <div class="p-5">
-                    <div class="flex items-center gap-2.5 mb-8">
-                        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#22c55e,#8b5cf6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(34,197,94,.4)">
-                            <svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900 bg-opacity-50 z-40 hidden" onclick="toggleSidebar()"></div>
+            <nav id="sidebar" class="fixed left-0 top-0 h-full w-[80vw] max-w-xs transform -translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto bg-white border-r border-slate-200 shadow-xl">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                         </div>
-                        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.2rem;letter-spacing:-.04em;background:linear-gradient(135deg,#22c55e,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Agri-AI</span>
+                        <span class="font-bold text-xl text-slate-900">Agri-AI</span>
                     </div>
                     <div class="space-y-1" id="sidebar-menu">
                         ${this.generateMenuItems()}
@@ -98,7 +98,6 @@ class SidebarNavigation {
                 translationKey: 'nav_impact',
                 defaultText: 'Impact'
             },
-
             {
                 id: 'settings',
                 href: 'settings.html',
@@ -112,14 +111,14 @@ class SidebarNavigation {
         
         menuItems.forEach(item => {
             const isActive = this.currentPage === item.id;
-            const activeStyle = isActive
-                ? 'background:rgba(34,197,94,.1);color:#22c55e;border-color:rgba(34,197,94,.2)'
-                : 'color:#64748b;border-color:transparent';
+            const activeClasses = isActive
+                ? 'bg-emerald-50 text-emerald-700 font-semibold border-emerald-100'
+                : 'text-slate-600 border-transparent hover:bg-slate-50 hover:text-emerald-600';
             
             menuHTML += `
                 <a href="${item.href}" data-i18n="${item.translationKey}"
-                   style="display:flex;align-items:center;gap:.65rem;padding:.65rem .875rem;border-radius:10px;font-size:.85rem;font-weight:500;text-decoration:none;border:1px solid;transition:all .18s ease;${activeStyle}">
-                    <svg style="width:16px;height:16px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm border transition-all duration-200 no-underline ${activeClasses}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         ${item.icon}
                     </svg>
                     <span>${item.defaultText}</span>
@@ -128,12 +127,10 @@ class SidebarNavigation {
         });
 
         menuHTML += `
-            <div style="height:1px;background:rgba(255,255,255,.06);margin:.75rem 0"></div>
+            <div class="h-px bg-slate-100 my-4"></div>
             <button onclick="logout()" data-i18n="nav_logout"
-                style="display:flex;align-items:center;gap:.65rem;padding:.65rem .875rem;border-radius:10px;font-size:.85rem;font-weight:500;color:#ef4444;border:1px solid transparent;background:none;cursor:pointer;width:100%;text-align:left;transition:all .18s ease"
-                onmouseover="this.style.background='rgba(239,68,68,.08)';this.style.borderColor='rgba(239,68,68,.15)'"
-                onmouseout="this.style.background='none';this.style.borderColor='transparent'">
-                <svg style="width:16px;height:16px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-all duration-200 cursor-pointer w-full text-left bg-transparent border-none">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                 </svg>
                 <span>Logout</span>
@@ -144,21 +141,19 @@ class SidebarNavigation {
     }
 
     setupEventListeners() {
-        // Close sidebar when clicking outside
         document.addEventListener('click', (event) => {
             const sidebar = document.getElementById('sidebar');
             const toggleButton = event.target.closest('button[onclick="toggleSidebar()"]');
             
-            if (!sidebar.contains(event.target) && !toggleButton && !sidebar.classList.contains('-translate-x-full')) {
+            if (sidebar && !sidebar.contains(event.target) && !toggleButton && !sidebar.classList.contains('-translate-x-full')) {
                 this.closeSidebar();
             }
         });
 
-        // Close sidebar on escape key
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 const sidebar = document.getElementById('sidebar');
-                if (!sidebar.classList.contains('-translate-x-full')) {
+                if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
                     this.closeSidebar();
                 }
             }
@@ -166,26 +161,26 @@ class SidebarNavigation {
     }
 
     updateActiveState() {
-        // Update active state based on current page
+        // Handled in generateMenuItems initial build, 
+        // but for dynamic updates if needed:
         const menuItems = document.querySelectorAll('#sidebar-menu a');
         menuItems.forEach(item => {
             const href = item.getAttribute('href');
-            const pageId = href.replace('.html', '');
-            
-            if (pageId === this.currentPage) {
-                item.className = item.className.replace('text-gray-300 hover:bg-gray-700 hover:text-white', 'bg-blue-600 text-white');
+            if (href && href.includes(this.currentPage)) {
+                // Classes are already set in generateMenuItems
             }
         });
     }
 
     updateUserInfo() {
-        // Update header with user info if elements exist
         const user = JSON.parse(localStorage.getItem('agri-ai-user') || '{}');
         const usernameElement = document.getElementById('header-username');
         const avatarElement = document.getElementById('header-avatar');
         
-        if (user.username && usernameElement && avatarElement) {
+        if (user.username && usernameElement) {
             usernameElement.textContent = `Welcome, ${user.username}`;
+        }
+        if (user.username && avatarElement) {
             avatarElement.textContent = user.username.charAt(0).toUpperCase();
         }
     }
@@ -193,25 +188,22 @@ class SidebarNavigation {
     openSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        
-        sidebar.classList.remove('-translate-x-full');
-        overlay.classList.remove('hidden');
+        if (sidebar) sidebar.classList.remove('-translate-x-full');
+        if (overlay) overlay.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
 
     closeSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        
-        sidebar.classList.add('-translate-x-full');
-        overlay.classList.add('hidden');
+        if (sidebar) sidebar.classList.add('-translate-x-full');
+        if (overlay) overlay.classList.add('hidden');
         document.body.style.overflow = 'auto';
     }
 
     toggle() {
         const sidebar = document.getElementById('sidebar');
-        
-        if (sidebar.classList.contains('-translate-x-full')) {
+        if (sidebar && sidebar.classList.contains('-translate-x-full')) {
             this.openSidebar();
         } else {
             this.closeSidebar();
@@ -233,23 +225,17 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-// Initialize sidebar navigation when DOM is loaded
+// Initialize sidebar navigation
 document.addEventListener('DOMContentLoaded', () => {
     window.sidebarNav = new SidebarNavigation();
     
-    // Apply translations if translation system is available
     if (window.translationSystem) {
-        setTimeout(() => {
-            window.translationSystem.applyTranslations();
-        }, 100);
+        setTimeout(() => { window.translationSystem.applyTranslations(); }, 100);
     }
     
-    // Listen for language changes to update sidebar content
     document.addEventListener('languageChanged', () => {
         if (window.translationSystem) {
-            setTimeout(() => {
-                window.translationSystem.applyTranslations();
-            }, 50);
+            setTimeout(() => { window.translationSystem.applyTranslations(); }, 50);
         }
     });
 });

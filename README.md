@@ -1,162 +1,87 @@
-# Agri-AI Yield Optimizer
+# 🌾 Agri-AI — AI-Powered Agriculture Platform
 
-A modern agricultural AI platform with separate pages for optimal user experience. Features AI-powered yield predictions, interactive maps, technology showcase, and comprehensive settings management.
-
-## 🌾 Features
-
-### Core Pages
-- **Landing Page**: Welcome and authentication flow
-- **Overview**: Feature showcase and platform capabilities
-- **Technology**: AI technology and tech stack information
-- **Map Tool**: Interactive agricultural mapping with controls
-- **Predict Yield**: AI-powered crop yield prediction form
-- **Impact**: Global impact metrics and success stories
-- **Settings**: Comprehensive user preferences and data management
-
-### Key Functionality
-- **AI Predictions**: Advanced machine learning yield forecasting
-- **Interactive Maps**: Global agricultural data visualization
-- **Multi-language Support**: 13+ languages including Indian languages
-- **Dark Theme**: Premium modern interface
-- **Responsive Design**: Works on all devices
-- **Authentication**: Secure user login and registration
+A production-ready web application for precision farming with AI-powered yield predictions, soil analysis, growth monitoring, and carbon tracking.
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Node.js (v14 or higher)
+```bash
+# Install dependencies
+npm install
 
-### Installation & Setup
+# Start the server
+npm start
 
-1. **Start the server**
-   ```bash
-   node simple-server.js
-   ```
+# Server runs at http://localhost:3000
+```
 
-2. **Access the application**
-   - Main Application: `http://localhost:3000` (redirects to signup for new users)
-   - Signup (Primary): `http://localhost:3000/signup.html`
-   - Login (Existing users): `http://localhost:3000/login.html`
+## 📋 Features
 
-### Default Credentials
-- **Admin**: username: `admin`, password: `admin123`
-- **Or create a new user account via signup**
+| Feature | Description |
+|---------|-------------|
+| **Yield Prediction** | AI-powered crop yield prediction using soil, irrigation, and fertilizer data |
+| **Soil Analysis** | Upload soil photos for texture classification (Sandy / Loamy / Clay) |
+| **Growth Monitoring** | Track crops from germination to harvest with countdown timers |
+| **Carbon Tracking** | Calculate carbon sequestration and estimated carbon credit earnings |
+| **Interactive Map** | Google Maps integration for agricultural region visualization |
+
+## 🔬 Prediction Engine
+
+The yield prediction uses scientifically-backed parameters:
+
+- **Base yields**: FAO crop-specific averages (kg/acre)
+- **Soil multipliers**: Loam (1.0), Clay (0.88), Sandy (0.72), Silt (0.95), etc.
+- **Irrigation factors**: Drip (+20%), Sprinkler (+10%), Rainfed (-25%)
+- **Fertilizer impact**: High (+18%), Medium (baseline), Organic (+5%), Low (-18%)
+- **Harvest estimation**: Crop-specific days-to-maturity (wheat 120d, rice 130d, sugarcane 330d)
+
+## 🛠️ Tech Stack
+
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Backend**: Node.js (zero-dependency server)
+- **Styling**: Custom CSS with glassmorphism + agriculture theme
+- **3D Effects**: Three.js particle system with organic firefly/pollen animations
+- **Charts**: Chart.js for carbon projections
+- **Maps**: Google Maps Embed API
+- **Auth**: Session-based with localStorage persistence
 
 ## 📁 Project Structure
 
 ```
-agri-ai-yield-optimizer/
-├── index.html              # Landing page (redirects to signup/overview)
-├── login.html              # User login
-├── signup.html             # User registration (primary entry point)
-├── overview.html           # Platform overview (main dashboard)
-├── technology.html         # Technology showcase
-├── maptool.html           # Interactive map tool
-├── predict.html           # Yield prediction form
-├── impact.html            # Global impact metrics
-├── settings.html          # User settings management
-├── simple-server.js       # Main server with API endpoints
-├── users-data.json        # User data storage
-├── package.json           # Dependencies
-└── README.md             # This file
+├── index.html              # Splash/landing page
+├── login.html              # Authentication
+├── signup.html             # New user registration
+├── overview.html           # Main dashboard
+├── predict.html            # Yield prediction
+├── soil-analysis.html      # AI soil texture analysis
+├── growth-monitoring.html  # Crop growth tracker
+├── carbon-tracking.html    # Carbon footprint calculator
+├── maptool.html            # Agricultural map viewer
+├── technology.html         # Platform technology info
+├── impact.html             # Environmental impact
+├── feedback.html           # User feedback forms
+├── settings.html           # User preferences
+├── simple-server.js        # Production Node.js server
+├── ui-theme.css            # Design system (colors, fonts, animations)
+├── page-shell.css          # Page layout components
+├── 3d-theme.css            # 3D effects and particles
+├── 3d-animations.js        # Three.js background engine
+├── sidebar-navigation.js   # Navigation system
+├── auth.js                 # Authentication logic
+├── translations.js         # Multi-language support
+└── assets/images/          # Generated hero images
 ```
 
-## 🔧 Server Configuration
+## 🌐 Deployment
 
-The `simple-server.js` provides:
-- **Port**: 3001 (configurable via PORT env var)
-- **Authentication**: JWT-based session management
-- **Data Storage**: JSON file-based user storage
-- **API Endpoints**: RESTful API for all functionality
+### Render
+Already configured — just connect your GitHub repo and deploy. See `render.yaml`.
 
-## 📊 API Endpoints
+### Any Node.js Host
+```bash
+npm install
+NODE_ENV=production PORT=3000 node simple-server.js
+```
 
-### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/logout` - User logout
+## 📜 License
 
-### Predictions
-- `POST /api/predict` - Generate yield prediction
-- `GET /api/user/predictions` - Get prediction history
-
-### User Management
-- `GET /api/user/profile` - Get user profile
-- `PUT /api/user/profile` - Update user profile
-
-## 🌍 Multi-language Support
-
-Supported languages:
-- English (US/India)
-- Telugu (తెలుగు)
-
-## 🧪 Testing the Application
-
-1. **Start Server**: `node simple-server.js`
-2. **Open Browser**: Go to `http://localhost:3000`
-3. **Test Flow**:
-   - Login or create account
-   - Navigate through all pages
-   - Test prediction form
-   - Adjust settings
-   - Test logout
-
-## 📱 Features by Page
-
-### Overview Page
-- 6 feature cards with animations
-- Platform statistics
-- Key capabilities showcase
-
-### Technology Page
-- AI technology explanations
-- Tech stack visualization
-- Innovation highlights
-
-### Map Tool Page
-- Interactive Google Maps
-- Agricultural data layers
-- Filter controls and options
-
-### Predict Yield Page
-- Comprehensive prediction form
-- Real-time processing
-- Results with recommendations
-
-### Impact Page
-- Global impact statistics
-- Success stories
-- Environmental benefits
-
-### Settings Page
-- Theme selection (Light/Dark/Auto)
-- Language preferences
-- Notification controls
-- Data export/import
-- Privacy settings
-
-## 🛡️ Security Features
-
-- JWT-based authentication
-- Token validation on all protected pages
-- Secure logout functionality
-- Input validation and sanitization
-- Session management
-
-## 📄 Documentation
-
-- `SEPARATE_PAGES_COMPLETE.md` - Detailed implementation guide
-- Inline code comments for maintenance
-- API endpoint documentation in server file
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
----
-
-**Modern Agricultural AI Platform - Built for Farmers Worldwide** 🌾
+MIT

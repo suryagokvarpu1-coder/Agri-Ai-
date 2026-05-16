@@ -13,7 +13,7 @@ class SoilAnalysisSystem {
         this.soilDatabase = {
             sandy: {
                 name: 'Sandy Soil',
-                color: '#f59e0b',
+                color: '#f9a825',
                 icon: '🏖️',
                 description: 'Sandy soil has large particles with excellent drainage but low water and nutrient retention. Best for crops that prefer well-drained conditions.',
                 crops: [
@@ -77,7 +77,7 @@ class SoilAnalysisSystem {
             },
             loamy: {
                 name: 'Loamy Soil',
-                color: '#10b981',
+                color: '#4caf50',
                 icon: '🌱',
                 description: 'Loamy soil is the ideal garden soil with balanced sand, silt, and clay particles. It provides excellent drainage while retaining moisture and nutrients.',
                 crops: [
@@ -151,7 +151,7 @@ class SoilAnalysisSystem {
             },
             clay: {
                 name: 'Clay Soil',
-                color: '#ef4444',
+                color: '#795548',
                 icon: '🧱',
                 description: 'Clay soil has fine particles that retain water and nutrients well but can become waterlogged and compacted. Best for crops that tolerate heavy, moisture-retentive soil.',
                 crops: [
@@ -492,7 +492,7 @@ class SoilAnalysisSystem {
         container.innerHTML = soilData.crops.map(crop => `
           <div class="crop-chip">
             <div style="font-size:1.75rem;margin-bottom:.4rem">${crop.icon}</div>
-            <div style="font-size:.8rem;font-weight:600;color:#f8fafc;margin-bottom:.3rem">${crop.name}</div>
+            <div style="font-size:.8rem;font-weight:600;color:#e8f5e9;margin-bottom:.3rem">${crop.name}</div>
             <div class="suitability-bar"><div class="suitability-fill" style="width:${crop.suitability}%"></div></div>
             <div style="font-size:.68rem;color:#475569">${crop.suitability}% · ${crop.season}</div>
           </div>
@@ -503,7 +503,7 @@ class SoilAnalysisSystem {
         const soilData = this.soilDatabase[soilType];
         const container = document.getElementById('soil-tips');
         
-        container.innerHTML = `<ul style="space-y:.5rem">${soilData.tips.map(tip => `<li style="display:flex;align-items:flex-start;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#64748b"><span style="color:#22c55e;margin-top:.15rem;flex-shrink:0">✓</span>${tip}</li>`).join('')}</ul>`;
+        container.innerHTML = `<ul style="space-y:.5rem">${soilData.tips.map(tip => `<li style="display:flex;align-items:flex-start;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#a5bfaa"><span style="color:#4caf50;margin-top:.15rem;flex-shrink:0">✓</span>${tip}</li>`).join('')}</ul>`;
     }
 
     showLoadingState() {

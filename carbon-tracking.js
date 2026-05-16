@@ -241,24 +241,24 @@ class CarbonTrackingSystem {
         
         // Display impact metrics
         impactResults.innerHTML = `
-            <div class="bg-green-900/30 p-6 rounded-xl border border-green-500/30 text-center">
-                <div class="text-3xl font-bold text-green-400 mb-2">${results.sequestered.toFixed(1)}</div>
-                <div class="text-sm text-green-300">Tons CO₂ Sequestered/Year</div>
+            <div style="background:rgba(76,175,80,.06);padding:1.5rem;border-radius:18px;border:1px solid rgba(76,175,80,.15);text-align:center">
+                <div style="font-family:'Playfair Display',Georgia,serif;font-size:2rem;font-weight:800;color:#4caf50;margin-bottom:.35rem">${results.sequestered.toFixed(1)}</div>
+                <div style="font-size:.82rem;color:#81c784">Tons CO₂ Sequestered/Year</div>
             </div>
             
-            <div class="bg-blue-900/30 p-6 rounded-xl border border-blue-500/30 text-center">
-                <div class="text-3xl font-bold text-blue-400 mb-2">${results.credits}</div>
-                <div class="text-sm text-blue-300">Carbon Credits Available</div>
+            <div style="background:rgba(249,168,37,.06);padding:1.5rem;border-radius:18px;border:1px solid rgba(249,168,37,.15);text-align:center">
+                <div style="font-family:'Playfair Display',Georgia,serif;font-size:2rem;font-weight:800;color:#f9a825;margin-bottom:.35rem">${results.credits}</div>
+                <div style="font-size:.82rem;color:#ffd54f">Carbon Credits Available</div>
             </div>
             
-            <div class="bg-yellow-900/30 p-6 rounded-xl border border-yellow-500/30 text-center">
-                <div class="text-3xl font-bold text-yellow-400 mb-2">$${results.value.toLocaleString()}</div>
-                <div class="text-sm text-yellow-300">Estimated Annual Value</div>
+            <div style="background:rgba(239,108,0,.06);padding:1.5rem;border-radius:18px;border:1px solid rgba(239,108,0,.15);text-align:center">
+                <div style="font-family:'Playfair Display',Georgia,serif;font-size:2rem;font-weight:800;color:#ef6c00;margin-bottom:.35rem">$${results.value.toLocaleString()}</div>
+                <div style="font-size:.82rem;color:#ffb74d">Estimated Annual Value</div>
             </div>
             
-            <div class="bg-purple-900/30 p-6 rounded-xl border border-purple-500/30 text-center">
-                <div class="text-3xl font-bold text-purple-400 mb-2">${results.metrics.sustainabilityScore}</div>
-                <div class="text-sm text-purple-300">Sustainability Score</div>
+            <div style="background:rgba(46,125,50,.06);padding:1.5rem;border-radius:18px;border:1px solid rgba(46,125,50,.15);text-align:center">
+                <div style="font-family:'Playfair Display',Georgia,serif;font-size:2rem;font-weight:800;color:#2e7d32;margin-bottom:.35rem">${results.metrics.sustainabilityScore}</div>
+                <div style="font-size:.82rem;color:#a5d6a7">Sustainability Score</div>
             </div>
         `;
         
@@ -295,8 +295,8 @@ class CarbonTrackingSystem {
                     {
                         label: 'Cumulative CO₂ Sequestered (tons)',
                         data: cumulativeData,
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4
@@ -304,8 +304,8 @@ class CarbonTrackingSystem {
                     {
                         label: 'Carbon Credits',
                         data: creditsData,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: '#f9a825',
+                        backgroundColor: 'rgba(249, 168, 37, 0.1)',
                         borderWidth: 3,
                         fill: false,
                         tension: 0.4,

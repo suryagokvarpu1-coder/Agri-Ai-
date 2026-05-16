@@ -35,7 +35,7 @@ class GrowthMonitoringSystem {
                         duration: 14,
                         description: 'True leaves developing, stem strengthening',
                         icon: '🌿',
-                        color: '#3b82f6',
+                        color: '#81c784',
                         tips: ['Gradually increase light exposure', 'Begin light fertilization', 'Monitor for pests']
                     },
                     {
@@ -43,7 +43,7 @@ class GrowthMonitoringSystem {
                         duration: 28,
                         description: 'Rapid leaf and stem growth, root development',
                         icon: '🌳',
-                        color: '#10b981',
+                        color: '#4caf50',
                         tips: ['Increase watering frequency', 'Provide support structures', 'Prune suckers if needed']
                     },
                     {
@@ -75,7 +75,7 @@ class GrowthMonitoringSystem {
                         duration: 30,
                         description: 'Fruits ready for harvest',
                         icon: '🧺',
-                        color: '#8b5cf6',
+                        color: '#f9a825',
                         tips: ['Harvest when fruits show color', 'Pick regularly to encourage production', 'Store properly']
                     }
                 ]
@@ -91,10 +91,10 @@ class GrowthMonitoringSystem {
                 },
                 stages: [
                     { name: 'Germination', duration: 5, description: 'Seeds sprouting', icon: '🌱', color: '#22c55e', tips: ['Keep soil cool and moist', 'Provide shade in hot weather'] },
-                    { name: 'Seedling', duration: 10, description: 'First true leaves', icon: '🌿', color: '#3b82f6', tips: ['Thin seedlings for spacing', 'Begin light fertilization'] },
-                    { name: 'Vegetative', duration: 25, description: 'Leaf development', icon: '🥬', color: '#10b981', tips: ['Consistent watering', 'Cool weather preferred'] },
+                    { name: 'Seedling', duration: 10, description: 'First true leaves', icon: '🌿', color: '#81c784', tips: ['Thin seedlings for spacing', 'Begin light fertilization'] },
+                    { name: 'Vegetative', duration: 25, description: 'Leaf development', icon: '🥬', color: '#4caf50', tips: ['Consistent watering', 'Cool weather preferred'] },
                     { name: 'Head Formation', duration: 15, description: 'Heads forming and filling', icon: '🥬', color: '#f59e0b', tips: ['Avoid overwatering', 'Monitor for bolting'] },
-                    { name: 'Harvest', duration: 14, description: 'Ready for harvest', icon: '🧺', color: '#8b5cf6', tips: ['Harvest in cool morning', 'Cut at base of plant'] }
+                    { name: 'Harvest', duration: 14, description: 'Ready for harvest', icon: '🧺', color: '#f9a825', tips: ['Harvest in cool morning', 'Cut at base of plant'] }
                 ]
             },
             carrots: {
@@ -108,10 +108,10 @@ class GrowthMonitoringSystem {
                 },
                 stages: [
                     { name: 'Germination', duration: 14, description: 'Slow seed germination', icon: '🌱', color: '#22c55e', tips: ['Keep soil consistently moist', 'Be patient - slow to germinate'] },
-                    { name: 'Seedling', duration: 21, description: 'Feathery leaves emerging', icon: '🌿', color: '#3b82f6', tips: ['Thin seedlings carefully', 'Avoid disturbing roots'] },
-                    { name: 'Vegetative', duration: 35, description: 'Root development and leaf growth', icon: '🥕', color: '#10b981', tips: ['Deep, loose soil important', 'Consistent moisture needed'] },
+                    { name: 'Seedling', duration: 21, description: 'Feathery leaves emerging', icon: '🌿', color: '#81c784', tips: ['Thin seedlings carefully', 'Avoid disturbing roots'] },
+                    { name: 'Vegetative', duration: 35, description: 'Root development and leaf growth', icon: '🥕', color: '#4caf50', tips: ['Deep, loose soil important', 'Consistent moisture needed'] },
                     { name: 'Root Maturation', duration: 21, description: 'Roots sizing up', icon: '🥕', color: '#f59e0b', tips: ['Reduce watering frequency', 'Monitor root size'] },
-                    { name: 'Harvest', duration: 30, description: 'Roots ready for harvest', icon: '🧺', color: '#8b5cf6', tips: ['Harvest before hard frost', 'Store in cool, humid conditions'] }
+                    { name: 'Harvest', duration: 30, description: 'Roots ready for harvest', icon: '🧺', color: '#f9a825', tips: ['Harvest before hard frost', 'Store in cool, humid conditions'] }
                 ]
             }
         };
@@ -222,11 +222,11 @@ class GrowthMonitoringSystem {
     getDefaultStages() {
         return [
             { name: 'Germination', duration: 7, description: 'Seeds sprouting', icon: '🌱', color: '#22c55e', tips: ['Keep soil moist', 'Provide warmth'] },
-            { name: 'Seedling', duration: 14, description: 'Early growth', icon: '🌿', color: '#3b82f6', tips: ['Provide light', 'Begin fertilization'] },
-            { name: 'Vegetative', duration: 28, description: 'Rapid growth', icon: '🌳', color: '#10b981', tips: ['Regular watering', 'Support if needed'] },
+            { name: 'Seedling', duration: 14, description: 'Early growth', icon: '🌿', color: '#81c784', tips: ['Provide light', 'Begin fertilization'] },
+            { name: 'Vegetative', duration: 28, description: 'Rapid growth', icon: '🌳', color: '#4caf50', tips: ['Regular watering', 'Support if needed'] },
             { name: 'Flowering', duration: 14, description: 'Flower development', icon: '🌸', color: '#f59e0b', tips: ['Consistent care', 'Monitor pollination'] },
             { name: 'Fruiting', duration: 21, description: 'Fruit development', icon: '🍎', color: '#ef4444', tips: ['Increase nutrients', 'Support branches'] },
-            { name: 'Harvest', duration: 30, description: 'Ready for harvest', icon: '🧺', color: '#8b5cf6', tips: ['Harvest at peak ripeness', 'Store properly'] }
+            { name: 'Harvest', duration: 30, description: 'Ready for harvest', icon: '🧺', color: '#f9a825', tips: ['Harvest at peak ripeness', 'Store properly'] }
         ];
     }
 
@@ -510,9 +510,9 @@ class GrowthMonitoringSystem {
     showNotification(message, type = 'success') {
         const notification = document.createElement('div');
         notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transform transition-transform duration-300 ${
-            type === 'success' ? 'bg-green-600' : 
+            type === 'success' ? 'bg-emerald-700' : 
             type === 'error' ? 'bg-red-600' : 
-            'bg-blue-600'
+            'bg-amber-600'
         } text-white`;
         
         notification.innerHTML = `

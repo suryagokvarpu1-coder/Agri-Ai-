@@ -2,28 +2,62 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agri-AI</title>
+<title>Agri-AI — AI-Powered Precision Agriculture</title>
+<meta name="description" content="Agri-AI harnesses artificial intelligence and satellite data to revolutionize farming.">
 <script src="translations.js"></script><script src="global-settings.js"></script>
 <script src="api-config.js"></script><script src="auth.js"></script>
+<link rel="stylesheet" href="3d-theme.css">
+<script src="3d-animations.js"></script>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',-apple-system,sans-serif;background:#020207;color:#f1f5f9;min-height:100vh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(16,185,129,.07) 0%,transparent 60%);pointer-events:none}
-.wrap{text-align:center;position:relative;z-index:1}
-.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#10b981,#8b5cf6);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 0 24px rgba(16,185,129,.4),0 0 48px rgba(16,185,129,.15);animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 24px rgba(16,185,129,.4),0 0 48px rgba(16,185,129,.15)}50%{box-shadow:0 0 32px rgba(16,185,129,.6),0 0 64px rgba(16,185,129,.25)}}
-.name{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.75rem;letter-spacing:-.04em;background:linear-gradient(135deg,#10b981,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
-.sub{font-size:.9rem;color:#475569;margin-bottom:2rem}
-.spinner{width:32px;height:32px;border-radius:50%;border:3px solid rgba(16,185,129,.15);border-top-color:#10b981;animation:spin .8s linear infinite;margin:0 auto}
+body{
+  font-family:'Inter',sans-serif;background:#ffffff;color:#0f172a;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  text-align:center;max-width:440px;
+  background:rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border:1px solid rgba(255, 255, 255, 0.1);
+  border-radius:24px;
+  padding:3rem 2rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+.premium-3d .name { color: #fff; }
+.logo{
+  width:64px;height:64px;border-radius:12px;
+  background:#16a34a;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.name{
+  font-weight:800;font-size:1.75rem;
+  color:#0f172a;margin-bottom:.5rem;
+  letter-spacing:-0.025em;
+}
+.sub{font-size:.9375rem;color:#64748b;margin-bottom:2.5rem;line-height:1.5}
+.spinner-wrap{display:flex;flex-direction:column;align-items:center;gap:0.75rem}
+.spinner{
+  width:32px;height:32px;border-radius:50%;
+  border:3px solid #f1f5f9;border-top-color:#16a34a;
+  animation:spin .8s linear infinite;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
+.spinner-text{font-size:.8125rem;color:#64748b;font-weight:500}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="logo"><svg width="28" height="28" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+  <div class="logo"><svg width="32" height="32" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
   <div class="name">Agri-AI</div>
-  <div class="sub">AI-Powered Agriculture Platform</div>
-  <div class="spinner"></div>
+  <div class="sub">AI-Powered Precision Agriculture Platform</div>
+  <div class="spinner-wrap">
+    <div class="spinner"></div>
+    <span class="spinner-text">Loading dashboard...</span>
+  </div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{

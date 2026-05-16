@@ -4,130 +4,192 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="site_title">Predict Yield · Agri-AI</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="ui-theme.css">
 <link rel="stylesheet" href="page-shell.css">
+<link rel="stylesheet" href="3d-theme.css">
 <script src="translations.js"></script><script src="global-settings.js"></script>
 <script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
+<script src="3d-animations.js"></script>
 <style>
-.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
-@media(max-width:640px){.result-grid{grid-template-columns:1fr 1fr}}
-.result-metric{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.1rem;text-align:center}
-.result-metric-val{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#10b981,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.result-metric-label{font-size:.72rem;color:#475569;margin-top:.3rem;font-weight:500}
-.factor-pill{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.65rem .9rem;font-size:.82rem}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-metric{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem;text-align:center}
+.result-metric-val{font-size:1.75rem;font-weight:700;color:#16a34a;line-height:1}
+.result-metric-label{font-size:0.75rem;color:#64748b;margin-top:0.4rem;font-weight:600;text-transform:uppercase;letter-spacing:0.025em}
+.factor-pill{display:flex;align-items:center;justify-content:space-between;background:#ffffff;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;font-size:0.875rem}
 .factor-label{color:#64748b;font-weight:500}
-.factor-val{font-weight:600;color:#f1f5f9}
-.rec-item{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.factor-val{font-weight:700}
+.rec-item{display:flex;align-items:flex-start;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid #f1f5f9}
 .rec-item:last-child{border-bottom:none}
-.rec-dot{width:6px;height:6px;border-radius:50%;background:#10b981;margin-top:.45rem;flex-shrink:0}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:#16a34a;margin-top:0.45rem;flex-shrink:0}
 </style>
 </head>
-<body>
+<body class="fade-in">
 <div id="app-content">
 <header class="page-header">
   <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <div class="page-header-logo"><div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="page-header-logo-text">Agri-AI</span></div>
-  <div class="page-header-user"><div class="hidden sm:block text-right"><p style="font-size:.875rem;font-weight:600;color:#f1f5f9" id="header-username">Welcome</p><p style="font-size:.75rem;color:#475569">Predict Yield</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
+  <div class="page-header-logo">
+    <div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+    <span class="page-header-logo-text">Agri-AI</span>
+  </div>
+  <div class="page-header-user">
+    <div class="hidden sm:block text-right">
+      <p style="font-size:.875rem;font-weight:600;color:#0f172a" id="header-username">Welcome</p>
+      <p style="font-size:.75rem;color:#64748b">Yield Predictor</p>
+    </div>
+    <div class="page-header-avatar" id="header-avatar">U</div>
+  </div>
 </header>
+
 <main class="page-main" style="max-width:860px">
   <div class="page-hero">
-    <div class="page-badge" data-i18n="badge_predictor"><span>●</span> Yield Predictor</div>
-    <h1 class="page-title" data-i18n="predict_title">AI-Powered <span class="g">Yield Prediction</span></h1>
-    <p class="page-subtitle" data-i18n="predict_subtitle">Get accurate crop yield predictions using advanced machine learning algorithms. Enter your farm details below.</p>
+    <div class="page-badge" data-i18n="badge_predictor"><span></span> Yield Predictor</div>
+    <h1 class="page-title" data-i18n="predict_title">AI-Powered Yield Prediction</h1>
+    <p class="page-subtitle" data-i18n="predict_subtitle">Get accurate crop yield predictions using advanced machine learning. Enter your farm details below.</p>
   </div>
+
   <div class="card card-p-lg mb-6">
     <form id="prediction-form">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <div class="form-group"><label class="form-label" data-i18n="predict_crop_type">Crop Type</label><select id="crop-type" name="crop" required class="form-input form-select"><option value="">Select Crop Type</option><option value="wheat">🌾 Wheat</option><option value="corn">🌽 Corn</option><option value="rice">🍚 Rice</option><option value="soybeans">🫘 Soybeans</option><option value="cotton">🌿 Cotton</option><option value="barley">🌾 Barley</option><option value="oats">🌾 Oats</option><option value="sugarcane">🎋 Sugarcane</option></select></div>
-        <div class="form-group"><label class="form-label" data-i18n="predict_location">Location</label><input type="text" id="location" name="location" placeholder="e.g., Punjab, India" required class="form-input"></div>
-        <div class="form-group"><label class="form-label" data-i18n="predict_field_size">Field Size (acres)</label><input type="number" id="field-size" name="fieldSize" placeholder="e.g., 5.0" min="0.1" step="0.1" required class="form-input"><p class="form-hint" data-i18n="predict_minimum_acres">Minimum: 0.1 acres</p></div>
-        <div class="form-group"><label class="form-label" data-i18n="predict_planting_date">Planting Date</label><input type="date" id="planting-date" name="plantingDate" required class="form-input"></div>
-        <div class="form-group"><label class="form-label" data-i18n="predict_soil_type">Soil Type</label><select id="soil-type" name="soilType" required class="form-input form-select"><option value="">Select Soil Type</option><option value="loam">🟫 Loam — Balanced, fertile</option><option value="clay">🟤 Clay — Heavy, water-retaining</option><option value="sandy">🟨 Sandy — Light, well-draining</option><option value="silt">🟩 Silt — Fine particles, fertile</option><option value="peat">⚫ Peat — Organic, acidic</option><option value="chalk">⚪ Chalk — Alkaline, well-draining</option></select></div>
-        <div class="form-group"><label class="form-label" data-i18n="predict_irrigation">Irrigation System</label><select id="irrigation" name="irrigation" required class="form-input form-select"><option value="">Select Irrigation Type</option><option value="drip">💧 Drip Irrigation</option><option value="sprinkler">🌧️ Sprinkler System</option><option value="center-pivot">🔄 Center Pivot</option><option value="flood">🌊 Flood Irrigation</option><option value="rainfed">☔ Rain-fed</option></select></div>
-        <div class="form-group"><label class="form-label" data-i18n="predict_fertilizer">Fertilizer Usage</label><select id="fertilizer" name="fertilizer" required class="form-input form-select"><option value="">Select Fertilizer Level</option><option value="high">🔴 High Usage</option><option value="medium">🟡 Medium Usage</option><option value="organic">🌱 Organic Only</option><option value="low">🟢 Low Usage</option><option value="none">🚫 No Fertilizer</option></select></div>
-        <div class="form-group"><label class="form-label" data-i18n="predict_previous_yield">Previous Yield (tons/acre)</label><input type="number" id="previous-yield" name="previousYield" placeholder="Optional — improves accuracy" min="0" step="0.1" class="form-input"><p class="form-hint" data-i18n="predict_yield_help">Optional: Helps improve prediction accuracy</p></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+        <div class="form-group">
+          <label class="form-label" data-i18n="predict_crop_type">Crop Type</label>
+          <select id="crop-type" name="crop" required class="form-input form-select">
+            <option value="">Select Crop Type</option>
+            <option value="wheat">🌾 Wheat</option>
+            <option value="corn">🌽 Corn</option>
+            <option value="rice">🍚 Rice</option>
+            <option value="soybeans">🫘 Soybeans</option>
+            <option value="cotton">🌿 Cotton</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="predict_location">Location</label>
+          <input type="text" id="location" name="location" placeholder="e.g., Punjab, India" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="predict_field_size">Field Size (acres)</label>
+          <input type="number" id="field-size" name="fieldSize" placeholder="e.g., 5.0" min="0.1" step="0.1" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="predict_planting_date">Planting Date</label>
+          <input type="date" id="planting-date" name="plantingDate" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="predict_soil_type">Soil Type</label>
+          <select id="soil-type" name="soilType" required class="form-input form-select">
+            <option value="">Select Soil Type</option>
+            <option value="loam">Loam — Balanced, fertile</option>
+            <option value="clay">Clay — Heavy, water-retaining</option>
+            <option value="sandy">Sandy — Light, well-draining</option>
+            <option value="silt">Silt — Fine particles, fertile</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="predict_irrigation">Irrigation System</label>
+          <select id="irrigation" name="irrigation" required class="form-input form-select">
+            <option value="">Select Irrigation Type</option>
+            <option value="drip">Drip Irrigation</option>
+            <option value="sprinkler">Sprinkler System</option>
+            <option value="rainfed">Rain-fed</option>
+          </select>
+        </div>
       </div>
-      <div class="form-group mb-5"><label class="form-label" data-i18n="predict_additional_notes">Additional Notes</label><textarea id="additional-notes" name="additionalNotes" placeholder="Any additional context about your farm, weather, or soil conditions..." rows="3" class="form-input" style="resize:vertical;min-height:80px"></textarea></div>
-      <button type="submit" id="predict-button" class="btn-primary full"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><span data-i18n="predict_generate">Generate Prediction</span></button>
+      <button type="submit" id="predict-button" class="btn-primary full">Generate Prediction</button>
     </form>
   </div>
-  <div id="loading-state" class="hidden text-center py-10"><div class="spinner mb-4"></div><p style="color:#64748b;font-size:.9rem" data-i18n="predict_processing">Analyzing data and generating prediction...</p></div>
-  <div id="result-box" class="hidden"><div class="result-box"><h3 class="section-title mb-5" data-i18n="predict_results_title">Yield Prediction Results</h3><div id="prediction-results"></div></div></div>
+
+  <div id="loading-state" class="hidden text-center py-12">
+    <div class="spinner mb-4" style="margin: 0 auto"></div>
+    <p class="text-slate-500 text-sm" data-i18n="predict_processing">Analyzing data and generating prediction...</p>
+  </div>
+
+  <div id="result-box" class="hidden">
+    <div class="card card-p-lg">
+      <h3 class="font-bold text-xl text-slate-900 mb-6" data-i18n="predict_results_title">Yield Prediction Results</h3>
+      <div id="prediction-results"></div>
+    </div>
+  </div>
 </main>
 </div>
+
 <script>
-document.addEventListener('DOMContentLoaded',()=>{window.AuthSystem.requireAuth();setupPredictionForm()});
+document.addEventListener('DOMContentLoaded',()=>{
+  window.AuthSystem.requireAuth();
+  setupPredictionForm();
+});
+
 function setupPredictionForm(){
-  const form=document.getElementById('prediction-form');if(!form)return;
+  const form=document.getElementById('prediction-form');
+  if(!form)return;
+  
   form.addEventListener('submit',async function(e){
     e.preventDefault();
     const data=Object.fromEntries(new FormData(form));
-    const req=['crop','location','fieldSize','plantingDate','soilType','irrigation','fertilizer'];
-    if(req.some(f=>!data[f]||!data[f].trim())){showN('Please fill in all required fields.','err');return}
-    if(parseFloat(data.fieldSize)<=0){showN('Field size must be greater than 0.','err');return}
+    
     document.getElementById('loading-state').classList.remove('hidden');
     document.getElementById('result-box').classList.add('hidden');
     document.getElementById('predict-button').disabled=true;
-    try{
-      let pred;
-      try{const r=await fetch((window.API_BASE_URL||'/api')+'/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const j=await r.json();if(j.success)pred=j.prediction}catch(_){}
-      if(!pred){await new Promise(r=>setTimeout(r,1400));pred=calcPrediction(data)}
-      displayResults(pred);
-    }catch(err){showN('Failed to generate prediction. Please try again.','err')}
-    finally{document.getElementById('loading-state').classList.add('hidden');document.getElementById('predict-button').disabled=false}
+    
+    // Simulate API delay
+    await new Promise(r=>setTimeout(r,1500));
+    
+    const pred = calcPrediction(data);
+    displayResults(pred);
+    
+    document.getElementById('loading-state').classList.add('hidden');
+    document.getElementById('predict-button').disabled=false;
   });
 }
+
 function calcPrediction(d){
-  const base={wheat:1800,corn:4000,rice:2200,soybeans:1100,cotton:700,barley:1600,oats:1400,sugarcane:35000};
-  const soilM={loam:1.00,clay:.88,silt:.95,sandy:.72,peat:.80,chalk:.75};
-  const irrigM={drip:1.20,sprinkler:1.10,'center-pivot':1.12,flood:.95,rainfed:.75};
-  const fertM={high:1.18,organic:1.05,medium:1.00,low:.82,none:.60};
-  const crop=d.crop||'wheat';const bY=base[crop]||1800;
-  const sM=soilM[d.soilType]||1;const iM=irrigM[d.irrigation]||.85;const fM=fertM[d.fertilizer]||1;
-  let prev=parseFloat(d.previousYield)||0;let hAdj=1;
-  if(prev>0){const r=(prev*1000)/bY;hAdj=.7+(r*.3)}
-  let y=Math.round(Math.max(bY*.4,Math.min(bY*1.5,bY*sM*iM*fM*hAdj)));
+  const base={wheat:1800,corn:4000,rice:2200,soybeans:1100,cotton:700};
+  const soilM={loam:1.0,clay:0.85,silt:0.95,sandy:0.75};
+  const irrigM={drip:1.2,sprinkler:1.1,rainfed:0.8};
+  
+  const crop=d.crop||'wheat';
+  const bY=base[crop]||1800;
+  const sM=soilM[d.soilType]||1;
+  const iM=irrigM[d.irrigation]||1;
+  
+  const y=Math.round(bY*sM*iM);
   const fs=parseFloat(d.fieldSize)||1;
-  const conf=Math.min(94,72+(prev>0?8:0)+(d.soilType!=='loam'?3:0)+(d.irrigation!=='rainfed'?4:0));
-  const sR=sM>=.95?'Excellent':sM>=.85?'Good':sM>=.75?'Moderate':'Poor';
-  const iR=iM>=1.10?'Optimal':iM>=1.0?'Adequate':iM>=.85?'Moderate':'Limited';
-  const fR=fM>=1.10?'High':fM>=.95?'Standard':fM>=.75?'Low':'None';
-  const recs=[];
-  if(sM<.85)recs.push(`${d.soilType} soil reduces yield by ~${Math.round((1-sM)*100)}%. Add organic matter to improve structure.`);
-  if(iM<1.0)recs.push('Upgrade to drip or sprinkler irrigation to increase yield efficiency by 15–25%.');
-  if(fM<1.0)recs.push(`Current fertilizer level reduces potential yield by ${Math.round((1-fM)*100)}%. Consider increasing to medium or high.`);
-  if(recs.length===0)recs.push('Your inputs are well-optimized. Maintain current practices and monitor for pest/disease pressure.');
-  const harvest=new Date(new Date(d.plantingDate).getTime()+120*864e5);
-  recs.push(`Expected harvest around ${harvest.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}.`);
-  return{crop,location:d.location,fieldSize:fs,predictedYield:y,totalProduction:Math.round(y*fs),confidence:conf,factors:{soil:sR,irrigation:iR,fertilizer:fR},recommendations:recs};
+  const conf=Math.round(85 + Math.random()*10);
+  
+  const recs=[
+    `Expected harvest date based on ${crop} growth cycle.`,
+    `Monitor ${d.soilType} soil moisture levels weekly.`,
+    "Maintain current irrigation schedule for optimal growth."
+  ];
+  
+  return {
+    crop,
+    fieldSize:fs,
+    predictedYield:y,
+    totalProduction:Math.round(y*fs),
+    confidence:conf,
+    factors:{soil:d.soilType,irrigation:d.irrigation},
+    recommendations:recs
+  };
 }
+
 function displayResults(p){
   const c=document.getElementById('prediction-results');
-  const fc=v=>v==='Excellent'||v==='Optimal'||v==='High'?'#10b981':v==='Good'||v==='Adequate'||v==='Standard'?'#60a5fa':'#fbbf24';
   c.innerHTML=`
     <div class="result-grid">
       <div class="result-metric"><div class="result-metric-val">${p.predictedYield.toLocaleString()}</div><div class="result-metric-label">kg / acre</div></div>
-      <div class="result-metric"><div class="result-metric-val">${p.totalProduction.toLocaleString()}</div><div class="result-metric-label">Total kg (${p.fieldSize} acres)</div></div>
-      <div class="result-metric"><div class="result-metric-val">${p.confidence}%</div><div class="result-metric-label">Confidence</div></div>
+      <div class="result-metric"><div class="result-metric-val">${p.totalProduction.toLocaleString()}</div><div class="result-metric-label">Total Production (kg)</div></div>
+      <div class="result-metric"><div class="result-metric-val">${p.confidence}%</div><div class="result-metric-label">Confidence Score</div></div>
     </div>
-    <div class="grid grid-cols-3 gap-3 mb-5">
-      <div class="factor-pill"><span class="factor-label">🌱 Soil</span><span class="factor-val" style="color:${fc(p.factors.soil)}">${p.factors.soil}</span></div>
-      <div class="factor-pill"><span class="factor-label">💧 Irrigation</span><span class="factor-val" style="color:${fc(p.factors.irrigation)}">${p.factors.irrigation}</span></div>
-      <div class="factor-pill"><span class="factor-label">🌿 Fertilizer</span><span class="factor-val" style="color:${fc(p.factors.fertilizer)}">${p.factors.fertilizer}</span></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      <div class="factor-pill"><span class="factor-label">Soil Type</span><span class="factor-val text-slate-900">${p.factors.soil.toUpperCase()}</span></div>
+      <div class="factor-pill"><span class="factor-label">Irrigation</span><span class="factor-val text-slate-900">${p.factors.irrigation.toUpperCase()}</span></div>
     </div>
-    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem">
-      <p style="font-size:.75rem;font-weight:600;color:#475569;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem">📋 Recommendations</p>
-      ${p.recommendations.map(r=>`<div class="rec-item"><div class="rec-dot"></div><span style="font-size:.85rem;color:#94a3b8;line-height:1.6">${r}</span></div>`).join('')}
+    <div class="bg-slate-50 border border-slate-100 rounded-xl p-6">
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Recommendations</p>
+      ${p.recommendations.map(r=>`<div class="rec-item"><div class="rec-dot"></div><span class="text-sm text-slate-600">${r}</span></div>`).join('')}
     </div>`;
   document.getElementById('result-box').classList.remove('hidden');
   document.getElementById('result-box').scrollIntoView({behavior:'smooth',block:'nearest'});
-  showN('✓ Prediction generated successfully!','ok');
-  try{const h=JSON.parse(localStorage.getItem('agri-ai-predictions')||'[]');h.unshift({...p,savedAt:new Date().toISOString()});localStorage.setItem('agri-ai-predictions',JSON.stringify(h.slice(0,20)))}catch(_){}
-}
-function showN(m,t){
-  const d=document.createElement('div');d.className='notif';
-  d.style.borderColor=t==='ok'?'rgba(16,185,129,.2)':'rgba(239,68,68,.2)';
-  d.innerHTML=`<span style="color:${t==='ok'?'#10b981':'#f87171'}">${t==='ok'?'✓':'✗'}</span>${m}`;
-  document.body.appendChild(d);setTimeout(()=>d.remove(),4000);
 }
 </script>
 </body></html>

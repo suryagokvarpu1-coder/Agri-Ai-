@@ -5,123 +5,126 @@
 <title data-i18n="site_title">Carbon Tracking · Agri-AI</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="ui-theme.css">
 <link rel="stylesheet" href="page-shell.css">
+<link rel="stylesheet" href="3d-theme.css">
 <script src="translations.js"></script><script src="global-settings.js"></script>
 <script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
+<script src="3d-animations.js"></script>
 <style>
-.carbon-card{background:rgba(7,7,15,.9);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:1.75rem;transition:border-color .2s ease,transform .35s cubic-bezier(.34,1.56,.64,1)}
-.carbon-card:hover{border-color:rgba(16,185,129,.18);transform:translateY(-3px)}
-.credit-positive{border-left:3px solid #10b981;background:rgba(16,185,129,.04)}
-.credit-negative{border-left:3px solid #ef4444;background:rgba(239,68,68,.04)}
-.credit-neutral{border-left:3px solid #f59e0b;background:rgba(245,158,11,.04)}
-.chart-container{position:relative;height:280px;margin:1rem 0}
-.form-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#f1f5f9;font-size:.88rem;padding:.7rem .9rem;outline:none;transition:border-color .2s ease,box-shadow .2s ease;font-family:'Inter',sans-serif}
-.form-input::placeholder{color:#1e293b}
-.form-input:focus{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.12);background:rgba(16,185,129,.03)}
-.form-select option{background:#0c0c18;color:#f1f5f9}
+.carbon-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+.carbon-card:hover {
+  border-color: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+.credit-positive { border-left: 4px solid #16a34a; }
+.chart-container { position: relative; height: 320px; margin: 1.5rem 0; }
 </style>
 </head>
-<body>
+<body class="fade-in">
 <div id="app-content">
 <header class="page-header">
   <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <div class="page-header-logo"><div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="page-header-logo-text">Agri-AI</span></div>
-  <div class="page-header-user"><div class="hidden sm:block text-right"><p style="font-size:.875rem;font-weight:600;color:#f1f5f9" id="header-username">Welcome</p><p style="font-size:.75rem;color:#475569">Carbon Tracking</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
+  <div class="page-header-logo">
+    <div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+    <span class="page-header-logo-text">Agri-AI</span>
+  </div>
+  <div class="page-header-user">
+    <div class="hidden sm:block text-right">
+      <p style="font-size:.875rem;font-weight:600;color:#0f172a" id="header-username">Welcome</p>
+      <p style="font-size:.75rem;color:#64748b">Carbon Tracking</p>
+    </div>
+    <div class="page-header-avatar" id="header-avatar">U</div>
+  </div>
 </header>
+
 <main class="page-main">
   <div class="page-hero">
-    <div class="page-badge" data-i18n="carbon_tracking_title"><span>●</span> Carbon Tracking</div>
-    <h1 class="page-title">Carbon Footprint <span class="g">Tracking</span></h1>
-    <p class="page-subtitle" data-i18n="carbon_tracking_subtitle">Monitor your farm's carbon sequestration, track environmental impact, and earn carbon credits through sustainable farming practices.</p>
+    <div class="page-badge"><span></span> Carbon Tracking</div>
+    <h1 class="page-title">Carbon Footprint Tracking</h1>
+    <p class="page-subtitle" data-i18n="carbon_tracking_subtitle">Monitor your farm's carbon sequestration and environmental impact through sustainable farming practices.</p>
   </div>
 
-  <!-- Dashboard -->
+  <!-- Dashboard Stats -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
     <div class="carbon-card credit-positive">
-      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem"><div style="width:40px;height:40px;border-radius:10px;background:rgba(16,185,129,.15);display:flex;align-items:center;justify-content:center"><svg width="18" height="18" style="color:#10b981" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9" data-i18n="carbon_sequestered">Carbon Sequestered</h3></div>
-      <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:800;color:#10b981;line-height:1" id="carbon-sequestered">0</div>
-      <p style="font-size:.78rem;color:#475569;margin-top:.35rem" data-i18n="carbon_tons_co2">tons CO₂ this year</p>
-      <p style="font-size:.75rem;color:#10b981;margin-top:.5rem">+15% from last year</p>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h3 class="font-bold text-slate-900" data-i18n="carbon_sequestered">Carbon Sequestered</h3>
+      </div>
+      <div class="text-3xl font-bold text-emerald-600 mb-1" id="carbon-sequestered">0</div>
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">tons CO₂ this year</p>
     </div>
     <div class="carbon-card credit-positive">
-      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem"><div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center"><svg width="18" height="18" style="color:#60a5fa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9" data-i18n="carbon_available_credits">Available Credits</h3></div>
-      <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:800;color:#60a5fa;line-height:1" id="available-credits">0</div>
-      <p style="font-size:.78rem;color:#475569;margin-top:.35rem" data-i18n="carbon_credits_ready">carbon credits ready to sell</p>
-      <button onclick="sellCredits()" style="margin-top:.75rem;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.25);border-radius:8px;padding:.35rem .75rem;font-size:.78rem;color:#60a5fa;cursor:pointer;transition:all .2s ease" data-i18n="carbon_sell_credits">Sell Credits</button>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h3 class="font-bold text-slate-900" data-i18n="carbon_available_credits">Available Credits</h3>
+      </div>
+      <div class="text-3xl font-bold text-blue-600 mb-1" id="available-credits">0</div>
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Ready to sell</p>
     </div>
     <div class="carbon-card credit-positive">
-      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem"><div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,.15);display:flex;align-items:center;justify-content:center"><svg width="18" height="18" style="color:#fbbf24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9">Estimated Value</h3></div>
-      <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:800;color:#fbbf24;line-height:1" id="estimated-value">$0</div>
-      <p style="font-size:.78rem;color:#475569;margin-top:.35rem">potential earnings</p>
-      <p style="font-size:.75rem;color:#fbbf24;margin-top:.5rem">$25–45 per credit</p>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h3 class="font-bold text-slate-900">Estimated Value</h3>
+      </div>
+      <div class="text-3xl font-bold text-amber-600 mb-1" id="estimated-value">$0</div>
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Potential earnings</p>
     </div>
   </div>
 
   <!-- Calculation Form -->
   <div class="card card-p-lg mb-8">
-    <h3 class="section-title mb-5" data-i18n="carbon_calculate_title">Calculate Carbon Sequestration</h3>
+    <h3 class="font-bold text-slate-900 text-xl mb-6" data-i18n="carbon_calculate_title">Calculate Carbon Impact</h3>
     <form id="carbon-form">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-5">
-        <div class="space-y-4">
-          <h4 style="font-size:.85rem;font-weight:600;color:#94a3b8;margin-bottom:.5rem">Farm Information</h4>
-          <div class="form-group"><label class="form-label" data-i18n="carbon_farm_size">Farm Size (acres)</label><input type="number" id="farm-size" name="farmSize" placeholder="Enter total farm size" min="0.1" step="0.1" required class="form-input"></div>
-          <div class="form-group"><label class="form-label" data-i18n="carbon_crop_type">Primary Crop Type</label><select id="crop-type" name="cropType" required class="form-input form-select"><option value="">Select crop type</option><option value="wheat">🌾 Wheat</option><option value="corn">🌽 Corn/Maize</option><option value="rice">🍚 Rice</option><option value="soybeans">🫘 Soybeans</option><option value="cotton">🌿 Cotton</option><option value="sugarcane">🎋 Sugarcane</option><option value="vegetables">🥕 Vegetables</option><option value="fruits">🍎 Fruits</option><option value="legumes">🫛 Legumes</option></select></div>
-          <div class="form-group"><label class="form-label" data-i18n="carbon_farming_method">Farming Method</label><select id="farming-method" name="farmingMethod" required class="form-input form-select"><option value="">Select farming method</option><option value="conventional">🚜 Conventional Farming</option><option value="organic">🌱 Organic Farming</option><option value="regenerative">♻️ Regenerative Agriculture</option><option value="no-till">🌾 No-Till Farming</option><option value="cover-crop">🌿 Cover Crop System</option><option value="agroforestry">🌳 Agroforestry</option></select></div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="space-y-5">
+          <div class="form-group"><label class="form-label">Farm Size (acres)</label><input type="number" id="farm-size" name="farmSize" placeholder="e.g., 50" required class="form-input"></div>
+          <div class="form-group"><label class="form-label">Primary Crop Type</label><select id="crop-type" name="cropType" required class="form-input form-select"><option value="">Select crop</option><option value="wheat">Wheat</option><option value="corn">Corn</option><option value="rice">Rice</option></select></div>
+          <div class="form-group"><label class="form-label">Farming Method</label><select id="farming-method" name="farmingMethod" required class="form-input form-select"><option value="">Select method</option><option value="conventional">Conventional</option><option value="organic">Organic</option><option value="regenerative">Regenerative</option></select></div>
         </div>
-        <div class="space-y-4">
-          <h4 style="font-size:.85rem;font-weight:600;color:#94a3b8;margin-bottom:.5rem">Sustainable Practices</h4>
-          <div class="form-group"><label class="form-label">Cover Crops Coverage (%)</label><input type="number" id="cover-crops" name="coverCrops" placeholder="Percentage of land with cover crops" min="0" max="100" class="form-input"></div>
-          <div class="form-group"><label class="form-label">Tree/Forest Coverage (%)</label><input type="number" id="tree-coverage" name="treeCoverage" placeholder="Percentage of land with trees" min="0" max="100" class="form-input"></div>
-          <div class="form-group"><label class="form-label">Composting & Organic Matter</label><select id="composting" name="composting" class="form-input form-select"><option value="none">No composting</option><option value="low">Low — Occasional composting</option><option value="medium">Medium — Regular composting</option><option value="high">High — Extensive composting program</option></select></div>
+        <div class="space-y-5">
+          <div class="form-group"><label class="form-label">Cover Crops Coverage (%)</label><input type="number" id="cover-crops" name="coverCrops" placeholder="0-100" class="form-input"></div>
+          <div class="form-group"><label class="form-label">Tree Coverage (%)</label><input type="number" id="tree-coverage" name="treeCoverage" placeholder="0-100" class="form-input"></div>
+          <div class="form-group"><label class="form-label">Organic Matter Usage</label><select id="composting" name="composting" class="form-input form-select"><option value="none">None</option><option value="medium">Regular</option><option value="high">Extensive</option></select></div>
         </div>
       </div>
-      <div class="form-group mb-5"><label class="form-label">Additional Sustainable Practices</label><textarea id="additional-practices" name="additionalPractices" placeholder="Describe any other carbon-reducing practices..." rows="3" class="form-input" style="resize:vertical;min-height:80px"></textarea></div>
-      <div class="text-center"><button type="submit" class="btn-primary"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>Calculate Carbon Impact</button></div>
+      <div class="text-center"><button type="submit" class="btn-primary">Calculate Impact</button></div>
     </form>
   </div>
 
-  <!-- Results -->
+  <!-- Results Section -->
   <div id="results-section" class="hidden">
-    <div class="card card-p-lg mb-6">
-      <h3 class="section-title mb-5">Carbon Impact Analysis</h3>
+    <div class="card card-p-lg mb-8">
+      <h3 class="font-bold text-slate-900 text-xl mb-6">Carbon Impact Analysis</h3>
       <div id="impact-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
-    </div>
-    <div class="card card-p-lg mb-6">
-      <h3 class="section-title mb-4">Carbon Sequestration Projection</h3>
       <div class="chart-container"><canvas id="carbonChart"></canvas></div>
     </div>
+    
     <div class="card card-p-lg">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:gap:.5rem">
-        <h3 class="section-title" style="margin-bottom:0">Carbon Credits Marketplace</h3>
-        <span style="font-size:.78rem;color:#475569">Current market price: $35/credit</span>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <h3 class="font-bold text-slate-900 text-xl mb-6">Marketplace</h3>
+      <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
-          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem;margin-bottom:1rem">
-            <h4 style="font-size:.875rem;font-weight:600;color:#f1f5f9;margin-bottom:.75rem">Your Carbon Credits</h4>
-            <div style="display:flex;justify-content:space-between;margin-bottom:.5rem"><span style="font-size:.85rem;color:#64748b">Available for sale:</span><span style="font-size:.85rem;font-weight:600;color:#10b981" id="credits-available">0 credits</span></div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:.5rem"><span style="font-size:.85rem;color:#64748b">Estimated value:</span><span style="font-size:.85rem;font-weight:600;color:#fbbf24" id="credits-value">$0</span></div>
-            <div style="display:flex;justify-content:space-between"><span style="font-size:.85rem;color:#64748b">Verification status:</span><span style="font-size:.85rem;font-weight:600;color:#60a5fa">Pending</span></div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:.5rem">
-            <button onclick="requestVerification()" class="btn-primary" style="background:linear-gradient(135deg,#3b82f6,#2563eb);box-shadow:0 3px 16px rgba(59,130,246,.3)">Request Verification</button>
-            <button onclick="listCredits()" class="btn-primary">List Credits for Sale</button>
-          </div>
+          <h4 class="font-bold text-emerald-900 text-lg mb-1">List your credits for sale</h4>
+          <p class="text-emerald-700 text-sm">Earn up to $35 per carbon credit verified on your farm.</p>
         </div>
-        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem">
-          <h4 style="font-size:.875rem;font-weight:600;color:#f1f5f9;margin-bottom:.75rem">Potential Earnings</h4>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(135deg,#10b981,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:.5rem" id="potential-earnings">$0</div>
-          <p style="font-size:.78rem;color:#475569">Based on current market rates</p>
-        </div>
+        <button class="btn-primary" style="background: #166534">Request Verification</button>
       </div>
     </div>
   </div>
 </main>
 </div>
-<div id="success-toast" class="fixed top-4 right-4 px-5 py-3 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 z-50" style="background:rgba(7,7,15,.95);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(20px);color:#f1f5f9;font-size:.85rem;font-weight:500;display:flex;align-items:center;gap:.6rem">
-  <svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-  <span id="toast-message">Success!</span>
-</div>
-<script>document.addEventListener('DOMContentLoaded',()=>{window.AuthSystem.requireAuth()});</script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  window.AuthSystem.requireAuth();
+});
+</script>
 <script src="carbon-tracking.js"></script>
 </body></html>

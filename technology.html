@@ -4,40 +4,84 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="site_title">Technology · Agri-AI</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="ui-theme.css">
 <link rel="stylesheet" href="page-shell.css">
+<link rel="stylesheet" href="3d-theme.css">
 <script src="translations.js"></script><script src="global-settings.js"></script>
 <script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
+<script src="3d-animations.js"></script>
+<style>
+.tech-stack-item {
+  text-align: center;
+  padding: 1rem;
+  transition: all 0.2s;
+}
+.tech-stack-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.75rem;
+  font-weight: 800;
+  color: #16a34a;
+}
+</style>
 </head>
-<body>
+<body class="fade-in">
 <div id="app-content">
 <header class="page-header">
   <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <div class="page-header-logo"><div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><span class="page-header-logo-text">Agri-AI</span></div>
-  <div class="page-header-user"><div class="hidden sm:block text-right"><p style="font-size:.875rem;font-weight:600;color:#f1f5f9" id="header-username">Welcome</p><p style="font-size:.75rem;color:#475569">Technology</p></div><div class="page-header-avatar" id="header-avatar">U</div></div>
+  <div class="page-header-logo">
+    <div class="page-header-logo-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+    <span class="page-header-logo-text">Agri-AI</span>
+  </div>
+  <div class="page-header-user">
+    <div class="hidden sm:block text-right">
+      <p style="font-size:.875rem;font-weight:600;color:#0f172a" id="header-username">Welcome</p>
+      <p style="font-size:.75rem;color:#64748b">Technology</p>
+    </div>
+    <div class="page-header-avatar" id="header-avatar">U</div>
+  </div>
 </header>
+
 <main class="page-main">
-  <div class="page-hero text-center" style="max-width:680px;margin:0 auto 3rem">
-    <div class="page-badge" data-i18n="badge_technology"><span>●</span> Technology</div>
-    <h1 class="page-title" data-i18n="tech_title">Cutting-Edge <span class="g">AI Technology</span></h1>
-    <p class="page-subtitle" style="margin:0 auto" data-i18n="tech_subtitle">Our platform leverages the latest advances in artificial intelligence, machine learning, and satellite technology to deliver unprecedented accuracy in agricultural predictions.</p>
+  <div class="page-hero text-center" style="max-width:800px; margin: 0 auto 4rem">
+    <div class="page-badge"><span></span> Technology</div>
+    <h1 class="page-title" data-i18n="tech_title">Advanced Agricultural Intelligence</h1>
+    <p class="page-subtitle" style="margin: 0 auto" data-i18n="tech_subtitle">Our platform leverages the latest advances in AI, machine learning, and satellite data to deliver precision farming insights.</p>
   </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
-    <div class="feat-card"><div class="icon-box" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.15)"><svg width="20" height="20" style="color:#60a5fa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem" data-i18n="tech_ml_title">Machine Learning</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65" data-i18n="tech_ml_desc">Advanced neural networks trained on millions of data points to recognize patterns in crop growth, weather conditions, and soil health for accurate yield predictions.</p></div>
-    <div class="feat-card"><div class="icon-box" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.15)"><svg width="20" height="20" style="color:#10b981" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem" data-i18n="tech_satellite_title">Satellite Imagery</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65" data-i18n="tech_satellite_desc">High-resolution satellite data from multiple sources provides real-time monitoring of crop health, growth stages, and environmental conditions across vast agricultural areas.</p></div>
-    <div class="feat-card"><div class="icon-box" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.15)"><svg width="20" height="20" style="color:#a78bfa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Weather Analytics</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65">Comprehensive weather data integration including temperature, precipitation, humidity, and seasonal patterns to predict their impact on crop yields.</p></div>
-    <div class="feat-card"><div class="icon-box" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.15)"><svg width="20" height="20" style="color:#fbbf24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Soil Analysis</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65">Advanced soil composition analysis using IoT sensors and laboratory data to understand nutrient levels, pH, moisture content, and soil health indicators.</p></div>
-    <div class="feat-card"><div class="icon-box" style="background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.15)"><svg width="20" height="20" style="color:#f472b6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">Big Data Processing</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65">Massive data processing capabilities handle petabytes of agricultural data from multiple sources to generate insights and predictions in real-time.</p></div>
-    <div class="feat-card"><div class="icon-box" style="background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.15)"><svg width="20" height="20" style="color:#2dd4bf" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div><h4 style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:.5rem">IoT Integration</h4><p style="font-size:.85rem;color:#64748b;line-height:1.65">Seamless integration with Internet of Things devices including sensors, drones, and smart farming equipment for comprehensive data collection.</p></div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+    <div class="feat-card">
+      <div class="icon-box"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+      <h4 class="font-bold text-slate-900 mb-2" data-i18n="tech_ml_title">Machine Learning</h4>
+      <p class="text-sm text-slate-600 leading-relaxed" data-i18n="tech_ml_desc">Neural networks trained on global data points to recognize patterns in crop health and weather impacts.</p>
+    </div>
+    <div class="feat-card">
+      <div class="icon-box" style="background:#eff6ff; color:#3b82f6"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <h4 class="font-bold text-slate-900 mb-2" data-i18n="tech_satellite_title">Satellite Imagery</h4>
+      <p class="text-sm text-slate-600 leading-relaxed" data-i18n="tech_satellite_desc">High-resolution spectral data providing real-time monitoring of crop growth across vast areas.</p>
+    </div>
+    <div class="feat-card">
+      <div class="icon-box" style="background:#fef3c7; color:#d97706"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+      <h4 class="font-bold text-slate-900 mb-2">Weather Analytics</h4>
+      <p class="text-sm text-slate-600 leading-relaxed">Integration of global weather models to predict hyper-local conditions affecting your fields.</p>
+    </div>
   </div>
+
   <div class="card card-p-lg">
-    <h3 class="section-title mb-6 text-center">Our Technology Stack</h3>
-    <div class="grid grid-cols-3 md:grid-cols-6 gap-5">
-      <div class="text-center"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(139,92,246,.15));border:1px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.9rem;color:#60a5fa">AI</div><p style="font-size:.75rem;color:#475569">TensorFlow</p></div>
-      <div class="text-center"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(5,150,105,.15));border:1px solid rgba(16,185,129,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.9rem;color:#10b981">ML</div><p style="font-size:.75rem;color:#475569">PyTorch</p></div>
-      <div class="text-center"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(217,119,6,.15));border:1px solid rgba(245,158,11,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.25rem">☁️</div><p style="font-size:.75rem;color:#475569">AWS Cloud</p></div>
-      <div class="text-center"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(220,38,38,.15));border:1px solid rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.25rem">🛰️</div><p style="font-size:.75rem;color:#475569">Satellite API</p></div>
-      <div class="text-center"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(124,58,237,.15));border:1px solid rgba(139,92,246,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.25rem">📊</div><p style="font-size:.75rem;color:#475569">Big Data</p></div>
-      <div class="text-center"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(20,184,166,.15),rgba(13,148,136,.15));border:1px solid rgba(20,184,166,.2);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;font-size:1.25rem">🌐</div><p style="font-size:.75rem;color:#475569">IoT Platform</p></div>
+    <h3 class="font-bold text-slate-900 text-center text-xl mb-8">Our Technology Stack</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+      <div class="tech-stack-item"><div class="tech-stack-icon">AI</div><p class="text-xs font-bold text-slate-400">TensorFlow</p></div>
+      <div class="tech-stack-item"><div class="tech-stack-icon">ML</div><p class="text-xs font-bold text-slate-400">PyTorch</p></div>
+      <div class="tech-stack-item"><div class="tech-stack-icon">☁️</div><p class="text-xs font-bold text-slate-400">AWS Cloud</p></div>
+      <div class="tech-stack-item"><div class="tech-stack-icon">🛰️</div><p class="text-xs font-bold text-slate-400">Satellite API</p></div>
+      <div class="tech-stack-item"><div class="tech-stack-icon">📊</div><p class="text-xs font-bold text-slate-400">Big Data</p></div>
+      <div class="tech-stack-item"><div class="tech-stack-icon">🌐</div><p class="text-xs font-bold text-slate-400">IoT Platform</p></div>
     </div>
   </div>
 </main>

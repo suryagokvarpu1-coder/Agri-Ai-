@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose an account · Agri-AI</title>
+    <script src="translations.js"></script>
+    <script src="global-settings.js"></script>
+    <script src="auth.js"></script>
+    <link rel="stylesheet" href="3d-theme.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #020617;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+        }
+
+        .picker-card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .provider-icon {
+            width: 54px;
+            height: 54px;
+            margin: 0 auto 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 14px;
+            padding: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .provider-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .provider-icon.github {
+            background: #181717;
+            color: white;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .account-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .account-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(22, 163, 74, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(22, 163, 74, 0.3);
+        }
+
+        .info {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name {
+            font-weight: 500;
+            font-size: 0.9375rem;
+            color: #f8fafc;
+        }
+
+        .email {
+            font-size: 0.8125rem;
+            color: #94a3b8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .add-account {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: #4ade80;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 18px;
+            transition: all 0.2s;
+            border: 1px dashed rgba(22, 163, 74, 0.3);
+        }
+
+        .add-account:hover {
+            background: rgba(22, 163, 74, 0.08);
+            border-style: solid;
+        }
+
+        .footer-info {
+            font-size: 0.75rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin-top: 2rem;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .footer-info a {
+            color: #16a34a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-info a:hover {
+            text-decoration: underline;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 10;
+            border-radius: 28px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(22, 163, 74, 0.1);
+            border-top-color: #16a34a;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="premium-3d">
+    <div id="canvas-container"></div>
+    
+    <div class="picker-card">
+        <div id="loading" class="loading-overlay">
+            <div class="spinner"></div>
+            <p style="font-size: 0.875rem; color: #fff; font-weight:500;">Signing you in...</p>
+        </div>
+
+        <div class="header">
+            <div id="provider-icon" class="provider-icon">
+                <!-- Icon injected -->
+            </div>
+            <h1 class="title">Choose an account</h1>
+            <p class="subtitle">to continue to <span style="color:#16a34a; font-weight:600;">Agri-AI</span></p>
+        </div>
+
+        <div id="account-list" class="account-list">
+            <!-- Accounts injected -->
+        </div>
+
+        <div class="add-account" onclick="addNewAccount()">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            Use another account
+        </div>
+
+        <div class="footer-info">
+            To continue, the provider will share your name and email address with Agri-AI. Review our <a href="#">Privacy Policy</a> and <a href="#">Terms</a>.
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const provider = params.get('provider') || 'google';
+        
+        const mockAccounts = [
+            { name: 'Yaswanth Gokavarapu', email: 'suryagokvarpu1@gmail.com', initial: 'Y' },
+            { name: 'Agri Expert', email: 'expert@agri-ai.com', initial: 'E' },
+            { name: 'Demo Account', email: 'demo@example.com', initial: 'D' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const iconContainer = document.getElementById('provider-icon');
+            const listContainer = document.getElementById('account-list');
+
+            if (provider === 'github') {
+                iconContainer.classList.add('github');
+                iconContainer.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>`;
+            } else {
+                iconContainer.innerHTML = `<svg viewBox="0 0 24 24" width="32" height="32"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
+            }
+
+            mockAccounts.forEach(acc => {
+                const item = document.createElement('div');
+                item.className = 'account-item';
+                item.onclick = () => selectAccount(acc);
+                item.innerHTML = `
+                    <div class="avatar">${acc.initial}</div>
+                    <div class="info">
+                        <span class="name">${acc.name}</span>
+                        <span class="email">${acc.email}</span>
+                    </div>
+                `;
+                listContainer.appendChild(item);
+            });
+        });
+
+        function selectAccount(acc) {
+            document.getElementById('loading').style.display = 'flex';
+            setTimeout(() => {
+                const result = window.AuthSystem.socialLogin(provider, {
+                    email: acc.email,
+                    name: acc.name
+                });
+                if (result.success) {
+                    window.location.href = 'overview.html';
+                } else {
+                    alert('Authentication failed: ' + result.error);
+                    document.getElementById('loading').style.display = 'none';
+                }
+            }, 1200);
+        }
+
+        function addNewAccount() {
+            const email = prompt("Enter your email address:");
+            if (email && email.includes('@')) {
+                const name = email.split('@')[0];
+                selectAccount({ name, email, initial: name.charAt(0).toUpperCase() });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -97,6 +97,52 @@
             return { success: true, message: 'Account created! Please log in.' };
         },
 
+        /** Social Login/Signup — signs up if user doesn't exist, then logs in */
+        socialLogin(provider, profile) {
+            if (!profile || !profile.email) return { success: false, error: 'Invalid social profile' };
+
+            const users = getUsers();
+            let user = users.find(u => u.email === profile.email);
+
+            if (!user) {
+                // Sign up new user
+                user = {
+                    id: users.length + 2,
+                    username: profile.email.split('@')[0],
+                    password: 'social-auth-' + Math.random().toString(36).slice(2),
+                    fullName: profile.name || profile.email.split('@')[0],
+                    email: profile.email,
+                    role: 'user',
+                    isActive: true,
+                    provider: provider,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    loginCount: 1
+                };
+                users.push(user);
+                saveUsers(users);
+            } else {
+                // Update existing user
+                user.lastLogin = new Date().toISOString();
+                user.loginCount = (user.loginCount || 0) + 1;
+                saveUsers(users);
+            }
+
+            const token = generateToken(user.username);
+            const sessionUser = {
+                username: user.username,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role || 'user',
+                provider: provider, // Track which provider was used
+                lastLogin: user.lastLogin,
+                loginCount: user.loginCount
+            };
+            localStorage.setItem(TOKEN_KEY, token);
+            localStorage.setItem(USER_KEY, JSON.stringify(sessionUser));
+            return { success: true, message: `Welcome, ${user.fullName}!`, token, user: sessionUser };
+        },
+
         /** Logout */
         logout() {
             localStorage.removeItem(TOKEN_KEY);

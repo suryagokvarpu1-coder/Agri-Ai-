@@ -101,7 +101,8 @@ class TranslationSystem {
     'auth_username':'Username','auth_password':'Password','auth_email':'Email (Optional)',
     'auth_full_name':'Full Name','auth_confirm_password':'Confirm Password',
     'auth_have_account':'Already have an account?','auth_no_account':"Don't have an account?",
-    'auth_signin_here':'Sign in here','auth_signup_here':'Sign up here'
+    'auth_signin_here':'Sign in here','auth_signup_here':'Sign up here',
+    'auth_or_continue':'Or continue with'
 },
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -197,7 +198,8 @@ class TranslationSystem {
     'auth_username':'వినియోగదారు పేరు','auth_password':'పాస్‌వర్డ్','auth_email':'ఇమెయిల్ (ఐచ్ఛికం)',
     'auth_full_name':'పూర్తి పేరు','auth_confirm_password':'పాస్‌వర్డ్ నిర్ధారించండి',
     'auth_have_account':'ఇప్పటికే ఖాతా ఉందా?','auth_no_account':'ఖాతా లేదా?',
-    'auth_signin_here':'ఇక్కడ సైన్ ఇన్ చేయండి','auth_signup_here':'ఇక్కడ సైన్ అప్ చేయండి'
+    'auth_signin_here':'ఇక్కడ సైన్ ఇన్ చేయండి','auth_signup_here':'ఇక్కడ సైన్ అప్ చేయండి',
+    'auth_or_continue':'లేదా దీనితో కొనసాగండి'
 },
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -293,7 +295,8 @@ class TranslationSystem {
     'auth_username':'उपयोगकर्ता नाम','auth_password':'पासवर्ड','auth_email':'ईमेल (वैकल्पिक)',
     'auth_full_name':'पूरा नाम','auth_confirm_password':'पासवर्ड की पुष्टि करें',
     'auth_have_account':'पहले से खाता है?','auth_no_account':'खाता नहीं है?',
-    'auth_signin_here':'यहाँ साइन इन करें','auth_signup_here':'यहाँ साइन अप करें'
+    'auth_signin_here':'यहाँ साइन इन करें','auth_signup_here':'यहाँ साइन अप करें',
+    'auth_or_continue':'या इसके साथ जारी रखें'
 },
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -389,7 +392,8 @@ class TranslationSystem {
     'auth_username':'பயனர் பெயர்','auth_password':'கடவுச்சொல்','auth_email':'மின்னஞ்சல் (விருப்பமானது)',
     'auth_full_name':'முழு பெயர்','auth_confirm_password':'கடவுச்சொல்லை உறுதிப்படுத்தவும்',
     'auth_have_account':'ஏற்கனவே கணக்கு உள்ளதா?','auth_no_account':'கணக்கு இல்லையா?',
-    'auth_signin_here':'இங்கே உள்நுழையவும்','auth_signup_here':'இங்கே பதிவு செய்யவும்'
+    'auth_signin_here':'இங்கே உள்நுழையவும்','auth_signup_here':'இங்கே பதிவு செய்யவும்',
+    'auth_or_continue':'அல்லது இதனுடன் தொடரவும்'
 },
 
 // ─────────────────────────────────────────────────────────────────────────────

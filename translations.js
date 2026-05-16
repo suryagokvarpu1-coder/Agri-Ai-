@@ -98,7 +98,7 @@ class TranslationSystem {
     'privacy_sharing_desc':'Share anonymized data with agricultural research institutions',
     'auth_login_title':'Welcome Back','auth_login_subtitle':'Sign in to your Agri-AI account',
     'auth_signup_title':'Join Agri-AI','auth_signup_subtitle':'Create your account to access the yield predictor',
-    'auth_username':'Username','auth_password':'Password','auth_email':'Email (Optional)',
+    'auth_username':'Username','auth_password':'Password','auth_email':'Email Address',
     'auth_full_name':'Full Name','auth_confirm_password':'Confirm Password',
     'auth_have_account':'Already have an account?','auth_no_account':"Don't have an account?",
     'auth_signin_here':'Sign in here','auth_signup_here':'Sign up here',
@@ -109,7 +109,7 @@ class TranslationSystem {
 // TELUGU
 // ─────────────────────────────────────────────────────────────────────────────
 'te': {
-    'nav_overview':'అవలోకనం','nav_technology':'సాంకేతికత','nav_map':'మ్యాప్ టూల్',
+    'nav_overview':'అవలోకనం','nav_technology':'సాంకేతికత','nav_మ్యాప్':'మ్యాప్ టూల్',
     'nav_predict':'దిగుబడి అంచనా','nav_impact':'ప్రభావం','nav_settings':'సెట్టింగ్స్',
     'nav_logout':'లాగ్ అవుట్','nav_soil_analysis':'మట్టి విశ్లేషణ',
     'nav_growth_monitoring':'వృద్ధి పర్యవేక్షణ','nav_carbon_tracking':'కార్బన్ ట్రాకింగ్',
@@ -195,7 +195,7 @@ class TranslationSystem {
     'privacy_sharing_desc':'వ్యవసాయ పరిశోధన సంస్థలతో అనామకీకరించిన డేటాను పంచుకోండి',
     'auth_login_title':'తిరిగి స్వాగతం','auth_login_subtitle':'దిగుబడి అంచనా వేయడానికి మీ ఖాతాలోకి సైన్ ఇన్ చేయండి',
     'auth_signup_title':'వ్యవసాయ-AIలో చేరండి','auth_signup_subtitle':'దిగుబడి అంచనా వేయడానికి మీ ఖాతాను సృష్టించండి',
-    'auth_username':'వినియోగదారు పేరు','auth_password':'పాస్‌వర్డ్','auth_email':'ఇమెయిల్ (ఐచ్ఛికం)',
+    'auth_username':'వినియోగదారు పేరు','auth_password':'పాస్‌వర్డ్','auth_email':'ఇమెయిల్ చిరునామా',
     'auth_full_name':'పూర్తి పేరు','auth_confirm_password':'పాస్‌వర్డ్ నిర్ధారించండి',
     'auth_have_account':'ఇప్పటికే ఖాతా ఉందా?','auth_no_account':'ఖాతా లేదా?',
     'auth_signin_here':'ఇక్కడ సైన్ ఇన్ చేయండి','auth_signup_here':'ఇక్కడ సైన్ అప్ చేయండి',
@@ -292,7 +292,7 @@ class TranslationSystem {
     'privacy_sharing_desc':'कृषि अनुसंधान संस्थानों के साथ अनामीकृत डेटा साझा करें',
     'auth_login_title':'वापस स्वागत है','auth_login_subtitle':'उपज अनुमान के लिए अपने खाते में साइन इन करें',
     'auth_signup_title':'कृषि-AI में शामिल हों','auth_signup_subtitle':'उपज अनुमान के लिए अपना खाता बनाएं',
-    'auth_username':'उपयोगकर्ता नाम','auth_password':'पासवर्ड','auth_email':'ईमेल (वैकल्पिक)',
+    'auth_username':'उपयोगकर्ता नाम','auth_password':'पासवर्ड','auth_email':'ईमेल पता',
     'auth_full_name':'पूरा नाम','auth_confirm_password':'पासवर्ड की पुष्टि करें',
     'auth_have_account':'पहले से खाता है?','auth_no_account':'खाता नहीं है?',
     'auth_signin_here':'यहाँ साइन इन करें','auth_signup_here':'यहाँ साइन अप करें',
@@ -389,7 +389,7 @@ class TranslationSystem {
     'privacy_sharing_desc':'வேளாண் ஆராய்ச்சி நிறுவனங்களுடன் அநாமதேயமாக்கப்பட்ட தரவை பகிரவும்',
     'auth_login_title':'மீண்டும் வரவேற்கிறோம்','auth_login_subtitle':'விளைச்சல் கணிப்புக்கு உங்கள் கணக்கில் உள்நுழையவும்',
     'auth_signup_title':'வேளாண்-AIல் சேரவும்','auth_signup_subtitle':'விளைச்சல் கணிப்புக்கு உங்கள் கணக்கை உருவாக்கவும்',
-    'auth_username':'பயனர் பெயர்','auth_password':'கடவுச்சொல்','auth_email':'மின்னஞ்சல் (விருப்பமானது)',
+    'auth_username':'பயனர் பெயர்','auth_password':'கடவுச்சொல்','auth_email':'மின்னஞ்சல் முகவரி',
     'auth_full_name':'முழு பெயர்','auth_confirm_password':'கடவுச்சொல்லை உறுதிப்படுத்தவும்',
     'auth_have_account':'ஏற்கனவே கணக்கு உள்ளதா?','auth_no_account':'கணக்கு இல்லையா?',
     'auth_signin_here':'இங்கே உள்நுழையவும்','auth_signup_here':'இங்கே பதிவு செய்யவும்',
@@ -486,7 +486,7 @@ class TranslationSystem {
     'privacy_sharing_desc':'ಕೃಷಿ ಸಂಶೋಧನಾ ಸಂಸ್ಥೆಗಳೊಂದಿಗೆ ಅನಾಮಧೇಯ ಡೇಟಾ ಹಂಚಿಕೊಳ್ಳಿ',
     'auth_login_title':'ಮತ್ತೆ ಸ್ವಾಗತ','auth_login_subtitle':'ಇಳುವರಿ ಅಂದಾಜಿಗಾಗಿ ನಿಮ್ಮ ಖಾತೆಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ',
     'auth_signup_title':'ಕೃಷಿ-AIಗೆ ಸೇರಿ','auth_signup_subtitle':'ಇಳುವರಿ ಅಂದಾಜಿಗಾಗಿ ನಿಮ್ಮ ಖಾತೆ ರಚಿಸಿ',
-    'auth_username':'ಬಳಕೆದಾರ ಹೆಸರು','auth_password':'ಪಾಸ್‌ವರ್ಡ್','auth_email':'ಇಮೇಲ್ (ಐಚ್ಛಿಕ)',
+    'auth_username':'ಬಳಕೆದಾರ ಹೆಸರು','auth_password':'ಪಾಸ್‌ವರ್ಡ್','auth_email':'ಇಮೇಲ್ ವಿಳಾಸ',
     'auth_full_name':'ಪೂರ್ಣ ಹೆಸರು','auth_confirm_password':'ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ',
     'auth_have_account':'ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?','auth_no_account':'ಖಾತೆ ಇಲ್ಲವೇ?',
     'auth_signin_here':'ಇಲ್ಲಿ ಸೈನ್ ಇನ್ ಮಾಡಿ','auth_signup_here':'ಇಲ್ಲಿ ಸೈನ್ ಅಪ್ ಮಾಡಿ'

@@ -8,6 +8,7 @@
 <script src="api-config.js"></script><script src="auth.js"></script>
 <link rel="stylesheet" href="3d-theme.css">
 <script src="3d-animations.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -174,8 +175,31 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.socialAuth = function(provider) {
-    const url = `social-picker.html?provider=${provider}&returnTo=${encodeURIComponent(window.location.href)}`;
-    window.location.href = url;
+    if (provider === 'google') {
+      // Trigger real Google Account Picker
+      google.accounts.id.initialize({
+        client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your Client ID
+        callback: (response) => {
+          // Decode JWT and login
+          const payload = JSON.parse(atob(response.credential.split('.')[1]));
+          const res = window.AuthSystem.socialLogin('google', {
+            email: payload.email,
+            name: payload.name
+          });
+          if (res.success) window.location.href = 'overview.html';
+        }
+      });
+      google.accounts.id.prompt(); 
+      const div = document.createElement('div');
+      div.id = 'google_btn_hidden';
+      div.style.display = 'none';
+      document.body.appendChild(div);
+      google.accounts.id.renderButton(div, { theme: 'outline', size: 'large' });
+      div.querySelector('div[role="button"]').click();
+    } else {
+      const url = `social-picker.html?provider=${provider}&returnTo=${encodeURIComponent(window.location.href)}`;
+      window.location.href = url;
+    }
   };
 });
 </script>

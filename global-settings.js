@@ -1,5 +1,5 @@
 /**
- * Global Settings System for Agri-AI (Normal UI Mode)
+ * Global Settings System for Zakri (Normal UI Mode)
  * Manages user preferences like language and units.
  */
 

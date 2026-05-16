@@ -1,14 +1,14 @@
 /**
- * Client-Side Auth System for Agri-AI
+ * Client-Side Auth System for Zakri
  * Works completely without a server — stores users in localStorage.
  * Falls back gracefully whether opened via file://, localhost, or production.
  */
 
 (function () {
 
-    const USERS_KEY   = 'agri-ai-users';
-    const TOKEN_KEY   = 'agri-ai-token';
-    const USER_KEY    = 'agri-ai-user';
+    const USERS_KEY   = 'zakri-users';
+    const TOKEN_KEY   = 'zakri-token';
+    const USER_KEY    = 'zakri-user';
 
     // ── Seed default accounts on first load ──────────────────────────────────
     function seedDefaultUsers() {

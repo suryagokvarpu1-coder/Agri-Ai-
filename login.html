@@ -100,8 +100,14 @@ body{
 </head>
 <body>
 <div class="login-card">
-  <div class="logo-wrap">
-    <div class="logo"><svg width="24" height="24" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+  <div class="logo-wrap" style="flex-direction: column; align-items: center; gap: 0.5rem;">
+    <div class="logo" style="width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+      <svg width="32" height="32" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M3 12h18M5 5l14 14M5 19L19 5" opacity="0.3"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
+      </svg>
+    </div>
+    <span style="font-weight: 900; letter-spacing: -0.05em; font-size: 1.75rem; color: #fff;">Zakri</span>
   </div>
   <h1 class="title" data-i18n="auth_login_title">Welcome back</h1>
   <p class="subtitle" data-i18n="auth_login_subtitle">Sign in to your farm dashboard</p>

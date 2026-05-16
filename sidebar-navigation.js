@@ -26,10 +26,13 @@ class SidebarNavigation {
             <nav id="sidebar" class="fixed left-0 top-0 h-full w-[80vw] max-w-xs transform -translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto bg-white border-r border-slate-200 shadow-xl">
                 <div class="p-6">
                     <div class="flex items-center gap-3 mb-8">
-                        <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M3 12h18M5 5l14 14M5 19L19 5" opacity="0.3"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
+                            </svg>
                         </div>
-                        <span class="font-bold text-xl text-slate-900">Agri-AI</span>
+                        <span class="font-black text-2xl tracking-tighter text-slate-900">Zakri</span>
                     </div>
                     <div class="space-y-1" id="sidebar-menu">
                         ${this.generateMenuItems()}

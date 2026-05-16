@@ -12,7 +12,7 @@ class TranslationSystem {
     'nav_predict':'Predict Yield','nav_impact':'Impact','nav_settings':'Settings',
     'nav_logout':'Logout','nav_soil_analysis':'Soil Analysis',
     'nav_growth_monitoring':'Growth Monitor','nav_carbon_tracking':'Carbon Tracking',
-    'site_title':'Agri-AI Yield Optimizer','welcome':'Welcome','loading':'Loading...',
+    'site_title':'Zakri Yield Optimizer','welcome':'Welcome','loading':'Loading...',
     'save':'Save','cancel':'Cancel','submit':'Submit','reset':'Reset',
     'login':'Login','signup':'Sign Up','logout':'Logout',
     'overview_title':'Revolutionizing Agriculture with AI',

@@ -9,8 +9,8 @@
       "role": "user",
       "isActive": true,
       "createdAt": "2026-01-24T06:29:25.656Z",
-      "lastLogin": "2026-01-24T08:23:59.357Z",
-      "loginCount": 3,
+      "lastLogin": "2026-05-15T04:54:16.478Z",
+      "loginCount": 5,
       "predictions": []
     },
     {
@@ -40,6 +40,6 @@
       "predictions": []
     }
   ],
-  "lastUpdated": "2026-01-25T04:50:16.999Z",
+  "lastUpdated": "2026-05-15T04:54:16.478Z",
   "totalUsers": 3
 }

@@ -8,9 +8,9 @@
 <script src="translations.js"></script><script src="global-settings.js"></script>
 <script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
 <style>
-.map-wrap{position:relative;width:100%;padding-bottom:52%;height:0;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.07)}
-@media(max-width:640px){.map-wrap{padding-bottom:70%}}
-.map-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:16px}
+.map-iframe-wrapper{position:relative;width:100%;padding-bottom:52%;height:0;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.07);margin-bottom:2rem}
+@media(max-width:640px){.map-iframe-wrapper{padding-bottom:70%}}
+.map-iframe-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:16px}
 .filter-row{display:grid;grid-template-columns:repeat(2,1fr);gap:.875rem}
 @media(min-width:768px){.filter-row{grid-template-columns:repeat(4,1fr)}}
 .active-filter{display:inline-flex;align-items:center;gap:.4rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.15);border-radius:99px;padding:.2rem .65rem;font-size:.72rem;color:#22c55e}
@@ -26,13 +26,20 @@
 <main class="page-main">
   <div class="page-hero">
     <div class="page-badge" data-i18n="badge_map"><span>●</span> Map Tool</div>
-    <h1 class="page-title" data-i18n="map_title">Interactive <span class="g">Agricultural Map</span></h1>
+    <h1 class="page-title">Interactive <span class="g">Agricultural Map</span></h1>
     <p class="page-subtitle" data-i18n="map_subtitle">Explore agricultural regions worldwide with our interactive map tool. View real-time satellite imagery, weather patterns, and crop distribution data.</p>
   </div>
 
   <!-- Map -->
-  <div class="map-wrap mb-8">
+  <div class="map-iframe-wrapper">
     <iframe id="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.2799160891!2d-74.25987368715491!3d40.697670063539654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQxJzUxLjYiTiA3NMKwMDAnMDAuMCJX!5e0!3m2!1sen!2sus!4v1635959472!5m2!1sen!2sus" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <!-- Feature cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+    <div class="feat-card"><div class="icon-box" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.15)"><svg width="20" height="20" style="color:#22c55e" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_satellite_title">Satellite Imagery</h4><p class="text-sm" style="color:#64748b;line-height:1.65">High-resolution satellite images updated daily to monitor crop health and growth patterns across different regions.</p></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.15)"><svg width="20" height="20" style="color:#60a5fa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_weather_title">Weather Overlay</h4><p class="text-sm" style="color:#64748b;line-height:1.65">Real-time weather data overlay showing temperature, precipitation, humidity, and wind patterns affecting agricultural areas.</p></div>
+    <div class="feat-card"><div class="icon-box" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.15)"><svg width="20" height="20" style="color:#fbbf24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_analytics_title">Crop Analytics</h4><p class="text-sm" style="color:#64748b;line-height:1.65">Detailed crop distribution data, yield predictions, and agricultural statistics for different regions and crop types.</p></div>
   </div>
 
   <!-- Filters -->
@@ -61,7 +68,7 @@
           <option value="30days">Last 30 Days</option><option value="year">Last Year</option>
         </select></div>
     </div>
-    <div class="flex flex-col sm:flex-row gap-3">
+    <div style="display:flex;flex-wrap:wrap;gap:.75rem">
       <button id="apply-filters-btn" class="btn-primary" data-i18n="map_apply_filters"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>Apply Filters</button>
       <button id="reset-filters-btn" class="btn-sec" data-i18n="map_reset_filters">Reset</button>
     </div>
@@ -69,16 +76,12 @@
 
   <!-- Active filters display -->
   <div id="filter-status" class="hidden card card-p mb-6">
-    <p class="text-xs font-semibold mb-3" style="color:#475569;letter-spacing:.08em;text-transform:uppercase" data-i18n="map_active_filters">Active Filters</p>
-    <div id="active-filters" class="flex flex-wrap gap-2"></div>
+    <p class="section-label mb-3" data-i18n="map_active_filters">Active Filters</p>
+    <div id="active-filters" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
   </div>
 
-  <!-- Map features -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-    <div class="feat-card"><div class="icon-box" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.15)"><svg width="20" height="20" style="color:#22c55e" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_satellite_title">Satellite Imagery</h4><p class="text-sm" style="color:#64748b;line-height:1.65">High-resolution satellite images updated daily to monitor crop health and growth patterns across different regions.</p></div>
-    <div class="feat-card"><div class="icon-box" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.15)"><svg width="20" height="20" style="color:#60a5fa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_weather_title">Weather Overlay</h4><p class="text-sm" style="color:#64748b;line-height:1.65">Real-time weather data overlay showing temperature, precipitation, humidity, and wind patterns affecting agricultural areas.</p></div>
-    <div class="feat-card"><div class="icon-box" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.15)"><svg width="20" height="20" style="color:#fbbf24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div><h4 class="text-base font-bold mb-2" style="color:#f8fafc;font-family:'Space Grotesk',sans-serif" data-i18n="map_analytics_title">Crop Analytics</h4><p class="text-sm" style="color:#64748b;line-height:1.65">Detailed crop distribution data, yield predictions, and agricultural statistics for different regions and crop types.</p></div>
-  </div>
+  <div id="map-data-display"></div>
+  <div id="map-info"></div>
 </main>
 </div>
 <script>

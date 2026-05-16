@@ -25,11 +25,11 @@
 <main class="page-main" style="max-width:720px">
   <div class="page-hero">
     <div class="page-badge"><span>●</span> Settings</div>
-    <h1 class="page-title" data-i18n="settings_title">Settings</h1>
+    <h1 class="page-title">Account <span class="g">Settings</span></h1>
     <p class="page-subtitle" data-i18n="settings_subtitle">Customize your Agri-AI experience with personalized settings for language, notifications, and more.</p>
   </div>
 
-  <!-- Language -->
+  <!-- Language & Region -->
   <div class="settings-section">
     <div class="settings-section-title"><svg width="16" height="16" style="color:#60a5fa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg><span data-i18n="settings_language">Language & Region</span></div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -41,16 +41,16 @@
   <!-- Notifications -->
   <div class="settings-section">
     <div class="settings-section-title"><svg width="16" height="16" style="color:#fbbf24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg><span data-i18n="settings_notifications">Notifications</span></div>
-    <div class="toggle-row"><div><p class="text-sm font-medium" style="color:#f8fafc" data-i18n="notif_predictions">Prediction Updates</p><p class="text-xs mt-0.5" style="color:#475569" data-i18n="notif_predictions_desc">Get notified when new predictions are available</p></div><label class="toggle"><input type="checkbox" id="notifications-predictions" checked><span class="toggle-track"></span></label></div>
-    <div class="toggle-row"><div><p class="text-sm font-medium" style="color:#f8fafc" data-i18n="notif_weather">Weather Alerts</p><p class="text-xs mt-0.5" style="color:#475569" data-i18n="notif_weather_desc">Receive alerts for severe weather conditions</p></div><label class="toggle"><input type="checkbox" id="notifications-weather" checked><span class="toggle-track"></span></label></div>
-    <div class="toggle-row"><div><p class="text-sm font-medium" style="color:#f8fafc" data-i18n="notif_system">System Updates</p><p class="text-xs mt-0.5" style="color:#475569" data-i18n="notif_system_desc">Get notified about system maintenance and updates</p></div><label class="toggle"><input type="checkbox" id="notifications-system"><span class="toggle-track"></span></label></div>
+    <div class="toggle-row"><div><p style="font-size:.875rem;font-weight:500;color:#f8fafc" data-i18n="notif_predictions">Prediction Updates</p><p style="font-size:.75rem;color:#475569;margin-top:.1rem" data-i18n="notif_predictions_desc">Get notified when new predictions are available</p></div><label class="toggle"><input type="checkbox" id="notifications-predictions" checked><span class="toggle-track"></span></label></div>
+    <div class="toggle-row"><div><p style="font-size:.875rem;font-weight:500;color:#f8fafc" data-i18n="notif_weather">Weather Alerts</p><p style="font-size:.75rem;color:#475569;margin-top:.1rem" data-i18n="notif_weather_desc">Receive alerts for severe weather conditions</p></div><label class="toggle"><input type="checkbox" id="notifications-weather" checked><span class="toggle-track"></span></label></div>
+    <div class="toggle-row"><div><p style="font-size:.875rem;font-weight:500;color:#f8fafc" data-i18n="notif_system">System Updates</p><p style="font-size:.75rem;color:#475569;margin-top:.1rem" data-i18n="notif_system_desc">Get notified about system maintenance and updates</p></div><label class="toggle"><input type="checkbox" id="notifications-system"><span class="toggle-track"></span></label></div>
   </div>
 
-  <!-- Privacy -->
+  <!-- Privacy & Data -->
   <div class="settings-section">
     <div class="settings-section-title"><svg width="16" height="16" style="color:#22c55e" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span data-i18n="settings_privacy">Privacy & Data</span></div>
-    <div class="toggle-row"><div><p class="text-sm font-medium" style="color:#f8fafc" data-i18n="privacy_analytics">Analytics & Usage Data</p><p class="text-xs mt-0.5" style="color:#475569" data-i18n="privacy_analytics_desc">Help improve our service by sharing anonymous usage data</p></div><label class="toggle"><input type="checkbox" id="privacy-analytics" checked><span class="toggle-track"></span></label></div>
-    <div class="toggle-row"><div><p class="text-sm font-medium" style="color:#f8fafc" data-i18n="privacy_sharing">Data Sharing</p><p class="text-xs mt-0.5" style="color:#475569" data-i18n="privacy_sharing_desc">Share anonymized data with agricultural research institutions</p></div><label class="toggle"><input type="checkbox" id="privacy-sharing"><span class="toggle-track"></span></label></div>
+    <div class="toggle-row"><div><p style="font-size:.875rem;font-weight:500;color:#f8fafc" data-i18n="privacy_analytics">Analytics & Usage Data</p><p style="font-size:.75rem;color:#475569;margin-top:.1rem" data-i18n="privacy_analytics_desc">Help improve our service by sharing anonymous usage data</p></div><label class="toggle"><input type="checkbox" id="privacy-analytics" checked><span class="toggle-track"></span></label></div>
+    <div class="toggle-row"><div><p style="font-size:.875rem;font-weight:500;color:#f8fafc" data-i18n="privacy_sharing">Data Sharing</p><p style="font-size:.75rem;color:#475569;margin-top:.1rem" data-i18n="privacy_sharing_desc">Share anonymized data with agricultural research institutions</p></div><label class="toggle"><input type="checkbox" id="privacy-sharing"><span class="toggle-track"></span></label></div>
   </div>
 
   <!-- Performance -->
@@ -59,7 +59,7 @@
     <div class="form-group" style="margin-bottom:0"><label class="form-label">Animation Level</label><select id="animation-level" class="form-input form-select"><option value="none">No Animations</option><option value="reduced">Reduced Animations</option><option value="normal" selected>Normal Animations</option><option value="enhanced">Enhanced Animations</option></select></div>
   </div>
 
-  <!-- Account -->
+  <!-- Account & Data -->
   <div class="settings-section">
     <div class="settings-section-title"><svg width="16" height="16" style="color:#a78bfa" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span data-i18n="settings_account">Account & Data</span></div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
@@ -67,25 +67,25 @@
       <button onclick="importData()" class="btn-sec"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/></svg>Import Data</button>
     </div>
     <div style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:14px;padding:1.25rem">
-      <p class="text-sm font-semibold mb-3" style="color:#a78bfa;font-family:'Space Grotesk',sans-serif" data-i18n="settings_need_help">Need Help?</p>
+      <p style="font-size:.875rem;font-weight:600;margin-bottom:.875rem;color:#a78bfa;font-family:'Space Grotesk',sans-serif" data-i18n="settings_need_help">Need Help?</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:1rem">
-          <p class="text-xs font-semibold mb-2" style="color:#f8fafc">24/7 Help Line</p>
-          <div class="flex flex-col gap-1.5">
-            <div class="flex justify-between items-center"><span class="text-xs" style="color:#475569">India:</span><a href="tel:+911800123456" class="text-xs font-mono" style="color:#a78bfa">+91 1800-123-456</a></div>
-            <div class="flex justify-between items-center"><span class="text-xs" style="color:#475569">International:</span><a href="tel:+18001234567" class="text-xs font-mono" style="color:#a78bfa">+1 800-123-4567</a></div>
+          <p style="font-size:.78rem;font-weight:600;color:#f8fafc;margin-bottom:.5rem">24/7 Help Line</p>
+          <div style="display:flex;flex-direction:column;gap:.4rem">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.75rem;color:#475569">India:</span><a href="tel:+911800123456" style="font-size:.75rem;font-family:'JetBrains Mono',monospace;color:#a78bfa">+91 1800-123-456</a></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.75rem;color:#475569">International:</span><a href="tel:+18001234567" style="font-size:.75rem;font-family:'JetBrains Mono',monospace;color:#a78bfa">+1 800-123-4567</a></div>
           </div>
         </div>
-        <div class="flex flex-col gap-2">
-          <a href="feedback.html" style="display:flex;align-items:center;gap:.6rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.75rem;text-decoration:none;transition:border-color .2s ease" onmouseover="this.style.borderColor='rgba(34,197,94,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'"><svg width="14" height="14" style="color:#22c55e;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span class="text-xs font-medium" style="color:#f8fafc">Send Feedback</span></a>
-          <button onclick="openLiveChat()" style="display:flex;align-items:center;gap:.6rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.75rem;cursor:pointer;transition:border-color .2s ease;width:100%;text-align:left" onmouseover="this.style.borderColor='rgba(34,197,94,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'"><svg width="14" height="14" style="color:#22c55e;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span class="text-xs font-medium" style="color:#f8fafc">Live Chat</span></button>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <a href="feedback.html" style="display:flex;align-items:center;gap:.6rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.75rem;text-decoration:none;transition:border-color .2s ease" onmouseover="this.style.borderColor='rgba(34,197,94,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'"><svg width="14" height="14" style="color:#22c55e;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span style="font-size:.78rem;font-weight:500;color:#f8fafc">Send Feedback</span></a>
+          <button onclick="openLiveChat()" style="display:flex;align-items:center;gap:.6rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.75rem;cursor:pointer;transition:border-color .2s ease;width:100%;text-align:left" onmouseover="this.style.borderColor='rgba(34,197,94,.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'"><svg width="14" height="14" style="color:#22c55e;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span style="font-size:.78rem;font-weight:500;color:#f8fafc">Live Chat</span></button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Save / Reset -->
-  <div class="flex justify-end gap-3 mt-2">
+  <div style="display:flex;justify-content:flex-end;gap:.75rem;margin-top:.5rem">
     <button onclick="resetSettings()" class="btn-sec">Reset to Defaults</button>
     <button onclick="saveSettings()" class="btn-primary"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Save Settings</button>
   </div>

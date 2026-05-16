@@ -490,44 +490,20 @@ class SoilAnalysisSystem {
         const container = document.getElementById('crop-recommendations');
         
         container.innerHTML = soilData.crops.map(crop => `
-            <div class="crop-card">
-                <div class="text-4xl mb-3">${crop.icon}</div>
-                <h4 class="text-lg font-semibold text-white mb-2">${crop.name}</h4>
-                <div class="flex items-center justify-center gap-2 mb-2">
-                    <div class="w-full bg-gray-700 rounded-full h-2">
-                        <div class="bg-green-500 h-2 rounded-full transition-all duration-1000" 
-                             style="width: ${crop.suitability}%"></div>
-                    </div>
-                    <span class="text-sm text-gray-300">${crop.suitability}%</span>
-                </div>
-                <p class="text-xs text-gray-400">${crop.season}</p>
-            </div>
+          <div class="crop-chip">
+            <div style="font-size:1.75rem;margin-bottom:.4rem">${crop.icon}</div>
+            <div style="font-size:.8rem;font-weight:600;color:#f8fafc;margin-bottom:.3rem">${crop.name}</div>
+            <div class="suitability-bar"><div class="suitability-fill" style="width:${crop.suitability}%"></div></div>
+            <div style="font-size:.68rem;color:#475569">${crop.suitability}% · ${crop.season}</div>
+          </div>
         `).join('');
-
-        // Animate suitability bars
-        setTimeout(() => {
-            container.querySelectorAll('.bg-green-500').forEach((bar, index) => {
-                setTimeout(() => {
-                    bar.style.width = `${soilData.crops[index].suitability}%`;
-                }, index * 100);
-            });
-        }, 500);
     }
 
     displaySoilTips(soilType) {
         const soilData = this.soilDatabase[soilType];
         const container = document.getElementById('soil-tips');
         
-        container.innerHTML = `
-            <ul class="space-y-2">
-                ${soilData.tips.map(tip => `
-                    <li class="flex items-start gap-2">
-                        <span class="text-green-400 mt-1">•</span>
-                        <span>${tip}</span>
-                    </li>
-                `).join('')}
-            </ul>
-        `;
+        container.innerHTML = `<ul style="space-y:.5rem">${soilData.tips.map(tip => `<li style="display:flex;align-items:flex-start;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#64748b"><span style="color:#22c55e;margin-top:.15rem;flex-shrink:0">✓</span>${tip}</li>`).join('')}</ul>`;
     }
 
     showLoadingState() {

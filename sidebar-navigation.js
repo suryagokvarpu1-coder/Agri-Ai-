@@ -112,11 +112,14 @@ class SidebarNavigation {
         
         menuItems.forEach(item => {
             const isActive = this.currentPage === item.id;
-            const activeClass = isActive ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white';
+            const activeStyle = isActive
+                ? 'background:rgba(34,197,94,.1);color:#22c55e;border-color:rgba(34,197,94,.2)'
+                : 'color:#64748b;border-color:transparent';
             
             menuHTML += `
-                <a href="${item.href}" data-i18n="${item.translationKey}" class="flex items-center space-x-3 px-4 py-3.5 rounded-lg ${activeClass} font-medium transition-all duration-200 min-h-[48px]">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="${item.href}" data-i18n="${item.translationKey}"
+                   style="display:flex;align-items:center;gap:.65rem;padding:.65rem .875rem;border-radius:10px;font-size:.85rem;font-weight:500;text-decoration:none;border:1px solid;transition:all .18s ease;${activeStyle}">
+                    <svg style="width:16px;height:16px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         ${item.icon}
                     </svg>
                     <span>${item.defaultText}</span>
@@ -124,10 +127,13 @@ class SidebarNavigation {
             `;
         });
 
-        // Add logout button
         menuHTML += `
-            <button onclick="logout()" data-i18n="nav_logout" class="flex items-center space-x-3 px-4 py-3.5 rounded-lg text-red-300 hover:bg-red-600 hover:text-white font-medium transition-all duration-200 w-full text-left min-h-[48px]">
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div style="height:1px;background:rgba(255,255,255,.06);margin:.75rem 0"></div>
+            <button onclick="logout()" data-i18n="nav_logout"
+                style="display:flex;align-items:center;gap:.65rem;padding:.65rem .875rem;border-radius:10px;font-size:.85rem;font-weight:500;color:#ef4444;border:1px solid transparent;background:none;cursor:pointer;width:100%;text-align:left;transition:all .18s ease"
+                onmouseover="this.style.background='rgba(239,68,68,.08)';this.style.borderColor='rgba(239,68,68,.15)'"
+                onmouseout="this.style.background='none';this.style.borderColor='transparent'">
+                <svg style="width:16px;height:16px;flex-shrink:0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                 </svg>
                 <span>Logout</span>

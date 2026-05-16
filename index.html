@@ -1,58 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="site_title">Agri-AI Yield Optimizer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="translations.js"></script>
-    <script src="global-settings.js"></script>
-    <script src="api-config.js"></script>
-    <script src="auth.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #000;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .loading {
-            text-align: center;
-        }
-        .spinner {
-            border: 4px solid #333;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agri-AI</title>
+<script src="translations.js"></script>
+<script src="global-settings.js"></script>
+<script src="api-config.js"></script>
+<script src="auth.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:#04040a;
+  color:#f8fafc;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;
+  position:relative;overflow:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(34,197,94,.07) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 85%,rgba(139,92,246,.08) 0%,transparent 55%);
+  pointer-events:none;
+}
+.loader{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;gap:1.5rem;
+  animation:fadeIn .6s ease both;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.logo-wrap{
+  width:72px;height:72px;border-radius:20px;
+  background:linear-gradient(135deg,#22c55e,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 32px rgba(34,197,94,.35),0 0 64px rgba(139,92,246,.2);
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 32px rgba(34,197,94,.35),0 0 64px rgba(139,92,246,.2)}50%{box-shadow:0 0 48px rgba(34,197,94,.5),0 0 80px rgba(139,92,246,.3)}}
+.brand{
+  font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:800;letter-spacing:-.04em;
+  background:linear-gradient(135deg,#22c55e,#8b5cf6,#ec4899);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.spinner{
+  width:32px;height:32px;border-radius:50%;
+  border:3px solid rgba(34,197,94,.15);
+  border-top-color:#22c55e;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status{font-size:.85rem;color:#475569;letter-spacing:.02em}
+</style>
 </head>
 <body>
-    <div class="loading">
-        <div class="spinner"></div>
-        <h2 data-i18n="welcome">Welcome to Agri-AI</h2>
-        <p data-i18n="loading">Redirecting to signup...</p>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.AuthSystem.isLoggedIn()) {
-                window.location.href = 'overview.html';
-            } else {
-                setTimeout(() => { window.location.href = 'signup.html'; }, 800);
-            }
-        });
-    </script>
+<div class="loader">
+  <div class="logo-wrap">
+    <svg width="32" height="32" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+    </svg>
+  </div>
+  <div class="brand">Agri-AI</div>
+  <div class="spinner"></div>
+  <p class="status" id="status-text">Loading...</p>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  if(window.AuthSystem&&window.AuthSystem.isLoggedIn()){
+    document.getElementById('status-text').textContent='Redirecting to dashboard...';
+    window.location.href='overview.html';
+  }else{
+    document.getElementById('status-text').textContent='Redirecting to sign up...';
+    setTimeout(()=>{window.location.href='signup.html'},800);
+  }
+});
+</script>
 </body>
 </html>

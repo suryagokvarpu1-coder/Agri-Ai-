@@ -175,8 +175,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.socialAuth = function(provider) {
-    const url = `account-picker.html?provider=${provider}&returnTo=${encodeURIComponent(window.location.href)}`;
-    window.location.href = url;
+    if (provider === 'google') {
+      const clientID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'; // PASTE YOUR ID HERE
+      const redirectURL = window.location.origin + '/overview.html';
+      const scope = 'email profile';
+      const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientID}&redirect_uri=${encodeURIComponent(redirectURL)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=select_account`;
+      window.location.href = url;
+    } else {
+      const url = `account-picker.html?provider=${provider}&returnTo=${encodeURIComponent(window.location.href)}`;
+      window.location.href = url;
+    }
   };
 });
 </script>

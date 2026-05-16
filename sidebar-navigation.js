@@ -32,7 +32,7 @@ class SidebarNavigation {
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
                             </svg>
                         </div>
-                        <span class="font-black text-2xl tracking-tighter text-slate-900">Zakri</span>
+                        <span class="font-black text-2xl tracking-tighter text-slate-900">Agri-AI</span>
                     </div>
                     <div class="space-y-1" id="sidebar-menu">
                         ${this.generateMenuItems()}

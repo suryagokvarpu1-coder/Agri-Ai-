@@ -1,5 +1,7 @@
 # 🌾 Agri-AI — AI-Powered Agriculture Platform
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/suryagokvarpu1-coder/Agri-Ai-)
+
 A production-ready web application for precision farming with AI-powered yield predictions, soil analysis, growth monitoring, and carbon tracking.
 
 ## 🚀 Quick Start

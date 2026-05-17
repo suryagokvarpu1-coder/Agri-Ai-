@@ -82,28 +82,18 @@ class Agri3DEngine {
     this.scene.add(this.particles);
 
     // Add a glowing mesh to represent the "Sun" or "Growth Center"
-    // Increase base size for more presence (from 2 to 3)
-    const sunGeom = new THREE.IcosahedronGeometry(3, 4);
+    // Reduced base size (from 3 to 1.5)
+    const sunGeom = new THREE.IcosahedronGeometry(1.5, 4);
     const sunMat = new THREE.MeshBasicMaterial({
       color: 0x4ade80, 
       wireframe: true,
       transparent: true,
-      opacity: 0.6 // Increased to 0.6
+      opacity: 0.6 
     });
     this.sun = new THREE.Mesh(sunGeom, sunMat);
     
-    // Solid white core - larger and fully opaque (size 1.2, opacity 1.0)
-    const coreGeom = new THREE.IcosahedronGeometry(1.2, 2);
-    const coreMat = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: false,
-      opacity: 1.0
-    });
-    const core = new THREE.Mesh(coreGeom, coreMat);
-    this.sun.add(core);
-
-    // Outer glow layer - also larger (size 3.2)
-    const glowGeom = new THREE.IcosahedronGeometry(3.2, 4);
+    // Outer glow layer - also reduced (from 3.2 to 1.7)
+    const glowGeom = new THREE.IcosahedronGeometry(1.7, 4);
     const glowMat = new THREE.MeshBasicMaterial({
       color: 0x22c55e,
       wireframe: true,

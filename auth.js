@@ -176,7 +176,12 @@
                 const el = document.getElementById('header-username');
                 const av = document.getElementById('header-avatar');
                 if (el) el.textContent = 'Welcome, ' + user.username;
-                if (av) av.textContent = user.username.charAt(0).toUpperCase();
+                if (av) {
+                    av.textContent = user.username.charAt(0).toUpperCase();
+                    av.style.cursor = 'pointer';
+                    av.title = 'View Profile';
+                    av.onclick = () => window.location.href = 'profile.html';
+                }
             }
             return true;
         }

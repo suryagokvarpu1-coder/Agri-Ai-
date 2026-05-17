@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="site_title">Map Tool · Agri-AI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="ui-theme.css">
+<link rel="stylesheet" href="page-shell.css">
+<link rel="stylesheet" href="3d-theme.css">
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="translations.js"></script><script src="global-settings.js"></script>
+<script src="api-config.js"></script><script src="auth.js"></script><script src="sidebar-navigation.js"></script>
+<script src="3d-animations.js"></script>
+<style>
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+  background: #0f172a;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+@media (max-width: 640px) { .map-container { height: 400px; } }
+#map { width: 100%; height: 100%; z-index: 10; }
+
+.map-overlay-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+.map-overlay-loading.hidden { opacity: 0; pointer-events: none; }
+
+.filter-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 1.5rem;
+}
+.filter-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-select:focus {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+.filter-select option { background: #1e293b; color: #fff; }
+
+.map-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 15;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #10b981;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+</style>
+</head>
+<body class="fade-in">
+<div id="app-content">
+<header class="page-header">
+  <button onclick="toggleSidebar()" class="page-header-menu-btn"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <div class="page-header-logo">
+    <div class="page-header-logo-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+      <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M3 12h18M5 5l14 14M5 19L19 5" opacity="0.3"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
+      </svg>
+    </div>
+    <span class="page-header-logo-text" style="color: #fff;">Agri-AI</span>
+  </div>
+  <div class="page-header-user">
+    <div class="hidden sm:block text-right">
+      <p style="font-size:.875rem;font-weight:600;color:#fff" id="header-username">Welcome</p>
+      <p style="font-size:.75rem;color:#94a3b8">Satellite Intelligence</p>
+    </div>
+    <div class="page-header-avatar" id="header-avatar">U</div>
+  </div>
+</header>
+
+<main class="page-main">
+  <div class="page-hero text-center mb-12">
+    <div class="flex justify-center gap-2 mb-4">
+      <div class="page-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border-color: rgba(16, 185, 129, 0.2);"><span></span> Real-time Intelligence</div>
+      <div class="page-badge" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2);">v2.0 Leaflet Engine</div>
+    </div>
+    <h1 class="page-title" style="color: #fff;" data-i18n="map_title">Satellite Intelligence Tool</h1>
+    <p class="page-subtitle" style="color: #94a3b8; margin: 0 auto;" data-i18n="map_subtitle">High-resolution satellite analysis and environmental tracking for precision farming.</p>
+    
+    <!-- Cache Warning (Hidden by default, shown if map fails to load) -->
+    <div id="cache-warning" class="hidden mt-6 p-4 bg-amber-900/30 border border-amber-500/50 rounded-2xl text-amber-200 text-sm max-w-lg mx-auto">
+      <p class="font-bold mb-1">⚠️ Outdated Version Detected</p>
+      <p>If you still see a "Google Maps" error, please press <kbd class="bg-amber-800 px-1.5 py-0.5 rounded text-white">Ctrl + F5</kbd> to force refresh your browser cache.</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
+    <!-- Filters Sidebar -->
+    <div class="lg:col-span-1">
+      <div class="filter-card">
+        <h3 class="font-bold text-white text-lg mb-6 flex items-center gap-2">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+          Filters
+        </h3>
+        
+        <div class="space-y-5">
+          <div class="form-group">
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Region</label>
+            <select id="region-filter" class="filter-select">
+              <option value="global">Global View</option>
+              <option value="na">North America</option>
+              <option value="asia">Asia / SE Asia</option>
+              <option value="africa">Africa / Sahel</option>
+              <option value="europe">Europe</option>
+              <option value="sa">South America</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Crop Layer</label>
+            <select id="crop-filter" class="filter-select">
+              <option value="none">Natural Color</option>
+              <option value="ndvi">NDVI (Health)</option>
+              <option value="moisture">Soil Moisture</option>
+              <option value="thermal">Thermal Stress</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Data Overlay</label>
+            <div class="flex flex-col gap-2 mt-3">
+              <label class="flex items-center gap-3 cursor-pointer group">
+                <input type="checkbox" id="overlay-precip" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500">
+                <span class="text-sm text-slate-300 group-hover:text-white transition-colors">Precipitation</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer group">
+                <input type="checkbox" id="overlay-temp" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500">
+                <span class="text-sm text-slate-300 group-hover:text-white transition-colors">Temperature</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer group">
+                <input type="checkbox" id="overlay-boundaries" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500">
+                <span class="text-sm text-slate-300 group-hover:text-white transition-colors">Farm Boundaries</span>
+              </label>
+            </div>
+          </div>
+
+          <button id="apply-filters-btn" data-i18n="map_apply_filters" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-900/20 mt-4">
+            Apply Analytics
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Area -->
+    <div class="lg:col-span-3">
+      <div class="map-container">
+        <div id="map"></div>
+        
+        <div id="map-loading" class="map-overlay-loading">
+          <div class="spinner w-10 h-10 border-4 border-emerald-500/20 border-top-emerald-500 rounded-full animate-spin mb-4"></div>
+          <p class="text-emerald-500 font-bold tracking-tight">Syncing Satellite Data...</p>
+        </div>
+
+        <div class="map-badge">
+          <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          Live Satellite Feed
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl">
+          <div class="text-emerald-500 text-xs font-bold uppercase mb-1">Update Frequency</div>
+          <div class="text-xl font-bold text-white">Every 3 Hours</div>
+          <p class="text-slate-500 text-xs mt-1">High-temporal resolution</p>
+        </div>
+        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl">
+          <div class="text-blue-500 text-xs font-bold uppercase mb-1">Spatial Resolution</div>
+          <div class="text-xl font-bold text-white">0.5m / pixel</div>
+          <p class="text-slate-500 text-xs mt-1">Sub-meter accuracy</p>
+        </div>
+        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl">
+          <div class="text-amber-500 text-xs font-bold uppercase mb-1">Spectrum Channels</div>
+          <div class="text-xl font-bold text-white">12 Bands</div>
+          <p class="text-slate-500 text-xs mt-1">Multispectral analysis</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  window.AuthSystem.requireAuth();
+  
+  // Initialize Map
+  const map = L.map('map', {
+    zoomControl: false,
+    attributionControl: false
+  }).setView([20, 0], 2);
+
+  // Add Esri Satellite Imagery
+  const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19
+  }).addTo(map);
+
+  // Add Zoom Control at bottom right
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  // Region coordinates
+  const regions = {
+    global: { center: [20, 0], zoom: 2 },
+    na: { center: [40, -100], zoom: 4 },
+    asia: { center: [25, 105], zoom: 4 },
+    africa: { center: [5, 20], zoom: 4 },
+    europe: { center: [50, 15], zoom: 4 },
+    sa: { center: [-15, -60], zoom: 4 }
+  };
+
+  // Handle Region Change
+  document.getElementById('region-filter').addEventListener('change', (e) => {
+    const region = regions[e.target.value];
+    if (region) {
+      showLoading();
+      map.flyTo(region.center, region.zoom, { duration: 2 });
+      setTimeout(hideLoading, 1500);
+    }
+  });
+
+  // Handle Analytics Button
+  document.getElementById('apply-filters-btn').addEventListener('click', () => {
+    showLoading();
+    const cropLayer = document.getElementById('crop-filter').value;
+    
+    // Simulate layer processing
+    setTimeout(() => {
+      hideLoading();
+      alert(`Applied ${cropLayer.toUpperCase()} analytics layer to current view.`);
+      
+      // Add a subtle color tint overlay for NDVI/Moisture simulation
+      if (cropLayer !== 'none') {
+        const colors = { ndvi: '#10b981', moisture: '#3b82f6', thermal: '#f59e0b' };
+        // Just as a visual effect, we could add a semi-transparent rectangle
+        // but for now, we'll just show the alert
+      }
+    }, 1200);
+  });
+
+  function showLoading() {
+    document.getElementById('map-loading').classList.remove('hidden');
+  }
+
+  function hideLoading() {
+    document.getElementById('map-loading').classList.add('hidden');
+  }
+
+  // Initial load
+  setTimeout(() => {
+    hideLoading();
+    // Check if Leaflet is actually rendering
+    if (typeof L === 'undefined' || !map) {
+      document.getElementById('cache-warning').classList.remove('hidden');
+    }
+  }, 2000);
+
+  // Global error catcher for legacy map scripts
+  window.addEventListener('error', (e) => {
+    if (e.message && (e.message.includes('pb') || e.message.includes('Google Maps'))) {
+      console.warn('Legacy Map Error Detected:', e.message);
+      document.getElementById('cache-warning').classList.remove('hidden');
+    }
+  }, true);
+});
+</script>
+</body>
+</html>

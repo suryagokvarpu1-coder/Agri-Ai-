@@ -24,7 +24,7 @@ npm start
 | **Soil Analysis** | Upload soil photos for texture classification (Sandy / Loamy / Clay) |
 | **Growth Monitoring** | Track crops from germination to harvest with countdown timers |
 | **Carbon Tracking** | Calculate carbon sequestration and estimated carbon credit earnings |
-| **Interactive Map** | Google Maps integration for agricultural region visualization |
+| **Satellite Intelligence** | Leaflet.js + Esri World Imagery for professional agricultural visualization |
 
 ## 🔬 Prediction Engine
 
@@ -43,7 +43,7 @@ The yield prediction uses scientifically-backed parameters:
 - **Styling**: Custom CSS with glassmorphism + agriculture theme
 - **3D Effects**: Three.js particle system with organic firefly/pollen animations
 - **Charts**: Chart.js for carbon projections
-- **Maps**: Google Maps Embed API
+- **Maps**: Leaflet.js with Esri World Imagery (High-Res)
 - **Auth**: Session-based with localStorage persistence
 
 ## 📁 Project Structure
@@ -57,7 +57,7 @@ The yield prediction uses scientifically-backed parameters:
 ├── soil-analysis.html      # AI soil texture analysis
 ├── growth-monitoring.html  # Crop growth tracker
 ├── carbon-tracking.html    # Carbon footprint calculator
-├── maptool.html            # Agricultural map viewer
+├── satellite-tool.html     # High-resolution satellite map viewer
 ├── technology.html         # Platform technology info
 ├── impact.html             # Environmental impact
 ├── feedback.html           # User feedback forms

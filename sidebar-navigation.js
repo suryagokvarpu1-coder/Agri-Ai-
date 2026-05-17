@@ -61,10 +61,10 @@ class SidebarNavigation {
             },
             {
                 id: 'maptool',
-                href: 'maptool.html',
+                href: `satellite-tool.html?v=${Date.now()}`,
                 icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>`,
                 translationKey: 'nav_map',
-                defaultText: 'Map Tool'
+                defaultText: 'Satellite Tool'
             },
             {
                 id: 'predict',
@@ -131,6 +131,11 @@ class SidebarNavigation {
 
         menuHTML += `
             <div class="h-px bg-slate-100 my-4"></div>
+            <button onclick="resetPlatformCache()" 
+                class="flex items-center gap-3 px-4 py-2 text-[10px] font-black text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer w-full text-left bg-transparent border-none uppercase tracking-widest">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span>Reset Platform Cache</span>
+            </button>
             <button onclick="logout()" data-i18n="nav_logout"
                 class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-all duration-200 cursor-pointer w-full text-left bg-transparent border-none">
                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,6 +231,15 @@ function logout() {
     localStorage.removeItem('agri-ai-token');
     localStorage.removeItem('agri-ai-user');
     window.location.href = 'login.html';
+}
+
+// Global reset function
+function resetPlatformCache() {
+    if(confirm("This will refresh the page and clear temporary map data to fix errors. Continue?")) {
+        localStorage.removeItem('agri-ai-language');
+        // We don't remove user token to keep them logged in
+        window.location.href = window.location.pathname + '?v=' + Date.now();
+    }
 }
 
 // Initialize sidebar navigation

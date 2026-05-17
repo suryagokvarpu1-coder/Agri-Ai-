@@ -61,7 +61,7 @@ class Agri3DEngine {
 
   createParticles() {
     const geometry = new THREE.BufferGeometry();
-    const count = 2000;
+    const count = 3500; // Increased density for more atmosphere
     const posArray = new Float32Array(count * 3);
 
     for (let i = 0; i < count * 3; i++) {
@@ -71,8 +71,8 @@ class Agri3DEngine {
     geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
     const material = new THREE.PointsMaterial({
-      size: 0.015,
-      color: 0x16a34a,
+      size: 0.025, // Increased size for more luminance
+      color: 0x22c55e, // Brighter Emerald
       transparent: true,
       opacity: 0.6,
       blending: THREE.AdditiveBlending
@@ -82,24 +82,52 @@ class Agri3DEngine {
     this.scene.add(this.particles);
 
     // Add a glowing mesh to represent the "Sun" or "Growth Center"
-    const sunGeom = new THREE.IcosahedronGeometry(2, 4);
+    // Increase base size for more presence (from 2 to 3)
+    const sunGeom = new THREE.IcosahedronGeometry(3, 4);
     const sunMat = new THREE.MeshBasicMaterial({
-      color: 0x16a34a,
+      color: 0x4ade80, 
       wireframe: true,
       transparent: true,
-      opacity: 0.05
+      opacity: 0.6 // Increased to 0.6
     });
     this.sun = new THREE.Mesh(sunGeom, sunMat);
+    
+    // Solid white core - larger and fully opaque (size 1.2, opacity 1.0)
+    const coreGeom = new THREE.IcosahedronGeometry(1.2, 2);
+    const coreMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: false,
+      opacity: 1.0
+    });
+    const core = new THREE.Mesh(coreGeom, coreMat);
+    this.sun.add(core);
+
+    // Outer glow layer - also larger (size 3.2)
+    const glowGeom = new THREE.IcosahedronGeometry(3.2, 4);
+    const glowMat = new THREE.MeshBasicMaterial({
+      color: 0x22c55e,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending
+    });
+    const glowLayer = new THREE.Mesh(glowGeom, glowMat);
+    this.sun.add(glowLayer);
+
+    // Ultra-intense internal light source
+    const internalLight = new THREE.PointLight(0x4ade80, 20, 30);
+    this.sun.add(internalLight);
+    
     this.scene.add(this.sun);
   }
 
   addLights() {
-    const p1 = new THREE.PointLight(0x16a34a, 1);
-    p1.position.set(2, 3, 4);
+    const p1 = new THREE.PointLight(0x4ade80, 8); // Further boosted to 8
+    p1.position.set(4, 5, 6);
     this.scene.add(p1);
 
-    const p2 = new THREE.PointLight(0x3b82f6, 0.5);
-    p2.position.set(-2, -3, -4);
+    const p2 = new THREE.PointLight(0x3b82f6, 1.5); // Boosted blue accent
+    p2.position.set(-4, -5, -6);
     this.scene.add(p2);
   }
 

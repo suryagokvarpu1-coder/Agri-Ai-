@@ -42,6 +42,7 @@ class GlobalSettings {
         this.loadSettings();
         this.applyAllSettings();
         this.setupLogoRefresh();
+        this.scrubLegacyMaps();
         
         window.addEventListener('storage', (event) => {
             if (event.key === 'agri-ai-settings') {
@@ -60,6 +61,32 @@ class GlobalSettings {
                 window.location.reload();
             }
         });
+    }
+
+    scrubLegacyMaps() {
+        /**
+         * EMERGENCY SCRUBBER: Removes any Google Maps iframes that might be injected 
+         * by stale caches, browser extensions, or legacy scripts.
+         */
+        const scrub = () => {
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                const src = iframe.src || '';
+                if (src.includes('google.com/maps') || src.includes('pb=')) {
+                    console.warn('🛡️ Agri-AI: Blocked legacy Google Maps component to prevent "pb" error.');
+                    iframe.remove();
+                }
+            });
+        };
+
+        // Run immediately
+        scrub();
+
+        // Also run when DOM changes (handles late injection)
+        if (typeof MutationObserver !== 'undefined') {
+            const observer = new MutationObserver(scrub);
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
     }
 
     loadSettings() {

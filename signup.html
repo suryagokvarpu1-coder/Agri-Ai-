@@ -219,8 +219,69 @@ document.addEventListener('DOMContentLoaded',()=>{
     window.location.href = url;
   };
 
-  document.getElementById('custom_google_btn').onclick = () => socialAuth('google');
+  document.getElementById('custom_google_btn').onclick = (e) => {
+    e.preventDefault();
+    document.getElementById('google-one-tap').style.display = 'block';
+  };
+  
+  window.loginWithMock = function(email, name) {
+    setLoad(true);
+    document.getElementById('google-one-tap').style.display = 'none';
+    setTimeout(() => {
+        const result = window.AuthSystem.socialLogin('google', { email, name });
+        if (result.success) {
+            window.location.href = 'overview.html';
+        } else {
+            show('err', 'Authentication failed: ' + result.error);
+            setLoad(false);
+        }
+    }, 1200);
+  };
 });
 </script>
+
+<!-- Mock Google One Tap Popup -->
+<div id="google-one-tap" style="display:none; position:fixed; top:24px; right:24px; width:360px; background:#fff; border-radius:12px; box-shadow:0 12px 48px rgba(0,0,0,0.2); z-index:9999; overflow:hidden; font-family:'Inter', sans-serif; animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+  <div style="padding:16px 20px; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <svg width="22" height="22" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <span style="font-weight:600; color:#1e293b; font-size:15px; letter-spacing:-0.01em;">Sign in to Agri-AI</span>
+    </div>
+    <button onclick="document.getElementById('google-one-tap').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:22px;color:#94a3b8;line-height:1;padding:0;display:flex;align-items:center;">&times;</button>
+  </div>
+  <div style="padding:8px 0; background:#f8fafc;">
+    <!-- Account 1 -->
+    <div class="g-account" onclick="loginWithMock('yaswanthgokavarapu97@gmail.com', 'Yaswanth Gokavarapu')" style="padding:12px 20px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:background 0.2s;">
+      <div style="width:40px; height:40px; border-radius:50%; background:#16a34a; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:17px; box-shadow:0 2px 8px rgba(22,163,74,0.3);">Y</div>
+      <div>
+        <div style="font-size:14.5px; font-weight:600; color:#1e293b;">Yaswanth Gokavarapu</div>
+        <div style="font-size:13px; color:#64748b;">yaswanthgokavarapu97@gmail.com</div>
+      </div>
+    </div>
+    <!-- Account 2 -->
+    <div class="g-account" onclick="loginWithMock('suryagokvarpu1@gmail.com', 'Suryagok Varpu')" style="padding:12px 20px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:background 0.2s;">
+      <div style="width:40px; height:40px; border-radius:50%; background:#2563eb; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:17px; box-shadow:0 2px 8px rgba(37,99,235,0.3);">S</div>
+      <div>
+        <div style="font-size:14.5px; font-weight:600; color:#1e293b;">Suryagok Varpu</div>
+        <div style="font-size:13px; color:#64748b;">suryagokvarpu1@gmail.com</div>
+      </div>
+    </div>
+    <!-- Account 3 -->
+    <div class="g-account" onclick="loginWithMock('krithiyadav@gmail.com', 'Krithi Yadav')" style="padding:12px 20px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:background 0.2s;">
+      <div style="width:40px; height:40px; border-radius:50%; background:#db2777; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:17px; box-shadow:0 2px 8px rgba(219,39,119,0.3);">K</div>
+      <div>
+        <div style="font-size:14.5px; font-weight:600; color:#1e293b;">Krithi Yadav</div>
+        <div style="font-size:13px; color:#64748b;">krithiyadav@gmail.com</div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:14px 20px; border-top:1px solid #f1f5f9; font-size:12.5px; color:#64748b; line-height:1.5;">
+    To continue, Google will share your name, email address, and profile picture with Agri-AI.
+  </div>
+</div>
+<style>
+  .g-account:hover { background: #f1f5f9 !important; }
+  @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+</style>
 </body>
 </html>

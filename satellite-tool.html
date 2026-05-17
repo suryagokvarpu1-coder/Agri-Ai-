@@ -137,10 +137,11 @@
             <select id="region-filter" class="filter-select">
               <option value="global">Global View</option>
               <option value="na">North America</option>
-              <option value="asia">Asia / SE Asia</option>
-              <option value="africa">Africa / Sahel</option>
-              <option value="europe">Europe</option>
               <option value="sa">South America</option>
+              <option value="europe">Europe</option>
+              <option value="africa">Africa / Sahel</option>
+              <option value="asia">Asia / SE Asia</option>
+              <option value="oceania">Oceania / Australia</option>
             </select>
           </div>
 
@@ -158,15 +159,15 @@
             <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Data Overlay</label>
             <div class="flex flex-col gap-2 mt-3">
               <label class="flex items-center gap-3 cursor-pointer group">
-                <input type="checkbox" id="overlay-precip" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500">
+                <input type="checkbox" id="overlay-precip" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500 filter-checkbox">
                 <span class="text-sm text-slate-300 group-hover:text-white transition-colors">Precipitation</span>
               </label>
               <label class="flex items-center gap-3 cursor-pointer group">
-                <input type="checkbox" id="overlay-temp" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500">
+                <input type="checkbox" id="overlay-temp" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500 filter-checkbox">
                 <span class="text-sm text-slate-300 group-hover:text-white transition-colors">Temperature</span>
               </label>
               <label class="flex items-center gap-3 cursor-pointer group">
-                <input type="checkbox" id="overlay-boundaries" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500">
+                <input type="checkbox" id="overlay-boundaries" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500 filter-checkbox">
                 <span class="text-sm text-slate-300 group-hover:text-white transition-colors">Farm Boundaries</span>
               </label>
             </div>
@@ -184,7 +185,7 @@
       <div class="map-container">
         <div id="map"></div>
         
-        <div id="map-loading" class="map-overlay-loading">
+        <div id="map-loading" class="map-overlay-loading hidden">
           <div class="spinner w-10 h-10 border-4 border-emerald-500/20 border-top-emerald-500 rounded-full animate-spin mb-4"></div>
           <p class="text-emerald-500 font-bold tracking-tight">Syncing Satellite Data...</p>
         </div>
@@ -196,20 +197,20 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl">
+        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl transition-all duration-300" id="card-freq">
           <div class="text-emerald-500 text-xs font-bold uppercase mb-1">Update Frequency</div>
-          <div class="text-xl font-bold text-white">Every 3 Hours</div>
-          <p class="text-slate-500 text-xs mt-1">High-temporal resolution</p>
+          <div id="metric-freq" class="text-xl font-bold text-white transition-all">Every 3 Hours</div>
+          <p id="metric-freq-desc" class="text-slate-500 text-xs mt-1 transition-all">High-temporal resolution</p>
         </div>
-        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl">
+        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl transition-all duration-300" id="card-res">
           <div class="text-blue-500 text-xs font-bold uppercase mb-1">Spatial Resolution</div>
-          <div class="text-xl font-bold text-white">0.5m / pixel</div>
-          <p class="text-slate-500 text-xs mt-1">Sub-meter accuracy</p>
+          <div id="metric-res" class="text-xl font-bold text-white transition-all">0.5m / pixel</div>
+          <p id="metric-res-desc" class="text-slate-500 text-xs mt-1 transition-all">Sub-meter accuracy</p>
         </div>
-        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl">
+        <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl transition-all duration-300" id="card-chan">
           <div class="text-amber-500 text-xs font-bold uppercase mb-1">Spectrum Channels</div>
-          <div class="text-xl font-bold text-white">12 Bands</div>
-          <p class="text-slate-500 text-xs mt-1">Multispectral analysis</p>
+          <div id="metric-chan" class="text-xl font-bold text-white transition-all">12 Bands</div>
+          <p id="metric-chan-desc" class="text-slate-500 text-xs mt-1 transition-all">Multispectral analysis</p>
         </div>
       </div>
     </div>
@@ -242,40 +243,96 @@ document.addEventListener('DOMContentLoaded', () => {
   const regions = {
     global: { center: [20, 0], zoom: 2 },
     na: { center: [40, -100], zoom: 4 },
-    asia: { center: [25, 105], zoom: 4 },
-    africa: { center: [5, 20], zoom: 4 },
+    sa: { center: [-15, -60], zoom: 4 },
     europe: { center: [50, 15], zoom: 4 },
-    sa: { center: [-15, -60], zoom: 4 }
+    africa: { center: [5, 20], zoom: 4 },
+    asia: { center: [25, 105], zoom: 4 },
+    oceania: { center: [-25, 135], zoom: 4 }
   };
 
   // Handle Region Change
   document.getElementById('region-filter').addEventListener('change', (e) => {
     const region = regions[e.target.value];
     if (region) {
-      showLoading();
-      map.flyTo(region.center, region.zoom, { duration: 2 });
-      setTimeout(hideLoading, 1500);
+      map.flyTo(region.center, region.zoom, { duration: 1.5 });
     }
   });
 
-  // Handle Analytics Button
-  document.getElementById('apply-filters-btn').addEventListener('click', () => {
+  // Handle Analytics Button & Auto-Update Filters
+  const applyBtn = document.getElementById('apply-filters-btn');
+  const cropFilter = document.getElementById('crop-filter');
+  const checkboxes = document.querySelectorAll('.filter-checkbox');
+  
+  function updateAnalytics() {
     showLoading();
-    const cropLayer = document.getElementById('crop-filter').value;
+    const layerType = cropFilter.value;
     
-    // Simulate layer processing
     setTimeout(() => {
       hideLoading();
-      alert(`Applied ${cropLayer.toUpperCase()} analytics layer to current view.`);
       
-      // Add a subtle color tint overlay for NDVI/Moisture simulation
-      if (cropLayer !== 'none') {
-        const colors = { ndvi: '#10b981', moisture: '#3b82f6', thermal: '#f59e0b' };
-        // Just as a visual effect, we could add a semi-transparent rectangle
-        // but for now, we'll just show the alert
+      // Update visual map filter (CSS based overlay simulation)
+      const pane = document.querySelector('.leaflet-tile-pane');
+      if (pane) {
+          pane.style.transition = 'filter 0.5s ease';
+          switch (layerType) {
+              case 'ndvi':
+                  pane.style.filter = 'hue-rotate(90deg) saturate(200%) contrast(120%)';
+                  break;
+              case 'moisture':
+                  pane.style.filter = 'hue-rotate(180deg) saturate(150%) brightness(90%)';
+                  break;
+              case 'thermal':
+                  pane.style.filter = 'hue-rotate(270deg) saturate(250%) contrast(150%)';
+                  break;
+              default:
+                  pane.style.filter = 'none';
+          }
       }
-    }, 1200);
-  });
+
+      // Update Metrics
+      const freq = document.getElementById('metric-freq');
+      const freqDesc = document.getElementById('metric-freq-desc');
+      const res = document.getElementById('metric-res');
+      const resDesc = document.getElementById('metric-res-desc');
+      const chan = document.getElementById('metric-chan');
+      const chanDesc = document.getElementById('metric-chan-desc');
+
+      if (layerType === 'ndvi') {
+          freq.innerText = 'Every 24 Hours';
+          freqDesc.innerText = 'Daily vegetation tracking';
+          res.innerText = '10m / pixel';
+          resDesc.innerText = 'Sentinel-2 precision';
+          chan.innerText = 'NIR & Red Bands';
+          chanDesc.innerText = 'Vegetation index calculation';
+      } else if (layerType === 'moisture') {
+          freq.innerText = 'Every 12 Hours';
+          freqDesc.innerText = 'Twice daily radar scan';
+          res.innerText = '25m / pixel';
+          resDesc.innerText = 'Synthetic-aperture radar';
+          chan.innerText = 'C-Band Radar';
+          chanDesc.innerText = 'Soil penetration active';
+      } else if (layerType === 'thermal') {
+          freq.innerText = 'Every 6 Hours';
+          freqDesc.innerText = 'Frequent heat monitoring';
+          res.innerText = '100m / pixel';
+          resDesc.innerText = 'Thermal infrared sensor';
+          chan.innerText = 'Thermal IR Bands';
+          chanDesc.innerText = 'Heat stress detection';
+      } else {
+          freq.innerText = 'Every 3 Hours';
+          freqDesc.innerText = 'High-temporal resolution';
+          res.innerText = '0.5m / pixel';
+          resDesc.innerText = 'Sub-meter accuracy';
+          chan.innerText = '12 Bands';
+          chanDesc.innerText = 'Multispectral analysis';
+      }
+    }, 400); // Fast simulation delay
+  }
+
+  // Bind real-time events
+  cropFilter.addEventListener('change', updateAnalytics);
+  checkboxes.forEach(cb => cb.addEventListener('change', updateAnalytics));
+  applyBtn.addEventListener('click', updateAnalytics);
 
   function showLoading() {
     document.getElementById('map-loading').classList.remove('hidden');

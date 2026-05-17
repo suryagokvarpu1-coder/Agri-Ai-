@@ -213,6 +213,22 @@ document.addEventListener('DOMContentLoaded', () => {
   populateCrops();
   setupLocationDetection();
   setupPredictionForm();
+  
+  // Auto-consume global location if available
+  const savedLoc = localStorage.getItem('agri_user_location');
+  if (savedLoc) {
+    try {
+      const parsed = JSON.parse(savedLoc);
+      if (parsed.address) document.getElementById('location').value = parsed.address;
+    } catch(e) {}
+  }
+  
+  // Listen for live updates from global Location Manager
+  window.addEventListener('agriLocationUpdated', (e) => {
+    if (e.detail && e.detail.address) {
+      document.getElementById('location').value = e.detail.address;
+    }
+  });
 });
 
 function populateCrops() {

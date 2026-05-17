@@ -231,6 +231,46 @@ document.addEventListener('DOMContentLoaded', () => {
     attributionControl: false
   }).setView([20, 0], 2);
 
+  // Auto-Center Map based on Global Location if available
+  const savedLoc = localStorage.getItem('agri_user_location');
+  if (savedLoc) {
+    try {
+      const parsed = JSON.parse(savedLoc);
+      if (parsed.lat && parsed.lon) {
+        map.setView([parsed.lat, parsed.lon], 12); // Closer zoom for specific location
+        
+        // Add a pulsing marker to represent the user's location
+        const pulseIcon = L.divIcon({
+          className: 'custom-pulse-marker',
+          html: '<div style="width:16px;height:16px;background:#10b981;border-radius:50%;box-shadow:0 0 0 0 rgba(16,185,129,1);animation:markerPulse 2s infinite;"></div>',
+          iconSize: [16, 16]
+        });
+        L.marker([parsed.lat, parsed.lon], {icon: pulseIcon}).addTo(map)
+         .bindPopup('<b style="color:#10b981;">Your Detected Farm Location</b>').openPopup();
+         
+        // Inject animation if not exists
+        if (!document.getElementById('marker-pulse-css')) {
+            document.head.insertAdjacentHTML('beforeend', '<style id="marker-pulse-css">@keyframes markerPulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); } 70% { box-shadow: 0 0 0 15px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }</style>');
+        }
+      }
+    } catch(e) {}
+  }
+
+  // Listen for Live Updates
+  window.addEventListener('agriLocationUpdated', (e) => {
+    if (e.detail && e.detail.lat && e.detail.lon) {
+      map.flyTo([e.detail.lat, e.detail.lon], 12, { duration: 2 });
+      
+      const pulseIcon = L.divIcon({
+          className: 'custom-pulse-marker',
+          html: '<div style="width:16px;height:16px;background:#10b981;border-radius:50%;box-shadow:0 0 0 0 rgba(16,185,129,1);animation:markerPulse 2s infinite;"></div>',
+          iconSize: [16, 16]
+      });
+      L.marker([e.detail.lat, e.detail.lon], {icon: pulseIcon}).addTo(map)
+       .bindPopup('<b style="color:#10b981;">Your Detected Farm Location</b>').openPopup();
+    }
+  });
+
   // Add Esri Satellite Imagery
   const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 19

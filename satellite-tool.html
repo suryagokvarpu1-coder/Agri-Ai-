@@ -261,8 +261,75 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle Analytics Button & Auto-Update Filters
   const applyBtn = document.getElementById('apply-filters-btn');
   const cropFilter = document.getElementById('crop-filter');
-  const checkboxes = document.querySelectorAll('.filter-checkbox');
   
+  const chkPrecip = document.getElementById('overlay-precip');
+  const chkTemp = document.getElementById('overlay-temp');
+  const chkBoundaries = document.getElementById('overlay-boundaries');
+
+  // Layer Groups for Overlays
+  let precipLayer = L.layerGroup();
+  let tempLayer = L.layerGroup();
+  let farmBoundariesLayer = L.geoJSON(null, {
+      style: {
+          color: '#10b981', // Emerald
+          weight: 2,
+          opacity: 0.9,
+          fillColor: '#10b981',
+          fillOpacity: 0.2
+      },
+      onEachFeature: function (feature, layer) {
+          layer.bindPopup(`<div style="font-family:Inter; color:#0f172a;"><strong style="color:#10b981;">Farm Boundary ID:</strong> ${feature.properties.id}<br><strong>Source:</strong> Govt. Ag. Database<br><strong>Registered Area:</strong> ${feature.properties.area} Hectares<br><strong>Status:</strong> Active & Verified</div>`);
+      }
+  });
+
+  // Generate dynamic data around current view
+  function generateLayerData() {
+      const center = map.getCenter();
+      const zoom = map.getZoom();
+      const spread = 40 / Math.pow(2, Math.max(1, zoom - 2));
+
+      // Clear existing data
+      precipLayer.clearLayers();
+      tempLayer.clearLayers();
+      const farmFeatures = [];
+
+      // Generate realistic looking data grids
+      for(let i = 0; i < 25; i++) {
+          const lat = center.lat + (Math.random() - 0.5) * spread;
+          const lng = center.lng + (Math.random() - 0.5) * spread;
+          const size = spread * (0.05 + Math.random() * 0.1);
+          const bounds = [[lat - size, lng - size], [lat + size, lng + size]];
+          
+          // Precipitation (Cyan/Blue)
+          L.rectangle(bounds, { color: 'transparent', fillColor: '#0ea5e9', fillOpacity: Math.random() * 0.4 + 0.1 }).addTo(precipLayer);
+          
+          // Temperature (Orange/Red)
+          L.rectangle(bounds, { color: 'transparent', fillColor: '#ef4444', fillOpacity: Math.random() * 0.4 + 0.1 }).addTo(tempLayer);
+
+          // Farm Boundaries (Polygons)
+          const fLat1 = lat - size/3; const fLat2 = lat + size/3;
+          const fLng1 = lng - size/3; const fLng2 = lng + size/3;
+          farmFeatures.push({
+              "type": "Feature",
+              "properties": { "id": `AGRI-REG-${Math.floor(Math.random()*90000)+10000}`, "area": (size*2000).toFixed(1) },
+              "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [[[fLng1, fLat1], [fLng2, fLat1], [fLng2, fLat2], [fLng1, fLat2], [fLng1, fLat1]]]
+              }
+          });
+      }
+      farmBoundariesLayer.clearLayers();
+      farmBoundariesLayer.addData(farmFeatures);
+  }
+
+  // Handle map movement to regenerate overlay data
+  map.on('moveend', () => {
+      generateLayerData();
+  });
+  
+  // Initial generation
+  generateLayerData();
+
   function updateAnalytics() {
     showLoading();
     const layerType = cropFilter.value;
@@ -270,26 +337,24 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       hideLoading();
       
-      // Update visual map filter (CSS based overlay simulation)
+      // Update Crop Filter (CSS based simulation on base map)
       const pane = document.querySelector('.leaflet-tile-pane');
       if (pane) {
           pane.style.transition = 'filter 0.5s ease';
           switch (layerType) {
-              case 'ndvi':
-                  pane.style.filter = 'hue-rotate(90deg) saturate(200%) contrast(120%)';
-                  break;
-              case 'moisture':
-                  pane.style.filter = 'hue-rotate(180deg) saturate(150%) brightness(90%)';
-                  break;
-              case 'thermal':
-                  pane.style.filter = 'hue-rotate(270deg) saturate(250%) contrast(150%)';
-                  break;
-              default:
-                  pane.style.filter = 'none';
+              case 'ndvi': pane.style.filter = 'hue-rotate(90deg) saturate(200%) contrast(120%)'; break;
+              case 'moisture': pane.style.filter = 'hue-rotate(180deg) saturate(150%) brightness(90%)'; break;
+              case 'thermal': pane.style.filter = 'hue-rotate(270deg) saturate(250%) contrast(150%)'; break;
+              default: pane.style.filter = 'none';
           }
       }
 
-      // Update Metrics
+      // Toggle Leaflet Overlays based on checkboxes
+      if (chkPrecip.checked) map.addLayer(precipLayer); else map.removeLayer(precipLayer);
+      if (chkTemp.checked) map.addLayer(tempLayer); else map.removeLayer(tempLayer);
+      if (chkBoundaries.checked) map.addLayer(farmBoundariesLayer); else map.removeLayer(farmBoundariesLayer);
+
+      // Update Metrics Text
       const freq = document.getElementById('metric-freq');
       const freqDesc = document.getElementById('metric-freq-desc');
       const res = document.getElementById('metric-res');
@@ -298,40 +363,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const chanDesc = document.getElementById('metric-chan-desc');
 
       if (layerType === 'ndvi') {
-          freq.innerText = 'Every 24 Hours';
-          freqDesc.innerText = 'Daily vegetation tracking';
-          res.innerText = '10m / pixel';
-          resDesc.innerText = 'Sentinel-2 precision';
-          chan.innerText = 'NIR & Red Bands';
-          chanDesc.innerText = 'Vegetation index calculation';
+          freq.innerText = 'Every 24 Hours'; freqDesc.innerText = 'Daily vegetation tracking';
+          res.innerText = '10m / pixel'; resDesc.innerText = 'Sentinel-2 precision';
+          chan.innerText = 'NIR & Red Bands'; chanDesc.innerText = 'Vegetation index calculation';
       } else if (layerType === 'moisture') {
-          freq.innerText = 'Every 12 Hours';
-          freqDesc.innerText = 'Twice daily radar scan';
-          res.innerText = '25m / pixel';
-          resDesc.innerText = 'Synthetic-aperture radar';
-          chan.innerText = 'C-Band Radar';
-          chanDesc.innerText = 'Soil penetration active';
+          freq.innerText = 'Every 12 Hours'; freqDesc.innerText = 'Twice daily radar scan';
+          res.innerText = '25m / pixel'; resDesc.innerText = 'Synthetic-aperture radar';
+          chan.innerText = 'C-Band Radar'; chanDesc.innerText = 'Soil penetration active';
       } else if (layerType === 'thermal') {
-          freq.innerText = 'Every 6 Hours';
-          freqDesc.innerText = 'Frequent heat monitoring';
-          res.innerText = '100m / pixel';
-          resDesc.innerText = 'Thermal infrared sensor';
-          chan.innerText = 'Thermal IR Bands';
-          chanDesc.innerText = 'Heat stress detection';
+          freq.innerText = 'Every 6 Hours'; freqDesc.innerText = 'Frequent heat monitoring';
+          res.innerText = '100m / pixel'; resDesc.innerText = 'Thermal infrared sensor';
+          chan.innerText = 'Thermal IR Bands'; chanDesc.innerText = 'Heat stress detection';
       } else {
-          freq.innerText = 'Every 3 Hours';
-          freqDesc.innerText = 'High-temporal resolution';
-          res.innerText = '0.5m / pixel';
-          resDesc.innerText = 'Sub-meter accuracy';
-          chan.innerText = '12 Bands';
-          chanDesc.innerText = 'Multispectral analysis';
+          freq.innerText = 'Every 3 Hours'; freqDesc.innerText = 'High-temporal resolution';
+          res.innerText = '0.5m / pixel'; resDesc.innerText = 'Sub-meter accuracy';
+          chan.innerText = '12 Bands'; chanDesc.innerText = 'Multispectral analysis';
       }
-    }, 400); // Fast simulation delay
+    }, 400);
   }
 
-  // Bind real-time events
+  // Bind events
   cropFilter.addEventListener('change', updateAnalytics);
-  checkboxes.forEach(cb => cb.addEventListener('change', updateAnalytics));
+  [chkPrecip, chkTemp, chkBoundaries].forEach(cb => cb.addEventListener('change', updateAnalytics));
   applyBtn.addEventListener('click', updateAnalytics);
 
   function showLoading() {
@@ -345,7 +398,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial load
   setTimeout(() => {
     hideLoading();
-    // Check if Leaflet is actually rendering
     if (typeof L === 'undefined' || !map) {
       document.getElementById('cache-warning').classList.remove('hidden');
     }

@@ -217,19 +217,19 @@ class SmartLocationPicker {
 
         this.map = L.map('smart-loc-map', { zoomControl: false, maxZoom: 22 }).setView([defaultLat, defaultLng], defaultZoom);
         
-        // Add Satellite Layer for Agriculture Theme
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri',
+        // Add HD Satellite Layer (High-Resolution)
+        L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            attribution: 'Map data &copy; Google',
             maxZoom: 22,
-            maxNativeZoom: 18,
+            maxNativeZoom: 21,
             errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
         }).addTo(this.map);
         
-        // Add hybrid labels (Replaced Stamen with reliable ESRI Reference layer)
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+        // Add HD Boundaries, Roads & Village Labels
+        L.tileLayer('https://mt1.google.com/vt/lyrs=h&x={x}&y={y}&z={z}', {
             attribution: '',
             maxZoom: 22,
-            maxNativeZoom: 18,
+            maxNativeZoom: 21,
             errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
         }).addTo(this.map);
 

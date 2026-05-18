@@ -272,11 +272,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Add Esri Satellite Imagery
-  const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  // Add HD Satellite Imagery (High-Resolution)
+  const satelliteLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     maxZoom: 22,
-    maxNativeZoom: 18, // Reduced to 18 to force Leaflet to stretch the image instead of fetching empty tiles
-    errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' // Transparent fallback
+    maxNativeZoom: 21,
+    attribution: 'Map data &copy; Google',
+    errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+  }).addTo(map);
+
+  // Add HD Boundaries, Roads & Village Labels
+  const labelsLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=h&x={x}&y={y}&z={z}', {
+    maxZoom: 22,
+    maxNativeZoom: 21,
+    errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
   }).addTo(map);
 
   // Add Zoom Control at bottom right

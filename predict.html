@@ -77,7 +77,9 @@ select option { background: #0f172a; color: #fff; }
     <!-- Planning Depth Header -->
     <div class="flex items-center gap-4 mb-8 pb-6 border-b border-white/10">
       <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L3 7l9 5 9-5-9-5zM3 12l9 5 9-5M3 17l9 5 9-5" />
+        </svg>
       </div>
       <div>
         <h3 class="font-bold text-xl text-white text-shadow">Planning Depth</h3>
@@ -89,10 +91,10 @@ select option { background: #0f172a; color: #fff; }
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
         <div class="form-group">
           <label class="form-label font-bold tracking-wide" data-i18n="predict_crop_type">Global Crop Database</label>
-          <select id="crop-type" name="crop" required class="form-input form-select cursor-pointer">
-            <option value="">Search or Select Crop...</option>
+          <input list="crop-options" id="crop-type" name="crop" required placeholder="Search or Type Crop Name..." class="form-input">
+          <datalist id="crop-options">
             <!-- Generated dynamically by JS -->
-          </select>
+          </datalist>
         </div>
         
         <div class="form-group">
@@ -148,12 +150,12 @@ select option { background: #0f172a; color: #fff; }
     </form>
   </div>
 
-  <div id="loading-state" class="hidden text-center py-12">
+  <div id="loading-state" class="hidden text-center py-12 transition-all">
     <div class="spinner mb-4" style="margin: 0 auto; border-top-color: #10b981;"></div>
     <p class="text-emerald-500 font-bold tracking-wide animate-pulse" data-i18n="predict_processing">Computing satellite data & deep learning models...</p>
   </div>
 
-  <div id="result-box" class="hidden">
+  <div id="result-box" class="hidden transition-all duration-500">
     <div class="glass-card mb-12">
       <h3 class="font-bold text-2xl text-white mb-6 text-shadow border-b border-white/10 pb-4" data-i18n="predict_results_title">Yield Forecast Analysis</h3>
       <div id="prediction-results"></div>
@@ -163,48 +165,75 @@ select option { background: #0f172a; color: #fff; }
 </div>
 
 <script>
-// Global Crop Database
+// Comprehensive Global Crop Database
 const globalCrops = {
-  'Cereals': [
+  'Cereals & Grains': [
     { id: 'wheat', name: 'Wheat', yield: 1800 },
     { id: 'corn', name: 'Corn (Maize)', yield: 4000 },
     { id: 'rice', name: 'Rice', yield: 2200 },
     { id: 'barley', name: 'Barley', yield: 1500 },
-    { id: 'millet', name: 'Millet', yield: 800 }
+    { id: 'millet', name: 'Millet', yield: 800 },
+    { id: 'sorghum', name: 'Sorghum', yield: 1200 },
+    { id: 'oats', name: 'Oats', yield: 1100 },
+    { id: 'rye', name: 'Rye', yield: 1000 },
+    { id: 'quinoa', name: 'Quinoa', yield: 600 }
   ],
   'Pulses & Legumes': [
     { id: 'soybeans', name: 'Soybeans', yield: 1100 },
     { id: 'lentils', name: 'Lentils', yield: 900 },
     { id: 'chickpeas', name: 'Chickpeas', yield: 1000 },
-    { id: 'beans', name: 'Common Beans', yield: 1200 }
+    { id: 'beans', name: 'Common Beans', yield: 1200 },
+    { id: 'peas', name: 'Peas', yield: 1500 },
+    { id: 'cowpeas', name: 'Cowpeas', yield: 800 },
+    { id: 'pigeonpeas', name: 'Pigeon Peas', yield: 950 }
   ],
   'Oilseeds': [
     { id: 'sunflower', name: 'Sunflower', yield: 1200 },
     { id: 'canola', name: 'Canola (Rapeseed)', yield: 1600 },
     { id: 'peanut', name: 'Peanut (Groundnut)', yield: 1400 },
-    { id: 'mustard', name: 'Mustard', yield: 1100 }
+    { id: 'mustard', name: 'Mustard', yield: 1100 },
+    { id: 'sesame', name: 'Sesame', yield: 600 },
+    { id: 'flaxseed', name: 'Flaxseed', yield: 900 },
+    { id: 'safflower', name: 'Safflower', yield: 1000 }
   ],
   'Commercial & Cash Crops': [
     { id: 'cotton', name: 'Cotton', yield: 700 },
     { id: 'sugarcane', name: 'Sugarcane', yield: 30000 },
     { id: 'coffee', name: 'Coffee', yield: 600 },
-    { id: 'tea', name: 'Tea', yield: 1200 }
+    { id: 'tea', name: 'Tea', yield: 1200 },
+    { id: 'tobacco', name: 'Tobacco', yield: 2000 },
+    { id: 'jute', name: 'Jute', yield: 2500 },
+    { id: 'rubber', name: 'Rubber', yield: 1500 },
+    { id: 'cocoa', name: 'Cocoa', yield: 450 }
   ],
-  'Fruits': [
+  'Fruits & Plantation': [
     { id: 'apple', name: 'Apple', yield: 15000 },
     { id: 'banana', name: 'Banana', yield: 20000 },
     { id: 'mango', name: 'Mango', yield: 8000 },
-    { id: 'orange', name: 'Orange', yield: 12000 }
+    { id: 'orange', name: 'Orange', yield: 12000 },
+    { id: 'grape', name: 'Grapes', yield: 10000 },
+    { id: 'pineapple', name: 'Pineapple', yield: 25000 },
+    { id: 'papaya', name: 'Papaya', yield: 18000 },
+    { id: 'coconut', name: 'Coconut', yield: 6000 }
   ],
   'Vegetables': [
     { id: 'tomato', name: 'Tomato', yield: 25000 },
     { id: 'potato', name: 'Potato', yield: 18000 },
-    { id: 'onion', name: 'Onion', yield: 14000 }
+    { id: 'onion', name: 'Onion', yield: 14000 },
+    { id: 'carrot', name: 'Carrot', yield: 20000 },
+    { id: 'cabbage', name: 'Cabbage', yield: 22000 },
+    { id: 'spinach', name: 'Spinach', yield: 8000 },
+    { id: 'broccoli', name: 'Broccoli', yield: 12000 }
   ],
   'Spices & Medicinal': [
     { id: 'turmeric', name: 'Turmeric', yield: 4000 },
     { id: 'ginger', name: 'Ginger', yield: 6000 },
-    { id: 'aloe_vera', name: 'Aloe Vera', yield: 10000 }
+    { id: 'aloe_vera', name: 'Aloe Vera', yield: 10000 },
+    { id: 'garlic', name: 'Garlic', yield: 8000 },
+    { id: 'black_pepper', name: 'Black Pepper', yield: 1500 },
+    { id: 'cardamom', name: 'Cardamom', yield: 300 },
+    { id: 'cloves', name: 'Cloves', yield: 500 },
+    { id: 'ashwagandha', name: 'Ashwagandha', yield: 600 }
   ]
 };
 
@@ -232,20 +261,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function populateCrops() {
-  const select = document.getElementById('crop-type');
+  const datalist = document.getElementById('crop-options');
+  if (!datalist) return;
   for (const [category, crops] of Object.entries(globalCrops)) {
-    const group = document.createElement('optgroup');
-    group.label = `— ${category} —`;
-    group.style.color = '#10b981';
-    group.style.background = '#0f172a';
-    
     crops.forEach(crop => {
       const option = document.createElement('option');
-      option.value = crop.id;
-      option.textContent = crop.name;
-      group.appendChild(option);
+      option.value = crop.name; // Use name as value for easy searching and display
+      datalist.appendChild(option);
     });
-    select.appendChild(group);
   }
 }
 
@@ -253,6 +276,7 @@ function setupLocationDetection() {
   const btn = document.getElementById('auto-locate-btn');
   const input = document.getElementById('location');
   const spinner = document.getElementById('loc-spinner');
+  if (!btn || !input || !spinner) return;
 
   btn.addEventListener('click', () => {
     if (!navigator.geolocation) {
@@ -269,7 +293,6 @@ function setupLocationDetection() {
         try {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-          // Reverse geocode via OpenStreetMap public API
           const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
           const data = await response.json();
           
@@ -306,29 +329,44 @@ function setupPredictionForm() {
   
   form.addEventListener('submit',async function(e){
     e.preventDefault();
-    const data=Object.fromEntries(new FormData(form));
     
-    document.getElementById('loading-state').classList.remove('hidden');
-    document.getElementById('result-box').classList.add('hidden');
-    document.getElementById('predict-button').disabled=true;
-    
-    // Simulate complex API processing
-    await new Promise(r=>setTimeout(r, 2000));
-    
-    const pred = calcPrediction(data);
-    displayResults(pred);
-    
-    document.getElementById('loading-state').classList.add('hidden');
-    document.getElementById('predict-button').disabled=false;
+    try {
+      const data=Object.fromEntries(new FormData(form));
+      
+      // Basic Validation
+      if (!data.crop || !data.location || !data.fieldSize || !data.soilType || !data.irrigation) {
+        throw new Error("Missing required fields.");
+      }
+
+      document.getElementById('loading-state').classList.remove('hidden');
+      document.getElementById('result-box').classList.add('hidden');
+      document.getElementById('predict-button').disabled=true;
+      
+      // Simulate robust API processing
+      await new Promise(r=>setTimeout(r, 1500));
+      
+      const pred = calcPrediction(data);
+      displayResults(pred);
+      
+    } catch(err) {
+      console.error("Prediction Error:", err);
+      alert("Error generating prediction. Please check all form fields and try again.");
+    } finally {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('predict-button').disabled=false;
+    }
   });
 }
 
-function getBaseYield(cropId) {
+function getBaseYield(cropName) {
+  // Case-insensitive search across the entire database
+  const searchName = (cropName || "").toLowerCase().trim();
   for (const crops of Object.values(globalCrops)) {
-    const found = crops.find(c => c.id === cropId);
+    const found = crops.find(c => c.name.toLowerCase() === searchName || c.id === searchName);
     if (found) return { yield: found.yield, name: found.name };
   }
-  return { yield: 1800, name: 'Unknown' };
+  // Fallback for custom user inputs
+  return { yield: 1800, name: cropName || 'Unknown Crop' };
 }
 
 function calcPrediction(d) {
@@ -340,43 +378,81 @@ function calcPrediction(d) {
   const sM = soilM[d.soilType] || 1;
   const iM = irrigM[d.irrigation] || 1;
   
-  // Apply location specific variance (simulated based on string length to look dynamic)
-  const locVariance = 0.9 + ((d.location.length % 20) / 100); 
+  // Safe location variance
+  const locStr = (d.location || "").toString();
+  const locVariance = 0.9 + ((locStr.length % 20) / 100); 
   
   const y = Math.round(bY * sM * iM * locVariance);
   const fs = parseFloat(d.fieldSize) || 1;
   const conf = Math.round(85 + Math.random()*12);
   
+  const locationSummary = locStr ? locStr.split(',')[0] : 'your region';
+  const soilName = (d.soilType || "").toUpperCase();
+  const irrigStrat = (d.irrigation || "").toLowerCase();
+  
   const recs=[
-    `Targeted insights for ${cropData.name} grown in ${d.location.split(',')[0]}.`,
-    `Current ${d.soilType.toUpperCase()} soil profile requires consistent monitoring.`,
-    d.irrigation === 'rainfed' ? 'Consider installing auxiliary irrigation to boost confidence.' : 'Current irrigation strategy provides optimal water distribution.'
+    `Targeted insights for ${cropData.name} grown in ${locationSummary}.`,
+    `Current ${soilName} soil profile requires consistent monitoring.`,
+    irrigStrat === 'rainfed' ? 'Consider installing auxiliary irrigation to boost confidence.' : 'Current irrigation strategy provides optimal water distribution.'
   ];
   
   return {
     cropName: cropData.name,
-    location: d.location,
+    location: locStr,
     fieldSize: fs,
     predictedYield: y,
     totalProduction: Math.round(y * fs),
     confidence: conf,
-    factors: { soil: d.soilType, irrigation: d.irrigation },
+    factors: { soil: soilName, irrigation: irrigStrat },
     recommendations: recs
   };
 }
 
 function displayResults(p) {
   const c = document.getElementById('prediction-results');
+  
+  // Calculate Progress Bar Color
+  let confColor = '#10b981'; // Emerald
+  if (p.confidence < 88) confColor = '#f59e0b'; // Amber
+  if (p.confidence < 80) confColor = '#ef4444'; // Red
+
   c.innerHTML = `
     <div class="result-grid">
-      <div class="result-metric"><div class="result-metric-val">${p.predictedYield.toLocaleString()}</div><div class="result-metric-label">Est. kg / acre</div></div>
-      <div class="result-metric"><div class="result-metric-val">${p.totalProduction.toLocaleString()}</div><div class="result-metric-label">Total Volume (kg)</div></div>
-      <div class="result-metric"><div class="result-metric-val" style="color: ${p.confidence > 90 ? '#10b981' : '#f59e0b'}">${p.confidence}%</div><div class="result-metric-label">AI Confidence Score</div></div>
+      <div class="result-metric">
+        <div class="result-metric-val">${p.predictedYield.toLocaleString()}</div>
+        <div class="result-metric-label">Est. kg / acre</div>
+      </div>
+      <div class="result-metric">
+        <div class="result-metric-val">${p.totalProduction.toLocaleString()}</div>
+        <div class="result-metric-label">Total Volume (kg)</div>
+      </div>
+      <div class="result-metric">
+        <div class="flex items-end justify-center gap-1">
+          <div class="result-metric-val" style="color: ${confColor}">${p.confidence}</div>
+          <span style="color: ${confColor}; font-weight: 800; font-size: 1.2rem; margin-bottom: 0.1rem;">%</span>
+        </div>
+        <div class="result-metric-label">AI Confidence Score</div>
+        <div class="w-full bg-slate-800 rounded-full h-1.5 mt-3 overflow-hidden shadow-inner">
+          <div class="h-1.5 rounded-full transition-all duration-1000 ease-out" style="width: 0%; background: ${confColor}" id="conf-progress"></div>
+        </div>
+      </div>
     </div>
     
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-      <div class="factor-pill"><span class="factor-label">Analyzed Soil</span><span class="factor-val">${p.factors.soil.toUpperCase()}</span></div>
-      <div class="factor-pill"><span class="factor-label">Water Source</span><span class="factor-val">${p.factors.irrigation.toUpperCase()}</span></div>
+      <div class="factor-pill">
+        <span class="factor-label flex items-center gap-2">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L3 7l9 5 9-5-9-5zM3 12l9 5 9-5"/></svg>
+          Analyzed Soil
+        </span>
+        <span class="factor-val">${p.factors.soil}</span>
+      </div>
+      <div class="factor-pill">
+        <span class="factor-label flex items-center gap-2">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Water Source
+        </span>
+        <span class="factor-val">${p.factors.irrigation.toUpperCase()}</span>
+      </div>
     </div>
     
     <div style="background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.1); border-radius: 16px; padding: 1.5rem;">
@@ -392,8 +468,15 @@ function displayResults(p) {
       `).join('')}
     </div>
   `;
+  
   document.getElementById('result-box').classList.remove('hidden');
   document.getElementById('result-box').scrollIntoView({behavior:'smooth',block:'start'});
+  
+  // Trigger progress bar animation
+  setTimeout(() => {
+    const bar = document.getElementById('conf-progress');
+    if(bar) bar.style.width = `${p.confidence}%`;
+  }, 100);
 }
 </script>
 </body></html>

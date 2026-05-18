@@ -231,7 +231,19 @@ class SoilAnalysisSystem {
 
     init() {
         this.setupEventListeners();
+        this.loadAIModel();
         console.log('🌱 Soil Analysis System initialized');
+    }
+
+    async loadAIModel() {
+        try {
+            if (window.mobilenet) {
+                this.mobilenetModel = await window.mobilenet.load();
+                console.log('🤖 MobileNet AI classification model loaded');
+            }
+        } catch (e) {
+            console.error('Failed to load MobileNet AI model:', e);
+        }
     }
 
     setupEventListeners() {
@@ -279,7 +291,7 @@ class SoilAnalysisSystem {
         this.showLoadingState();
 
         try {
-            // Real image analysis using Canvas API
+            // Real image analysis using Canvas API & TensorFlow
             const analysisResult = await this.analyzeImageColors(file);
             this.displayResults(analysisResult);
         } catch (error) {
@@ -308,9 +320,39 @@ class SoilAnalysisSystem {
             const img = new Image();
             const url = URL.createObjectURL(file);
 
-            img.onload = () => {
+            img.onload = async () => {
                 try {
-                    // Draw image to canvas and sample pixels
+                    // Step 1: AI Object Classification (TensorFlow MobileNet)
+                    if (this.mobilenetModel) {
+                        const stepEl = document.getElementById('analysis-step');
+                        if (stepEl) stepEl.textContent = "Step 1: Running AI Object Classification...";
+                        
+                        const predictions = await this.mobilenetModel.classify(img);
+                        
+                        // Valid keywords that describe soil, ground, or textures often confused with macro soil
+                        const validKeywords = [
+                            'soil', 'earth', 'ground', 'dirt', 'sand', 'clay', 'mud', 'plow', 'field', 
+                            'farm', 'garden', 'pot', 'terrain', 'rock', 'stone', 'pebble', 'gravel',
+                            'texture', 'pattern', 'surface', 'sponge', 'dough', 'leather', 'velvet', 'wool',
+                            'ant', 'worm', 'nematode', 'geological'
+                        ];
+                        
+                        let isValidSoil = false;
+                        for (const pred of predictions) {
+                            const className = pred.className.toLowerCase();
+                            if (validKeywords.some(kw => className.includes(kw))) {
+                                isValidSoil = true;
+                                break;
+                            }
+                        }
+                        
+                        // If AI is heavily confident it's an indoor object, person, vehicle, etc. reject it.
+                        if (!isValidSoil && predictions[0].probability > 0.15) {
+                            throw new Error("No soil detected in the uploaded image. Please upload a valid soil photo for analysis.");
+                        }
+                    }
+
+                    // Step 2: Draw image to canvas and sample pixels
                     const canvas = document.createElement('canvas');
                     const MAX = 200; // downsample for performance
                     const scale = Math.min(MAX / img.width, MAX / img.height, 1);

@@ -339,20 +339,22 @@ class SoilAnalysisSystem {
                         const pixelHsl = this.rgbToHsl(pr, pg, pb);
                         const {h, s, l} = pixelHsl;
                         
-                        // Strict validation: check if pixel is an earth tone (brown, tan, dark grey, red-brown, yellowish)
-                        const isHueBrownish = (h >= 0 && h <= 60) || (h >= 330);
-                        const isGreyscale = s < 0.15; // Greys/Blacks
-                        const isNotTooVivid = s < 0.65; // Soil is rarely highly saturated neon
-                        const isNotTooDarkOrLight = l > 0.05 && l < 0.95; // Ignore pure white/black pixels
+                        // Lenient validation: check if pixel is an earth tone or natural shade
+                        // H: 0-90 (Red to Yellow-Green) or > 320 (Pink-Red)
+                        const isHueBrownish = (h >= 0 && h <= 90) || (h >= 320);
+                        const isGreyscale = s < 0.25; // Greys, Blacks, Whites
+                        const isNotTooVivid = s < 0.85; // Reject only extreme neon/synthetic colors
                         
-                        if ((isHueBrownish || isGreyscale) && isNotTooVivid && isNotTooDarkOrLight) {
+                        if ((isHueBrownish || isGreyscale) && isNotTooVivid) {
                             earthToneCount++;
                         }
                     }
                     
                     const earthTonePercentage = earthToneCount / count;
                     
-                    if (earthTonePercentage < 0.40) {
+                    // Very lenient threshold: only reject if LESS than 15% of the image contains natural earth/grey tones.
+                    // This prevents rejecting soil with heavy green grass, glare, or shadows.
+                    if (earthTonePercentage < 0.15) {
                         throw new Error("Invalid image detected. Please upload a valid soil image for analysis.");
                     }
 

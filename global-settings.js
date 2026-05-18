@@ -309,3 +309,28 @@ if (document.readyState !== 'loading') {
     window.globalSettings = new GlobalSettings();
     window.locationManager = new LocationManager();
 }
+
+// ── Firebase Initialization ────────────────────────────────────────────────
+// Dynamically imported to support ES Modules in a standard script context
+(async function initFirebase() {
+    try {
+        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
+        const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js");
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDa4sh85YNzidrw7stFLgEWsLzZyP3BIKw",
+            authDomain: "agri-ai-ca82f.firebaseapp.com",
+            projectId: "agri-ai-ca82f",
+            storageBucket: "agri-ai-ca82f.firebasestorage.app",
+            messagingSenderId: "949311311156",
+            appId: "1:949311311156:web:72f7a02466182afbc0a961",
+            measurementId: "G-Y37LKY1W8X"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        console.log("🔥 Firebase Application & Analytics Initialized Successfully");
+    } catch(err) {
+        console.error("🔥 Firebase initialization failed:", err);
+    }
+})();

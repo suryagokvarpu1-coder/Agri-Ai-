@@ -215,18 +215,20 @@ class SmartLocationPicker {
             } catch(e) {}
         }
 
-        this.map = L.map('smart-loc-map', { zoomControl: false }).setView([defaultLat, defaultLng], defaultZoom);
+        this.map = L.map('smart-loc-map', { zoomControl: false, maxZoom: 22 }).setView([defaultLat, defaultLng], defaultZoom);
         
         // Add Satellite Layer for Agriculture Theme
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri'
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 22,
+            maxNativeZoom: 19
         }).addTo(this.map);
         
         // Add hybrid labels
         L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}{r}.png', {
             attribution: '',
             subdomains: 'abcd',
-            maxZoom: 20
+            maxZoom: 22
         }).addTo(this.map);
 
         L.control.zoom({ position: 'bottomright' }).addTo(this.map);

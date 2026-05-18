@@ -228,7 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Map
   const map = L.map('map', {
     zoomControl: false,
-    attributionControl: false
+    attributionControl: false,
+    maxZoom: 22
   }).setView([20, 0], 2);
 
   // Auto-Center Map based on Global Location if available
@@ -273,7 +274,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Add Esri Satellite Imagery
   const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19
+    maxZoom: 22,
+    maxNativeZoom: 19
   }).addTo(map);
 
   // Add Zoom Control at bottom right

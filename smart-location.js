@@ -115,13 +115,13 @@ class SmartLocationPicker {
     }
 
     attachGlobalListeners() {
-        // Find inputs that should trigger the smart picker
-        // Primarily targeting ID 'location' or class 'smart-location-input'
         document.addEventListener('click', (e) => {
-            const input = e.target.closest('#location, .smart-location-input');
-            if (input && input.tagName === 'INPUT') {
+            // Check if user clicked the input, or the map icon button
+            const trigger = e.target.closest('.smart-location-input, #open-map-picker');
+            if (trigger) {
                 e.preventDefault();
-                this.targetInput = input;
+                // Always target the actual text input for filling data
+                this.targetInput = document.getElementById('location');
                 this.openModal();
             }
             

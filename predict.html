@@ -106,9 +106,12 @@ select option { background: #0f172a; color: #fff; }
               Auto-Detect
             </button>
           </label>
-          <div class="relative">
-            <input type="text" id="location" name="location" placeholder="e.g., Punjab, India" required class="form-input smart-location-input" readonly>
-            <div id="loc-spinner" class="absolute right-3 top-3 hidden">
+          <div class="relative flex items-center">
+            <input type="text" id="location" name="location" placeholder="e.g., Punjab, India" required class="form-input w-full pr-12">
+            <button type="button" id="open-map-picker" class="absolute right-2 p-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 rounded-lg transition-colors cursor-pointer smart-location-input" title="Open Map Picker">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            </button>
+            <div id="loc-spinner" class="absolute right-12 top-3 hidden">
               <div class="w-4 h-4 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"></div>
             </div>
           </div>

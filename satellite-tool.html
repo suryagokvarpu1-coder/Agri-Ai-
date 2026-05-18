@@ -275,7 +275,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Add Esri Satellite Imagery
   const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 22,
-    maxNativeZoom: 19
+    maxNativeZoom: 18, // Reduced to 18 to force Leaflet to stretch the image instead of fetching empty tiles
+    errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' // Transparent fallback
   }).addTo(map);
 
   // Add Zoom Control at bottom right

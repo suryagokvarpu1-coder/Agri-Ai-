@@ -251,7 +251,7 @@ class SmartLocationPicker {
             // Custom Leaflet Icon matching UI
             const icon = L.divIcon({
                 className: 'custom-pin',
-                html: \`<div style="width:24px;height:24px;background:#10b981;border:3px solid white;border-radius:50%;box-shadow:0 0 10px rgba(0,0,0,0.5);"></div>\`,
+                html: `<div style="width:24px;height:24px;background:#10b981;border:3px solid white;border-radius:50%;box-shadow:0 0 10px rgba(0,0,0,0.5);"></div>`,
                 iconSize: [24, 24],
                 iconAnchor: [12, 12]
             });
@@ -265,7 +265,7 @@ class SmartLocationPicker {
         document.getElementById('smart-loc-display').innerHTML = '<span class="animate-pulse">Fetching details...</span>';
         
         try {
-            const response = await fetch(\`https://nominatim.openstreetmap.org/reverse?format=json&lat=\${lat}&lon=\${lng}\`);
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
             const data = await response.json();
             
             if (data && data.address) {
@@ -298,7 +298,7 @@ class SmartLocationPicker {
     }
 
     fallbackCoords(lat, lng) {
-        const text = \`\${lat.toFixed(5)}, \${lng.toFixed(5)}\`;
+        const text = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
         document.getElementById('smart-loc-display').textContent = text;
         document.getElementById('smart-loc-search').value = text;
         this.currentSelectedData = { address: text, lat, lon: lng };
@@ -308,7 +308,7 @@ class SmartLocationPicker {
     detectCurrentLocation() {
         const btn = document.getElementById('smart-loc-current');
         const originalHtml = btn.innerHTML;
-        btn.innerHTML = \`<div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div><span class="hidden sm:inline">Detecting...</span>\`;
+        btn.innerHTML = `<div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div><span class="hidden sm:inline">Detecting...</span>`;
         btn.disabled = true;
 
         if (!navigator.geolocation) {
@@ -347,7 +347,7 @@ class SmartLocationPicker {
         this.searchTimeout = setTimeout(async () => {
             try {
                 // nominatim search
-                const res = await fetch(\`https://nominatim.openstreetmap.org/search?format=json&q=\${encodeURIComponent(query)}&limit=5&addressdetails=1\`);
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`);
                 const data = await res.json();
                 
                 if (data && data.length > 0) {
@@ -361,10 +361,10 @@ class SmartLocationPicker {
                         const mainPart = name.split(',')[0];
                         const rest = name.substring(mainPart.length + 1);
                         
-                        div.innerHTML = \`
-                            <span class="text-white font-medium">\${mainPart}</span>
-                            <span class="text-slate-400 text-xs truncate">\${rest}</span>
-                        \`;
+                        div.innerHTML = `
+                            <span class="text-white font-medium">${mainPart}</span>
+                            <span class="text-slate-400 text-xs truncate">${rest}</span>
+                        `;
                         
                         div.onclick = () => {
                             sugg.classList.add('hidden');

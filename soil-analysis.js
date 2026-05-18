@@ -284,7 +284,22 @@ class SoilAnalysisSystem {
             this.displayResults(analysisResult);
         } catch (error) {
             console.error('Analysis error:', error);
-            this.showError('Failed to analyze soil sample. Please try again.');
+            
+            // Revert loading state visually
+            this.loadingState.classList.add('hidden');
+            const uploadContent = document.getElementById('upload-content');
+            if (uploadContent) {
+                uploadContent.innerHTML = `
+                    <svg class="w-12 h-12 text-slate-400 mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <p class="text-white font-medium mb-1">Click to upload or drag & drop</p>
+                    <p class="text-sm text-slate-400">JPG, PNG, WEBP (Max 10MB)</p>
+                `;
+            }
+            
+            this.showError(error.message || 'Failed to analyze soil sample. Please try again.');
+            
+            // Clear input so they can upload the same file again if they want
+            if (this.fileInput) this.fileInput.value = '';
         }
     }
 
@@ -309,12 +324,38 @@ class SoilAnalysisSystem {
 
                     // Sample every 4th pixel for speed
                     let rSum = 0, gSum = 0, bSum = 0, count = 0;
+                    let earthToneCount = 0;
+                    
                     for (let i = 0; i < imageData.length; i += 16) {
-                        rSum += imageData[i];
-                        gSum += imageData[i + 1];
-                        bSum += imageData[i + 2];
+                        const pr = imageData[i];
+                        const pg = imageData[i + 1];
+                        const pb = imageData[i + 2];
+                        
+                        rSum += pr;
+                        gSum += pg;
+                        bSum += pb;
                         count++;
+                        
+                        const pixelHsl = this.rgbToHsl(pr, pg, pb);
+                        const {h, s, l} = pixelHsl;
+                        
+                        // Strict validation: check if pixel is an earth tone (brown, tan, dark grey, red-brown, yellowish)
+                        const isHueBrownish = (h >= 0 && h <= 60) || (h >= 330);
+                        const isGreyscale = s < 0.15; // Greys/Blacks
+                        const isNotTooVivid = s < 0.65; // Soil is rarely highly saturated neon
+                        const isNotTooDarkOrLight = l > 0.05 && l < 0.95; // Ignore pure white/black pixels
+                        
+                        if ((isHueBrownish || isGreyscale) && isNotTooVivid && isNotTooDarkOrLight) {
+                            earthToneCount++;
+                        }
                     }
+                    
+                    const earthTonePercentage = earthToneCount / count;
+                    
+                    if (earthTonePercentage < 0.40) {
+                        throw new Error("Invalid image detected. Please upload a valid soil image for analysis.");
+                    }
+
                     const r = rSum / count;
                     const g = gSum / count;
                     const b = bSum / count;

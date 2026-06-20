@@ -145,6 +145,92 @@ body {
 .fade-in { animation: fadeIn 0.4s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
+/* Base Features and Navigation Cards */
+.feat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 1.5rem;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.feat-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-lg);
+  background: var(--primary-50);
+  color: var(--primary);
+  border: 1px solid var(--primary-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.section-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+
+/* Quick Actions Cards */
+.qa {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.qa:hover {
+  background: var(--bg-subtle);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.qa-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: var(--primary-50);
+  color: var(--primary);
+  border: 1px solid var(--primary-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.qa-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--t1);
+  margin-bottom: 0.125rem;
+}
+
+.qa-desc {
+  font-size: 0.75rem;
+  color: var(--t2);
+}
+
 /* Utilities */
 .hidden { display: none !important; }
 .mb-4 { margin-bottom: 1rem; }

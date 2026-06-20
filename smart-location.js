@@ -9,7 +9,7 @@ class SmartLocationPicker {
         this.marker = null;
         this.targetInput = null;
         this.searchTimeout = null;
-        
+
         // Wait for DOM to load
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.init());
@@ -34,7 +34,7 @@ class SmartLocationPicker {
             link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
             document.head.appendChild(link);
         }
-        
+
         // Inject Leaflet JS if not present
         if (!window.L && !document.getElementById('leaflet-js')) {
             const script = document.createElement('script');
@@ -124,7 +124,7 @@ class SmartLocationPicker {
                 this.targetInput = document.getElementById('location');
                 this.openModal();
             }
-            
+
             // Also intercept the "Auto-Detect" buttons next to location inputs if they exist
             const autoBtn = e.target.closest('#auto-locate-btn');
             if (autoBtn) {
@@ -147,7 +147,7 @@ class SmartLocationPicker {
     openModal() {
         const modal = document.getElementById('smart-location-modal');
         const content = document.getElementById('smart-loc-content');
-        
+
         modal.classList.remove('hidden');
         // Trigger animation frame for transition
         requestAnimationFrame(() => {
@@ -170,21 +170,21 @@ class SmartLocationPicker {
                 document.getElementById('smart-loc-search').value = val;
                 document.getElementById('smart-loc-display').textContent = val;
                 document.getElementById('smart-loc-confirm').disabled = false;
-                
+
                 // Optional: Fire a silent search to place pin, or just rely on existing pin
             }
         }
-        
+
         document.getElementById('smart-loc-search').focus();
     }
 
     closeModal() {
         const modal = document.getElementById('smart-location-modal');
         const content = document.getElementById('smart-loc-content');
-        
+
         modal.classList.add('opacity-0');
         content.classList.add('scale-95');
-        
+
         setTimeout(() => {
             modal.classList.add('hidden');
         }, 300);
@@ -212,11 +212,11 @@ class SmartLocationPicker {
                     defaultLng = parsed.lon;
                     defaultZoom = 12;
                 }
-            } catch(e) {}
+            } catch (e) { }
         }
 
         this.map = L.map('smart-loc-map', { zoomControl: false, maxZoom: 22 }).setView([defaultLat, defaultLng], defaultZoom);
-        
+
         // Add HD Satellite Layer (High-Resolution)
         L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
             attribution: 'Map data &copy; Google',
@@ -224,7 +224,7 @@ class SmartLocationPicker {
             maxNativeZoom: 21,
             errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
         }).addTo(this.map);
-        
+
         // Add HD Boundaries, Roads & Village Labels
         L.tileLayer('https://mt1.google.com/vt/lyrs=h&x={x}&y={y}&z={z}', {
             attribution: '',
@@ -267,22 +267,22 @@ class SmartLocationPicker {
     async setPinAndReverseGeocode(lat, lng) {
         this.updateMarker(lat, lng);
         document.getElementById('smart-loc-display').innerHTML = '<span class="animate-pulse">Fetching details...</span>';
-        
+
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
             const data = await response.json();
-            
+
             if (data && data.address) {
                 const parts = [
                     data.address.village || data.address.town || data.address.city || data.address.county,
                     data.address.state,
                     data.address.country
                 ].filter(Boolean);
-                
+
                 const fullAddress = parts.join(", ");
                 document.getElementById('smart-loc-display').textContent = fullAddress;
                 document.getElementById('smart-loc-search').value = fullAddress;
-                
+
                 // Store full object temporarily
                 this.currentSelectedData = {
                     address: fullAddress,
@@ -290,7 +290,7 @@ class SmartLocationPicker {
                     lon: lng,
                     details: data.address
                 };
-                
+
                 document.getElementById('smart-loc-confirm').disabled = false;
             } else {
                 this.fallbackCoords(lat, lng);
@@ -342,7 +342,7 @@ class SmartLocationPicker {
     handleSearchInput(query) {
         if (this.searchTimeout) clearTimeout(this.searchTimeout);
         const sugg = document.getElementById('smart-loc-suggestions');
-        
+
         if (!query || query.length < 3) {
             sugg.classList.add('hidden');
             return;
@@ -353,23 +353,23 @@ class SmartLocationPicker {
                 // nominatim search
                 const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`);
                 const data = await res.json();
-                
+
                 if (data && data.length > 0) {
                     sugg.innerHTML = '';
                     data.forEach(item => {
                         const name = item.display_name;
                         const div = document.createElement('div');
                         div.className = 'px-4 py-3 hover:bg-slate-700 cursor-pointer border-b border-slate-700 last:border-0 flex flex-col transition-colors';
-                        
+
                         // Bold the main part
                         const mainPart = name.split(',')[0];
                         const rest = name.substring(mainPart.length + 1);
-                        
+
                         div.innerHTML = `
                             <span class="text-white font-medium">${mainPart}</span>
                             <span class="text-slate-400 text-xs truncate">${rest}</span>
                         `;
-                        
+
                         div.onclick = () => {
                             sugg.classList.add('hidden');
                             this.setPinAndReverseGeocode(parseFloat(item.lat), parseFloat(item.lon));
@@ -380,7 +380,7 @@ class SmartLocationPicker {
                 } else {
                     sugg.classList.add('hidden');
                 }
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
             }
         }, 400); // 400ms debounce
@@ -388,11 +388,11 @@ class SmartLocationPicker {
 
     confirmSelection() {
         if (!this.currentSelectedData) return;
-        
+
         // Update input
         if (this.targetInput) {
             this.targetInput.value = this.currentSelectedData.address;
-            
+
             // Dispatch native change event so other scripts (like form validation) catch it
             const event = new Event('change', { bubbles: true });
             this.targetInput.dispatchEvent(event);
@@ -404,7 +404,7 @@ class SmartLocationPicker {
             lat: this.currentSelectedData.lat,
             lon: this.currentSelectedData.lon
         }));
-        
+
         // Fire custom event
         window.dispatchEvent(new CustomEvent('agriLocationUpdated', {
             detail: this.currentSelectedData

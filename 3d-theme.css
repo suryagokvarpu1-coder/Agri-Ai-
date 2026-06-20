@@ -127,6 +127,92 @@ body.premium-3d {
 .premium-3d .icon-box {
   animation: float 3s ease-in-out infinite;
   box-shadow: 0 0 15px rgba(22, 163, 74, 0.2);
+  background: rgba(22, 163, 74, 0.15) !important;
+  border-color: rgba(22, 163, 74, 0.3) !important;
+  color: #4ade80 !important;
+}
+
+/* ── Premium 3D Elements Contrast and Visibility Overrides ── */
+.premium-3d .feat-card h4,
+.premium-3d .feat-card .font-bold {
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.premium-3d .feat-card p,
+.premium-3d .feat-card .text-slate-600,
+.premium-3d .feat-card .text-slate-500 {
+  color: #cbd5e1 !important;
+}
+
+.premium-3d .section-label {
+  color: #4ade80 !important;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.2);
+}
+
+/* Header Text Visibility */
+.premium-3d #header-username {
+  color: #ffffff !important;
+}
+.premium-3d .page-header-user p {
+  color: #94a3b8 !important;
+}
+.premium-3d .page-header-menu-btn {
+  color: #ffffff !important;
+  border-color: var(--glass-border) !important;
+}
+.premium-3d .page-header-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #4ade80 !important;
+  border-color: #4ade80 !important;
+}
+
+/* Hero Visual Dark Mode Sync */
+.premium-3d .hero-visual {
+  background: rgba(2, 6, 23, 0.4) !important;
+  border-color: var(--glass-border) !important;
+}
+.premium-3d .hero-chip {
+  background: rgba(2, 6, 23, 0.8) !important;
+  border-color: var(--glass-border) !important;
+  color: #4ade80 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Stat Cards Dark Mode styling */
+.premium-3d .stat-card {
+  background: var(--glass) !important;
+  border-color: var(--glass-border) !important;
+}
+.premium-3d .stat-num {
+  color: #4ade80 !important;
+  text-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+}
+.premium-3d .stat-label {
+  color: #94a3b8 !important;
+}
+
+/* Quick Actions Dark Mode styling */
+.premium-3d .qa {
+  background: var(--glass) !important;
+  border-color: var(--glass-border) !important;
+}
+.premium-3d .qa:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(22, 163, 74, 0.4) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+.premium-3d .qa-icon {
+  background: rgba(22, 163, 74, 0.15) !important;
+  border-color: rgba(22, 163, 74, 0.3) !important;
+  color: #4ade80 !important;
+}
+.premium-3d .qa-title {
+  color: #ffffff !important;
+}
+.premium-3d .qa-desc {
+  color: #cbd5e1 !important;
 }
 
 /* ── Scrollbar ─────────────────────────────────── */

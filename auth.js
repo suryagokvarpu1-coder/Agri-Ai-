@@ -1,196 +1,315 @@
 /**
- * Client-Side Auth System for Agri-AI
- * Works completely without a server — stores users in localStorage.
- * Falls back gracefully whether opened via file://, localhost, or production.
+ * Client-Side Auth System for Agri-AI (Firebase & Firestore Edition)
+ * Manages Firebase Authentication sessions and Firestore synchronization.
  */
 
 (function () {
+    const TOKEN_KEY = 'agri-ai-token';
+    const USER_KEY  = 'agri-ai-user';
 
-    const USERS_KEY   = 'agri-ai-users';
-    const TOKEN_KEY   = 'agri-ai-token';
-    const USER_KEY    = 'agri-ai-user';
+    let resolveAuthReady;
+    const authReadyPromise = new Promise(resolve => {
+        resolveAuthReady = resolve;
+    });
 
-    // ── Seed default accounts on first load ──────────────────────────────────
-    function seedDefaultUsers() {
-        if (localStorage.getItem(USERS_KEY)) return;
-        const defaults = [
-            { id: 1, username: 'admin',       password: 'admin123',   fullName: 'Administrator', email: 'admin@agri-ai.com', role: 'admin', isActive: true, createdAt: new Date().toISOString(), lastLogin: null, loginCount: 0 },
-            { id: 2, username: 'gyaswanth',   password: '123654Tt@',  fullName: 'G Yaswanth',    email: null,                role: 'user',  isActive: true, createdAt: new Date().toISOString(), lastLogin: null, loginCount: 0 },
-            { id: 3, username: 'testuser123', password: 'testpass123',fullName: 'Test User',      email: 'test@example.com',  role: 'user',  isActive: true, createdAt: new Date().toISOString(), lastLogin: null, loginCount: 0 },
-            { id: 4, username: 'dinesh',      password: 'dinesh123',  fullName: 'Dinesh',         email: null,                role: 'user',  isActive: true, createdAt: new Date().toISOString(), lastLogin: null, loginCount: 0 }
+    // Helper: list of protected pages
+    function isCurrentPageProtected() {
+        const path = window.location.pathname;
+        const page = path.split('/').pop() || 'index.html';
+        const protectedPages = [
+            'overview.html',
+            'predict.html',
+            'soil-analysis.html',
+            'satellite-tool.html',
+            'growth-monitoring.html',
+            'carbon-tracking.html',
+            'feedback.html',
+            'settings.html',
+            'profile.html',
+            'impact.html'
         ];
-        localStorage.setItem(USERS_KEY, JSON.stringify(defaults));
+        return protectedPages.includes(page);
     }
 
-    function getUsers() {
-        try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
-        catch { return []; }
+    // Helper: show a beautiful premium loading overlay
+    function showAuthLoadingOverlay() {
+        if (document.getElementById('auth-loading-overlay')) return;
+        const overlay = document.createElement('div');
+        overlay.id = 'auth-loading-overlay';
+        overlay.style.position = 'fixed';
+        overlay.style.inset = '0';
+        overlay.style.backgroundColor = 'rgba(15, 23, 42, 0.95)';
+        overlay.style.backdropFilter = 'blur(16px)';
+        overlay.style.display = 'flex';
+        overlay.style.flexDirection = 'column';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.zIndex = '99999';
+        overlay.style.color = '#ffffff';
+        overlay.style.fontFamily = "'Inter', sans-serif";
+
+        overlay.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+                <svg width="50" height="50" fill="none" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;">
+                    <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.2)" stroke-width="4"></circle>
+                    <path fill="#10b981" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <div style="font-weight: 700; letter-spacing: -0.025em; font-size: 1.25rem;">Authenticating with Agri-AI...</div>
+                <div style="font-size: 0.875rem; color: #94a3b8;">Verifying secure session with Firebase</div>
+            </div>
+            <style>
+                @keyframes spin { to { transform: rotate(360deg); } }
+            </style>
+        `;
+        document.body.appendChild(overlay);
     }
 
-    function saveUsers(users) {
-        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    function hideAuthLoadingOverlay() {
+        const overlay = document.getElementById('auth-loading-overlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.25s ease';
+            setTimeout(() => overlay.remove(), 250);
+        }
     }
 
-    function generateToken(username) {
-        return 'token-' + username + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
-    }
+    // Helper: update page header with name and avatar
+    function updatePageHeader(user) {
+        if (!user) return;
+        const el = document.getElementById('header-username');
+        const av = document.getElementById('header-avatar');
+        if (el) el.textContent = 'Welcome, ' + (user.fullName || user.username || 'User');
+        if (av) {
+            av.style.cursor = 'pointer';
+            av.title = 'View Profile';
+            av.onclick = () => window.location.href = 'profile.html';
 
-    // ── Public API ────────────────────────────────────────────────────────────
-    window.AuthSystem = {
-
-        /** Login — returns { success, message, token, user } or { success:false, error } */
-        login(username, password) {
-            if (!username || !password) return { success: false, error: 'Please fill in all fields' };
-
-            const users = getUsers();
-
-            // admin shortcut
-            if (username === 'admin' && password === 'admin123') {
-                const token = generateToken('admin');
-                const user  = { username: 'admin', fullName: 'Administrator', email: 'admin@agri-ai.com', role: 'admin' };
-                localStorage.setItem(TOKEN_KEY, token);
-                localStorage.setItem(USER_KEY,  JSON.stringify(user));
-                return { success: true, message: 'Welcome back, Administrator!', token, user };
+            if (user.photoURL) {
+                av.innerHTML = `<img src="${user.photoURL}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                const displayName = user.fullName || user.username || 'U';
+                av.textContent = displayName.charAt(0).toUpperCase();
             }
+        }
+    }
 
-            const found = users.find(u => u.username === username);
-            if (!found)                return { success: false, error: 'Username not found' };
-            if (!found.isActive)       return { success: false, error: 'Account is deactivated' };
-            if (found.password !== password) return { success: false, error: 'Invalid password' };
+    // Auth state changed listener
+    function initAuthListener() {
+        if (!window.firebase || !window.firebase.auth) {
+            setTimeout(initAuthListener, 50);
+            return;
+        }
 
-            // update login stats
-            found.lastLogin  = new Date().toISOString();
-            found.loginCount = (found.loginCount || 0) + 1;
-            saveUsers(users);
+        const { onAuthStateChanged } = window.firebase.authMethods;
+        onAuthStateChanged(window.firebase.auth, async (fbUser) => {
+            const path = window.location.pathname;
+            const page = path.split('/').pop() || 'index.html';
 
-            const token = generateToken(username);
-            const user  = { username: found.username, fullName: found.fullName, email: found.email, role: found.role || 'user', lastLogin: found.lastLogin, loginCount: found.loginCount };
-            localStorage.setItem(TOKEN_KEY, token);
-            localStorage.setItem(USER_KEY,  JSON.stringify(user));
-            return { success: true, message: `Welcome back, ${found.fullName}!`, token, user };
+            if (fbUser) {
+                let userProfile = null;
+                try {
+                    const { doc, getDoc, setDoc } = window.firebase.firestoreMethods;
+                    const userDocRef = doc(window.firebase.db, 'users', fbUser.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        userProfile = userDocSnap.data();
+                        // Update last login timestamp in Firestore
+                        await setDoc(userDocRef, {
+                            lastLogin: new Date().toISOString()
+                        }, { merge: true });
+                        // Update local object
+                        userProfile.lastLogin = new Date().toISOString();
+                    } else {
+                        // Create profile if missing
+                        userProfile = {
+                            uid: fbUser.uid,
+                            username: fbUser.email ? fbUser.email.split('@')[0] : 'user_' + fbUser.uid.substring(0, 5),
+                            fullName: fbUser.displayName || fbUser.email.split('@')[0],
+                            email: fbUser.email || '',
+                            photoURL: fbUser.photoURL || '',
+                            role: 'user',
+                            createdAt: new Date().toISOString(),
+                            lastLogin: new Date().toISOString(),
+                            loginCount: 1
+                        };
+                        await setDoc(userDocRef, userProfile);
+                    }
+                } catch (err) {
+                    console.error("Firestore user sync error:", err);
+                    userProfile = {
+                        uid: fbUser.uid,
+                        username: fbUser.email ? fbUser.email.split('@')[0] : 'user',
+                        fullName: fbUser.displayName || 'Farmer',
+                        email: fbUser.email || '',
+                        photoURL: fbUser.photoURL || '',
+                        role: 'user'
+                    };
+                }
+
+                // Cache credentials
+                localStorage.setItem(TOKEN_KEY, fbUser.accessToken || 'firebase-session');
+                localStorage.setItem(USER_KEY, JSON.stringify(userProfile));
+
+                resolveAuthReady(userProfile);
+                hideAuthLoadingOverlay();
+                updatePageHeader(userProfile);
+
+                // If on login/signup page, redirect to overview
+                if (page === 'login.html' || page === 'signup.html') {
+                    window.location.href = 'overview.html';
+                }
+            } else {
+                // Not authenticated
+                localStorage.removeItem(TOKEN_KEY);
+                localStorage.removeItem(USER_KEY);
+
+                resolveAuthReady(null);
+                hideAuthLoadingOverlay();
+
+                if (isCurrentPageProtected()) {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+    }
+
+    // Initialize listener
+    initAuthListener();
+
+    // Exported AuthSystem API
+    window.AuthSystem = {
+        authReady: authReadyPromise,
+
+        /** Google Sign-In */
+        async loginWithGoogle() {
+            if (!window.firebase || !window.firebase.auth) {
+                throw new Error("Firebase SDK not initialized");
+            }
+            const { signInWithPopup } = window.firebase.authMethods;
+            const { auth, googleProvider } = window.firebase;
+            
+            const result = await signInWithPopup(auth, googleProvider);
+            return { success: true, user: result.user };
         },
 
-        /** Register — returns { success, message } or { success:false, error } */
-        register(username, password, fullName, email) {
-            if (!username || !password || !fullName) return { success: false, error: 'Username, password and full name are required' };
-            if (username.length < 3)  return { success: false, error: 'Username must be at least 3 characters' };
-            if (password.length < 6)  return { success: false, error: 'Password must be at least 6 characters' };
-
-            const users = getUsers();
-            if (username === 'admin' || users.find(u => u.username === username))
-                return { success: false, error: 'Username already exists' };
-            if (email && users.find(u => u.email === email))
-                return { success: false, error: 'Email already registered' };
-
-            const newUser = {
-                id: users.length + 2,
-                username, password, fullName,
-                email: email || null,
-                role: 'user',
-                isActive: true,
-                createdAt: new Date().toISOString(),
-                lastLogin: null,
-                loginCount: 0
-            };
-            users.push(newUser);
-            saveUsers(users);
-            return { success: true, message: 'Account created! Please log in.' };
+        /** Email/Password Sign-In */
+        async login(email, password) {
+            if (!window.firebase || !window.firebase.auth) {
+                return { success: false, error: "Firebase SDK not initialized" };
+            }
+            const { signInWithEmailAndPassword } = window.firebase.authMethods;
+            try {
+                const result = await signInWithEmailAndPassword(window.firebase.auth, email, password);
+                return { success: true, user: result.user };
+            } catch (err) {
+                return { success: false, error: this.formatAuthError(err.code) };
+            }
         },
 
-        /** Social Login/Signup — signs up if user doesn't exist, then logs in */
-        socialLogin(provider, profile) {
-            if (!profile || !profile.email) return { success: false, error: 'Invalid social profile' };
+        /** Email/Password Registration */
+        async register(username, password, fullName, email) {
+            if (!window.firebase || !window.firebase.auth) {
+                return { success: false, error: "Firebase SDK not initialized" };
+            }
+            const { createUserWithEmailAndPassword } = window.firebase.authMethods;
+            const { doc, setDoc } = window.firebase.firestoreMethods;
+            const { db } = window.firebase;
 
-            const users = getUsers();
-            let user = users.find(u => u.email === profile.email);
+            try {
+                // 1. Create authentication credentials
+                const result = await createUserWithEmailAndPassword(window.firebase.auth, email, password);
+                const uid = result.user.uid;
 
-            if (!user) {
-                // Sign up new user
-                user = {
-                    id: users.length + 2,
-                    username: profile.email.split('@')[0],
-                    password: 'social-auth-' + Math.random().toString(36).slice(2),
-                    fullName: profile.name || profile.email.split('@')[0],
-                    email: profile.email,
+                // 2. Create User Profile document in Firestore
+                const userProfile = {
+                    uid: uid,
+                    username: username.toLowerCase().trim(),
+                    fullName: fullName.trim(),
+                    email: email.trim(),
+                    photoURL: '',
                     role: 'user',
-                    isActive: true,
-                    provider: provider,
                     createdAt: new Date().toISOString(),
                     lastLogin: new Date().toISOString(),
                     loginCount: 1
                 };
-                users.push(user);
-                saveUsers(users);
-            } else {
-                // Update existing user
-                user.lastLogin = new Date().toISOString();
-                user.loginCount = (user.loginCount || 0) + 1;
-                saveUsers(users);
-            }
+                await setDoc(doc(db, 'users', uid), userProfile);
 
-            const token = generateToken(user.username);
-            const sessionUser = {
-                username: user.username,
-                fullName: user.fullName,
-                email: user.email,
-                role: user.role || 'user',
-                provider: provider, // Track which provider was used
-                lastLogin: user.lastLogin,
-                loginCount: user.loginCount
-            };
-            localStorage.setItem(TOKEN_KEY, token);
-            localStorage.setItem(USER_KEY, JSON.stringify(sessionUser));
-            return { success: true, message: `Welcome, ${user.fullName}!`, token, user: sessionUser };
+                return { success: true, message: 'Account created successfully! Logging you in...' };
+            } catch (err) {
+                return { success: false, error: this.formatAuthError(err.code) };
+            }
         },
 
         /** Logout */
-        logout() {
+        async logout() {
             localStorage.removeItem(TOKEN_KEY);
             localStorage.removeItem(USER_KEY);
+            if (window.firebase && window.firebase.auth) {
+                const { signOut } = window.firebase.authMethods;
+                await signOut(window.firebase.auth);
+            }
             window.location.href = 'login.html';
         },
 
-        /** Returns current user object or null */
+        /** Returns current cached user details */
         getCurrentUser() {
-            try { return JSON.parse(localStorage.getItem(USER_KEY)); }
-            catch { return null; }
+            try {
+                return JSON.parse(localStorage.getItem(USER_KEY));
+            } catch {
+                return null;
+            }
         },
 
-        /** Returns true if a session token exists */
+        /** Synchronous check if token exists in storage */
         isLoggedIn() {
             return !!localStorage.getItem(TOKEN_KEY);
         },
 
-        /**
-         * Call on every protected page.
-         * Redirects to login.html if not authenticated.
-         */
+        /** Protected route validation */
         requireAuth() {
             if (!this.isLoggedIn()) {
                 window.location.href = 'login.html';
                 return false;
             }
-            // Populate header username / avatar if elements exist
+
+            // Show temporary loading overlay while Firebase initializes and verifies session
+            showAuthLoadingOverlay();
+
+            // Populate header username / avatar if cached profile exists
             const user = this.getCurrentUser();
             if (user) {
-                const el = document.getElementById('header-username');
-                const av = document.getElementById('header-avatar');
-                if (el) el.textContent = 'Welcome, ' + user.username;
-                if (av) {
-                    av.textContent = user.username.charAt(0).toUpperCase();
-                    av.style.cursor = 'pointer';
-                    av.title = 'View Profile';
-                    av.onclick = () => window.location.href = 'profile.html';
-                }
+                updatePageHeader(user);
             }
             return true;
+        },
+
+        /** User-friendly error message formatter */
+        formatAuthError(code) {
+            switch (code) {
+                case 'auth/invalid-email':
+                    return 'Invalid email address format.';
+                case 'auth/user-disabled':
+                    return 'This user account has been disabled.';
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                case 'auth/invalid-credential':
+                    return 'Incorrect email or password.';
+                case 'auth/email-already-in-use':
+                    return 'Email address is already registered.';
+                case 'auth/weak-password':
+                    return 'Password is too weak. Must be at least 6 characters.';
+                case 'auth/operation-not-allowed':
+                    return 'Sign-in provider is disabled in Firebase.';
+                case 'auth/popup-closed-by-user':
+                    return 'Sign-in popup closed before completion.';
+                default:
+                    return 'Authentication failed. Please try again.';
+            }
         }
     };
 
-    // Seed on load
-    seedDefaultUsers();
-
-    // Expose logout globally (sidebar uses it)
+    // Expose global logout callback
     window.logout = function () { window.AuthSystem.logout(); };
 
 })();

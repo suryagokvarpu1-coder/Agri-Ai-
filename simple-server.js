@@ -9,6 +9,28 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+// Load environment variables from .env if present
+(function loadEnv() {
+    const envPath = path.join(__dirname, '.env');
+    if (fs.existsSync(envPath)) {
+        try {
+            const envContent = fs.readFileSync(envPath, 'utf8');
+            envContent.split(/\r?\n/).forEach(line => {
+                const trimmed = line.trim();
+                if (trimmed && !trimmed.startsWith('#')) {
+                    const parts = trimmed.split('=');
+                    const key = parts[0].trim();
+                    const val = parts.slice(1).join('=').trim().replace(/^['"]|['"]$/g, '');
+                    process.env[key] = val;
+                }
+            });
+            console.log('📝 Loaded environment variables from .env file');
+        } catch (err) {
+            console.warn('⚠️ Warning: Failed to load .env file:', err.message);
+        }
+    }
+})();
+
 class SimpleServer {
     constructor() {
         this.port = process.env.PORT || 3000;
@@ -95,6 +117,8 @@ class SimpleServer {
         // Route handling
         if (pathname === '/' || pathname === '/index.html') {
             this.serveFile(res, 'index.html', 'text/html');
+        } else if (pathname === '/firebase-config.js') {
+            this.serveFirebaseConfig(res);
         } else if (pathname.startsWith('/api/')) {
             this.handleAPI(req, res, pathname, method);
         } else if (pathname.endsWith('.html')) {
@@ -135,6 +159,20 @@ class SimpleServer {
             res.writeHead(200, { 'Content-Type': contentType });
             res.end(data);
         });
+    }
+
+    serveFirebaseConfig(res) {
+        res.writeHead(200, { 'Content-Type': 'application/javascript' });
+        res.end(`
+            window.FIREBASE_CONFIG = {
+                apiKey: "${process.env.VITE_FIREBASE_API_KEY || ''}",
+                authDomain: "${process.env.VITE_FIREBASE_AUTH_DOMAIN || ''}",
+                projectId: "${process.env.VITE_FIREBASE_PROJECT_ID || ''}",
+                storageBucket: "${process.env.VITE_FIREBASE_STORAGE_BUCKET || ''}",
+                messagingSenderId: "${process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || ''}",
+                appId: "${process.env.VITE_FIREBASE_APP_ID || ''}"
+            };
+        `);
     }
 
     handleAPI(req, res, pathname, method) {

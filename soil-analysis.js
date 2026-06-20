@@ -9,7 +9,7 @@ class SoilAnalysisSystem {
         this.fileInput = document.getElementById('soil-image');
         this.loadingState = document.getElementById('loading-state');
         this.analysisResults = document.getElementById('analysis-results');
-        
+
         this.soilDatabase = {
             sandy: {
                 name: 'Sandy Soil',
@@ -25,7 +25,7 @@ class SoilAnalysisSystem {
                     { name: 'Beets', icon: '🟣', suitability: 85, season: 'Cool season' },
                     { name: 'Sweet Potatoes', icon: '🍠', suitability: 90, season: 'Warm season' },
                     { name: 'Potatoes', icon: '🥔', suitability: 85, season: 'Cool season' },
-                    
+
                     // Herbs (Thrive in well-drained sandy soil)
                     { name: 'Rosemary', icon: '🌿', suitability: 95, season: 'Perennial' },
                     { name: 'Thyme', icon: '🌿', suitability: 92, season: 'Perennial' },
@@ -33,14 +33,14 @@ class SoilAnalysisSystem {
                     { name: 'Sage', icon: '🌿', suitability: 88, season: 'Perennial' },
                     { name: 'Lavender', icon: '💜', suitability: 95, season: 'Perennial' },
                     { name: 'Basil', icon: '🌿', suitability: 80, season: 'Warm season' },
-                    
+
                     // Fruits & Berries
                     { name: 'Strawberries', icon: '🍓', suitability: 85, season: 'Perennial' },
                     { name: 'Blueberries', icon: '🫐', suitability: 82, season: 'Perennial' },
                     { name: 'Grapes', icon: '🍇', suitability: 88, season: 'Perennial' },
                     { name: 'Melons', icon: '🍈', suitability: 85, season: 'Warm season' },
                     { name: 'Watermelons', icon: '🍉', suitability: 87, season: 'Warm season' },
-                    
+
                     // Vegetables
                     { name: 'Asparagus', icon: '🌿', suitability: 90, season: 'Perennial' },
                     { name: 'Onions', icon: '🧅', suitability: 85, season: 'Cool season' },
@@ -48,17 +48,17 @@ class SoilAnalysisSystem {
                     { name: 'Leeks', icon: '🥬', suitability: 80, season: 'Cool season' },
                     { name: 'Lettuce', icon: '🥬', suitability: 75, season: 'Cool season' },
                     { name: 'Spinach', icon: '🥬', suitability: 70, season: 'Cool season' },
-                    
+
                     // Legumes
                     { name: 'Green Beans', icon: '🫛', suitability: 80, season: 'Warm season' },
                     { name: 'Lima Beans', icon: '🫛', suitability: 82, season: 'Warm season' },
                     { name: 'Black-eyed Peas', icon: '🫛', suitability: 85, season: 'Warm season' },
-                    
+
                     // Grains & Cereals
                     { name: 'Rye', icon: '🌾', suitability: 88, season: 'Cool season' },
                     { name: 'Barley', icon: '🌾', suitability: 85, season: 'Cool season' },
                     { name: 'Millet', icon: '🌾', suitability: 90, season: 'Warm season' },
-                    
+
                     // Flowers & Ornamentals
                     { name: 'Sunflowers', icon: '🌻', suitability: 85, season: 'Warm season' },
                     { name: 'Marigolds', icon: '🌼', suitability: 80, season: 'Warm season' },
@@ -86,53 +86,53 @@ class SoilAnalysisSystem {
                     { name: 'Peppers', icon: '🌶️', suitability: 92, season: 'Warm season' },
                     { name: 'Eggplant', icon: '🍆', suitability: 90, season: 'Warm season' },
                     { name: 'Potatoes', icon: '🥔', suitability: 88, season: 'Cool season' },
-                    
+
                     // Leafy Greens
                     { name: 'Lettuce', icon: '🥬', suitability: 95, season: 'Cool season' },
                     { name: 'Spinach', icon: '🥬', suitability: 92, season: 'Cool season' },
                     { name: 'Kale', icon: '🥬', suitability: 90, season: 'Cool season' },
                     { name: 'Arugula', icon: '🥬', suitability: 88, season: 'Cool season' },
-                    
+
                     // Legumes
                     { name: 'Green Beans', icon: '🫛', suitability: 90, season: 'Warm season' },
                     { name: 'Peas', icon: '🟢', suitability: 88, season: 'Cool season' },
                     { name: 'Lima Beans', icon: '🫛', suitability: 85, season: 'Warm season' },
                     { name: 'Soybeans', icon: '🫛', suitability: 87, season: 'Warm season' },
-                    
+
                     // Cucurbits
                     { name: 'Cucumbers', icon: '🥒', suitability: 90, season: 'Warm season' },
                     { name: 'Squash', icon: '🎃', suitability: 88, season: 'Warm season' },
                     { name: 'Zucchini', icon: '🥒', suitability: 90, season: 'Warm season' },
                     { name: 'Pumpkins', icon: '🎃', suitability: 85, season: 'Warm season' },
                     { name: 'Melons', icon: '🍈', suitability: 87, season: 'Warm season' },
-                    
+
                     // Root Vegetables
                     { name: 'Carrots', icon: '🥕', suitability: 90, season: 'Cool season' },
                     { name: 'Beets', icon: '🟣', suitability: 88, season: 'Cool season' },
                     { name: 'Radishes', icon: '🌶️', suitability: 85, season: 'Cool season' },
                     { name: 'Turnips', icon: '🟣', suitability: 87, season: 'Cool season' },
-                    
+
                     // Brassicas
                     { name: 'Broccoli', icon: '🥦', suitability: 90, season: 'Cool season' },
                     { name: 'Cabbage', icon: '🥬', suitability: 88, season: 'Cool season' },
                     { name: 'Cauliflower', icon: '🥦', suitability: 87, season: 'Cool season' },
-                    
+
                     // Grains
                     { name: 'Corn', icon: '🌽', suitability: 95, season: 'Warm season' },
                     { name: 'Wheat', icon: '🌾', suitability: 88, season: 'Cool season' },
                     { name: 'Oats', icon: '🌾', suitability: 85, season: 'Cool season' },
-                    
+
                     // Alliums
                     { name: 'Onions', icon: '🧅', suitability: 90, season: 'Cool season' },
                     { name: 'Garlic', icon: '🧄', suitability: 88, season: 'Cool season' },
                     { name: 'Leeks', icon: '🥬', suitability: 85, season: 'Cool season' },
-                    
+
                     // Herbs
                     { name: 'Basil', icon: '🌿', suitability: 90, season: 'Warm season' },
                     { name: 'Parsley', icon: '🌿', suitability: 88, season: 'Cool season' },
                     { name: 'Cilantro', icon: '🌿', suitability: 85, season: 'Cool season' },
                     { name: 'Oregano', icon: '🌿', suitability: 87, season: 'Perennial' },
-                    
+
                     // Fruits
                     { name: 'Strawberries', icon: '🍓', suitability: 90, season: 'Perennial' },
                     { name: 'Blueberries', icon: '🫐', suitability: 85, season: 'Perennial' },
@@ -163,49 +163,49 @@ class SoilAnalysisSystem {
                     { name: 'Kale', icon: '🥬', suitability: 90, season: 'Cool season' },
                     { name: 'Collard Greens', icon: '🥬', suitability: 92, season: 'Cool season' },
                     { name: 'Kohlrabi', icon: '🥬', suitability: 85, season: 'Cool season' },
-                    
+
                     // Leafy Greens
                     { name: 'Swiss Chard', icon: '🌿', suitability: 88, season: 'Cool season' },
                     { name: 'Spinach', icon: '🥬', suitability: 85, season: 'Cool season' },
                     { name: 'Arugula', icon: '🥬', suitability: 82, season: 'Cool season' },
                     { name: 'Lettuce', icon: '🥬', suitability: 80, season: 'Cool season' },
                     { name: 'Mustard Greens', icon: '🥬', suitability: 87, season: 'Cool season' },
-                    
+
                     // Legumes (Nitrogen fixers help clay soil)
                     { name: 'Peas', icon: '🟢', suitability: 85, season: 'Cool season' },
                     { name: 'Fava Beans', icon: '🫛', suitability: 90, season: 'Cool season' },
                     { name: 'Soybeans', icon: '🫛', suitability: 88, season: 'Warm season' },
                     { name: 'Lentils', icon: '🫛', suitability: 82, season: 'Cool season' },
                     { name: 'Chickpeas', icon: '🫛', suitability: 80, season: 'Warm season' },
-                    
+
                     // Root Vegetables (Some varieties)
                     { name: 'Beets', icon: '🟣', suitability: 85, season: 'Cool season' },
                     { name: 'Turnips', icon: '🟣', suitability: 88, season: 'Cool season' },
                     { name: 'Rutabagas', icon: '🟣', suitability: 90, season: 'Cool season' },
-                    
+
                     // Grains & Cereals
                     { name: 'Wheat', icon: '🌾', suitability: 90, season: 'Cool season' },
                     { name: 'Oats', icon: '🌾', suitability: 88, season: 'Cool season' },
                     { name: 'Rice', icon: '🍚', suitability: 95, season: 'Warm season' },
                     { name: 'Corn', icon: '🌽', suitability: 85, season: 'Warm season' },
-                    
+
                     // Fruits (Some varieties)
                     { name: 'Apples', icon: '🍎', suitability: 82, season: 'Perennial' },
                     { name: 'Pears', icon: '🍐', suitability: 85, season: 'Perennial' },
                     { name: 'Plums', icon: '🟣', suitability: 80, season: 'Perennial' },
-                    
+
                     // Vegetables
                     { name: 'Celery', icon: '🥬', suitability: 88, season: 'Cool season' },
                     { name: 'Leeks', icon: '🥬', suitability: 85, season: 'Cool season' },
                     { name: 'Fennel', icon: '🌿', suitability: 80, season: 'Cool season' },
                     { name: 'Artichokes', icon: '🌿', suitability: 82, season: 'Perennial' },
-                    
+
                     // Herbs (Moisture-loving)
                     { name: 'Parsley', icon: '🌿', suitability: 85, season: 'Cool season' },
                     { name: 'Chives', icon: '🌿', suitability: 88, season: 'Perennial' },
                     { name: 'Mint', icon: '🌿', suitability: 90, season: 'Perennial' },
                     { name: 'Cilantro', icon: '🌿', suitability: 82, season: 'Cool season' },
-                    
+
                     // Cover Crops (Soil improvement)
                     { name: 'Clover', icon: '🍀', suitability: 92, season: 'Cool season' },
                     { name: 'Alfalfa', icon: '🌿', suitability: 88, season: 'Perennial' },
@@ -225,7 +225,7 @@ class SoilAnalysisSystem {
                 ]
             }
         };
-        
+
         this.init();
     }
 
@@ -273,7 +273,7 @@ class SoilAnalysisSystem {
         this.uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             this.uploadArea.classList.remove('dragover');
-            
+
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 this.handleFileUpload(files[0]);
@@ -296,7 +296,7 @@ class SoilAnalysisSystem {
             this.displayResults(analysisResult);
         } catch (error) {
             console.error('Analysis error:', error);
-            
+
             // Revert loading state visually
             this.loadingState.classList.add('hidden');
             const uploadContent = document.getElementById('upload-content');
@@ -307,9 +307,9 @@ class SoilAnalysisSystem {
                     <p class="text-sm text-slate-400">JPG, PNG, WEBP (Max 10MB)</p>
                 `;
             }
-            
+
             this.showError(error.message || 'Failed to analyze soil sample. Please try again.');
-            
+
             // Clear input so they can upload the same file again if they want
             if (this.fileInput) this.fileInput.value = '';
         }
@@ -326,17 +326,17 @@ class SoilAnalysisSystem {
                     if (this.mobilenetModel) {
                         const stepEl = document.getElementById('analysis-step');
                         if (stepEl) stepEl.textContent = "Step 1: Running AI Object Classification...";
-                        
+
                         const predictions = await this.mobilenetModel.classify(img);
-                        
+
                         // Valid keywords that describe soil, ground, or textures often confused with macro soil
                         const validKeywords = [
-                            'soil', 'earth', 'ground', 'dirt', 'sand', 'clay', 'mud', 'plow', 'field', 
+                            'soil', 'earth', 'ground', 'dirt', 'sand', 'clay', 'mud', 'plow', 'field',
                             'farm', 'garden', 'pot', 'terrain', 'rock', 'stone', 'pebble', 'gravel',
                             'texture', 'pattern', 'surface', 'sponge', 'dough', 'leather', 'velvet', 'wool',
                             'ant', 'worm', 'nematode', 'geological'
                         ];
-                        
+
                         let isValidSoil = false;
                         for (const pred of predictions) {
                             const className = pred.className.toLowerCase();
@@ -345,7 +345,7 @@ class SoilAnalysisSystem {
                                 break;
                             }
                         }
-                        
+
                         // If AI is heavily confident it's an indoor object, person, vehicle, etc. reject it.
                         if (!isValidSoil && predictions[0].probability > 0.15) {
                             throw new Error("No soil detected in the uploaded image. Please upload a valid soil photo for analysis.");
@@ -356,7 +356,7 @@ class SoilAnalysisSystem {
                     const canvas = document.createElement('canvas');
                     const MAX = 200; // downsample for performance
                     const scale = Math.min(MAX / img.width, MAX / img.height, 1);
-                    canvas.width  = Math.round(img.width  * scale);
+                    canvas.width = Math.round(img.width * scale);
                     canvas.height = Math.round(img.height * scale);
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -367,37 +367,37 @@ class SoilAnalysisSystem {
                     // Sample every 4th pixel for speed
                     let rSum = 0, gSum = 0, bSum = 0, count = 0;
                     let earthToneCount = 0;
-                    
+
                     for (let i = 0; i < imageData.length; i += 16) {
                         const pr = imageData[i];
                         const pg = imageData[i + 1];
                         const pb = imageData[i + 2];
-                        
+
                         rSum += pr;
                         gSum += pg;
                         bSum += pb;
                         count++;
-                        
+
                         const pixelHsl = this.rgbToHsl(pr, pg, pb);
-                        const {h, s, l} = pixelHsl;
-                        
+                        const { h, s, l } = pixelHsl;
+
                         // Lenient validation: check if pixel is an earth tone or natural shade
                         // H: 0-90 (Red to Yellow-Green) or > 320 (Pink-Red)
                         const isHueBrownish = (h >= 0 && h <= 90) || (h >= 320);
                         const isGreyscale = s < 0.25; // Greys, Blacks, Whites
                         const isNotTooVivid = s < 0.85; // Reject only extreme neon/synthetic colors
-                        
+
                         if ((isHueBrownish || isGreyscale) && isNotTooVivid) {
                             earthToneCount++;
                         }
                     }
-                    
+
                     const earthTonePercentage = earthToneCount / count;
-                    
-                    // Very lenient threshold: only reject if LESS than 15% of the image contains natural earth/grey tones.
-                    // This prevents rejecting soil with heavy green grass, glare, or shadows.
-                    if (earthTonePercentage < 0.15) {
-                        throw new Error("Invalid image detected. Please upload a valid soil image for analysis.");
+
+                    // Strict validation: reject if LESS than 40% of the image contains natural earth/grey tones.
+                    // This prevents accepting completely unrelated images like skies, documents, or screenshots.
+                    if (earthTonePercentage < 0.40) {
+                        throw new Error("Validation Failed: The uploaded image does not appear to contain enough soil. Please upload a clear photo of soil.");
                     }
 
                     const r = rSum / count;
@@ -438,10 +438,10 @@ class SoilAnalysisSystem {
                     const total = sandy + loamy + clay;
                     const pSandy = Math.round((sandy / total) * 100 * 10) / 10;
                     const pLoamy = Math.round((loamy / total) * 100 * 10) / 10;
-                    const pClay  = Math.round(100 - pSandy - pLoamy, 10) / 10;
+                    const pClay = Math.round(100 - pSandy - pLoamy, 10) / 10;
 
                     const dominant = pSandy >= pLoamy && pSandy >= pClay ? 'sandy'
-                                   : pLoamy >= pClay ? 'loamy' : 'clay';
+                        : pLoamy >= pClay ? 'loamy' : 'clay';
 
                     // Confidence based on how dominant the result is
                     const maxPct = Math.max(pSandy, pLoamy, pClay);
@@ -476,7 +476,7 @@ class SoilAnalysisSystem {
                             confidence: Math.round(confidence * 10) / 10,
                             avgColor: { r: Math.round(r), g: Math.round(g), b: Math.round(b) },
                             hsl: { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) },
-                            timestamp: new Date()
+                            timestamp: new Date().toISOString()
                         });
                     }, 2200);
 
@@ -538,23 +538,29 @@ class SoilAnalysisSystem {
             const percentage = result.percentages[soilType];
             const progressBar = document.getElementById(`${soilType}-progress`);
             const percentageText = document.getElementById(`${soilType}-percentage`);
-            
+
             if (progressBar && percentageText) {
                 // Animate progress bar
                 setTimeout(() => {
                     progressBar.style.width = `${percentage}%`;
                 }, 300);
-                
+
                 percentageText.textContent = `${percentage}%`;
             }
         });
 
         // Update primary soil type
         const soilData = this.soilDatabase[result.dominantType];
-        document.getElementById('detected-soil-type').textContent = soilData.name;
-        document.getElementById('soil-confidence').textContent = `Confidence: ${result.confidence.toFixed(1)}% | Avg Color: RGB(${result.avgColor?.r || '–'},${result.avgColor?.g || '–'},${result.avgColor?.b || '–'})`;
-        document.getElementById('soil-description').textContent = soilData.description;
-        
+        document.getElementById('detected-soil-type').textContent = `Predicted: ${soilData.name}`;
+
+        const timestampFormatted = new Date(result.timestamp).toLocaleString();
+        document.getElementById('soil-confidence').innerHTML = `
+            <strong>AI Confidence:</strong> ${result.confidence.toFixed(1)}% <br>
+            <strong>Data Source:</strong> On-Device Vision Model <br>
+            <strong>Timestamp:</strong> ${timestampFormatted}
+        `;
+        document.getElementById('soil-description').textContent = `(Note: This is an AI prediction and not a guaranteed lab result.) ${soilData.description}`;
+
         // Update soil type icon
         const iconElement = document.getElementById('soil-type-icon');
         iconElement.style.backgroundColor = soilData.color;
@@ -566,14 +572,63 @@ class SoilAnalysisSystem {
         // Display soil improvement tips
         this.displaySoilTips(result.dominantType);
 
+        // Save report to Firestore
+        const currentUser = window.AuthSystem.getCurrentUser();
+        if (currentUser) {
+            this.saveReportToFirestore(currentUser.uid, result);
+        }
+
         // Scroll to results
         this.analysisResults.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async saveReportToFirestore(uid, result) {
+        if (!window.firebase || !window.firebase.db) {
+            console.warn("Firebase not initialized; cannot save soil report.");
+            return;
+        }
+
+        const { collection, addDoc, serverTimestamp } = window.firebase.firestoreMethods;
+        const db = window.firebase.db;
+
+        try {
+            // 1. Save to soil_analyses collection
+            const analysisData = {
+                uid: uid,
+                dominantType: result.dominantType,
+                percentages: result.percentages,
+                confidence: result.confidence,
+                timestamp: serverTimestamp()
+            };
+            const docRef = await addDoc(collection(db, 'soil_analyses'), analysisData);
+            console.log("Soil analysis saved to Firestore under ID:", docRef.id);
+
+            // 2. Save to saved_reports collection
+            const soilData = this.soilDatabase[result.dominantType];
+            const reportData = {
+                uid: uid,
+                type: 'soil_analysis',
+                title: `Soil Analysis: ${soilData.name}`,
+                summary: `${soilData.name} detected with ${result.confidence.toFixed(1)}% AI confidence.`,
+                timestamp: serverTimestamp(),
+                details: {
+                    analysisId: docRef.id,
+                    dominantType: result.dominantType,
+                    percentages: result.percentages,
+                    confidence: result.confidence
+                }
+            };
+            await addDoc(collection(db, 'saved_reports'), reportData);
+            console.log("Soil report saved to saved_reports collection.");
+        } catch (err) {
+            console.error("Error saving soil analysis/report to Firestore:", err);
+        }
     }
 
     displayCropRecommendations(soilType) {
         const soilData = this.soilDatabase[soilType];
         const container = document.getElementById('crop-recommendations');
-        
+
         container.innerHTML = soilData.crops.map(crop => `
           <div class="crop-chip">
             <div style="font-size:1.75rem;margin-bottom:.4rem">${crop.icon}</div>
@@ -587,14 +642,14 @@ class SoilAnalysisSystem {
     displaySoilTips(soilType) {
         const soilData = this.soilDatabase[soilType];
         const container = document.getElementById('soil-tips');
-        
+
         container.innerHTML = `<ul style="space-y:.5rem">${soilData.tips.map(tip => `<li style="display:flex;align-items:flex-start;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#a5bfaa"><span style="color:#4caf50;margin-top:.15rem;flex-shrink:0">✓</span>${tip}</li>`).join('')}</ul>`;
     }
 
     showLoadingState() {
         this.analysisResults.classList.add('hidden');
         this.loadingState.classList.remove('hidden');
-        
+
         // Update upload area to show selected file
         const uploadContent = document.getElementById('upload-content');
         uploadContent.innerHTML = `
@@ -618,9 +673,9 @@ class SoilAnalysisSystem {
                 <span>${message}</span>
             </div>
         `;
-        
+
         document.body.appendChild(errorDiv);
-        
+
         // Remove after 5 seconds
         setTimeout(() => {
             errorDiv.style.transform = 'translateX(100%)';

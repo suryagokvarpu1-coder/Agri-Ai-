@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Rules for users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isOwner(userId);
+    }
+    
+    // Rules for soil_analyses collection
+    match /soil_analyses/{analysisId} {
+      allow read, write: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+    
+    // Rules for yield_predictions collection
+    match /yield_predictions/{predictionId} {
+      allow read, write: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+    
+    // Rules for saved_reports collection
+    match /saved_reports/{reportId} {
+      allow read, write: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+  }
+}

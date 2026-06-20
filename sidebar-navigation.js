@@ -186,10 +186,14 @@ class SidebarNavigation {
         const avatarElement = document.getElementById('header-avatar');
         
         if (user.username && usernameElement) {
-            usernameElement.textContent = `Welcome, ${user.username}`;
+            usernameElement.textContent = `Welcome, ${user.fullName || user.username}`;
         }
         if (user.username && avatarElement) {
-            avatarElement.textContent = user.username.charAt(0).toUpperCase();
+            if (user.photoURL) {
+                avatarElement.innerHTML = `<img src="${user.photoURL}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                avatarElement.textContent = (user.fullName || user.username).charAt(0).toUpperCase();
+            }
         }
     }
 
@@ -228,9 +232,13 @@ function toggleSidebar() {
 
 // Global logout function
 function logout() {
-    localStorage.removeItem('agri-ai-token');
-    localStorage.removeItem('agri-ai-user');
-    window.location.href = 'login.html';
+    if (window.AuthSystem && window.AuthSystem.logout) {
+        window.AuthSystem.logout();
+    } else {
+        localStorage.removeItem('agri-ai-token');
+        localStorage.removeItem('agri-ai-user');
+        window.location.href = 'login.html';
+    }
 }
 
 // Global reset function

@@ -73,15 +73,57 @@ The yield prediction uses scientifically-backed parameters:
 └── assets/images/          # Generated hero images
 ```
 
+## 🔒 Firebase Integration & Setup
+
+Agri-AI integrates **Firebase Authentication** for secure Google Sign-In and **Cloud Firestore** to store user profiles and history.
+
+### 1. Firebase Setup Instructions
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
+2. Enable **Authentication** in the project, and add **Google** as a Sign-in Provider.
+3. Enable **Cloud Firestore** database.
+4. Go to Project Settings and create a Web App to get your configuration keys.
+5. Apply the Firestore Security Rules from the `firestore.rules` file in the root of the project to your database.
+
+### 2. Environment Variables Configuration
+Create a `.env` file in the root directory of the project (this file is ignored by Git). Add your Firebase Web App credentials as follows:
+
+```env
+VITE_FIREBASE_API_KEY=your_actual_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_actual_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_actual_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_actual_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_actual_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_actual_app_id
+```
+
+### 3. Firestore Collections Schema
+The application creates and manages the following Firestore collections:
+- **`users`**: Stores user profiles.
+  - Document ID: `uid`
+  - Fields: `uid`, `username`, `fullName`, `email`, `photoURL`, `role`, `createdAt`, `lastLogin`, `loginCount`
+- **`soil_analyses`**: Stores detailed soil classification runs.
+  - Fields: `uid`, `dominantType`, `percentages` (sandy/loamy/clay/organic), `confidence`, `timestamp`
+- **`yield_predictions`**: Stores crop yield prediction inputs and outputs.
+  - Fields: `uid`, `crop`, `location`, `fieldSize`, `predictedYield`, `totalProduction`, `confidence`, `factors` (soil, irrigation, elevation), `timestamp`
+- **`saved_reports`**: A unified reports collection to display historical data on the farm dashboard history panel.
+  - Fields: `uid`, `type` (soil_analysis/yield_prediction), `title`, `summary`, `timestamp`, `details` (full structured results)
+
+---
+
 ## 🌐 Deployment
 
 ### Render
-Already configured — just connect your GitHub repo and deploy. See `render.yaml`.
+Already configured — just connect your GitHub repo, define your Environment Variables in the Render Dashboard matching the keys in `.env`, and deploy. See `render.yaml`.
 
 ### Any Node.js Host
 ```bash
+# Copy env template and fill out credentials
+cp .env.example .env
+nano .env
+
+# Install dependencies and start
 npm install
-NODE_ENV=production PORT=3000 node simple-server.js
+npm start
 ```
 
 ## 📜 License

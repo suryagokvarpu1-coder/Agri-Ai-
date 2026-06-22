@@ -235,7 +235,7 @@
     }
 
     let firebaseLoadAttempts = 0;
-    const maxFirebaseLoadAttempts = 60; // 60 * 50ms = 3000ms (3 seconds)
+    const maxFirebaseLoadAttempts = 160; // 160 * 50ms = 8000ms (8 seconds)
 
     // Auth state changed listener
     function initAuthListener() {
@@ -247,7 +247,7 @@
         if (!window.firebase || !window.firebase.auth) {
             firebaseLoadAttempts++;
             if (firebaseLoadAttempts >= maxFirebaseLoadAttempts) {
-                console.error("Firebase SDK failed to load within 3 seconds.");
+                console.error("Firebase SDK failed to load within 8 seconds.");
                 triggerFallback("Firebase SDK missing/failed to load");
                 return;
             }
@@ -357,7 +357,7 @@
         initAuthListener();
         authTimeoutTimer = setTimeout(() => {
             triggerFallback("Authentication Verification Timeout");
-        }, 3500);
+        }, 10000);
     } else {
         // Immediate resolve for static pages that do not load Firebase (e.g. index.html)
         const cachedUser = getLocalUser();

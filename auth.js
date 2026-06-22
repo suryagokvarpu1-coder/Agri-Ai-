@@ -375,7 +375,8 @@
                 throw new Error("Firebase SDK not initialized");
             }
             const { signInWithPopup } = window.firebase.authMethods;
-            const { auth, googleProvider } = window.firebase;
+            const { auth } = window.firebase;
+            const googleProvider = window.firebase.providers.google;
             
             const result = await signInWithPopup(auth, googleProvider);
             return { success: true, user: result.user };

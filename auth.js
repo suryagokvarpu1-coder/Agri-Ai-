@@ -7,6 +7,14 @@
     const TOKEN_KEY = 'agri-ai-token';
     const USER_KEY  = 'agri-ai-user';
 
+    function getLocalUser() {
+        try {
+            return JSON.parse(localStorage.getItem(USER_KEY));
+        } catch {
+            return null;
+        }
+    }
+
     let resolveAuthReady;
     const authReadyPromise = new Promise(resolve => {
         resolveAuthReady = resolve;
@@ -210,7 +218,7 @@
             authTimeoutTimer = null;
         }
 
-        const cachedUser = window.AuthSystem.getCurrentUser();
+        const cachedUser = getLocalUser();
         if (cachedUser) {
             resolveAuthReady(cachedUser);
             hideAuthLoadingOverlay();
@@ -296,7 +304,7 @@
                 } catch (err) {
                     console.error("Firestore user sync error:", err);
                     // Use local cache as fallback if Firestore fails, otherwise create basic profile
-                    const cached = window.AuthSystem.getCurrentUser();
+                    const cached = getLocalUser();
                     userProfile = cached || {
                         uid: fbUser.uid,
                         username: fbUser.email ? fbUser.email.split('@')[0] : 'user',
@@ -352,7 +360,7 @@
         }, 3500);
     } else {
         // Immediate resolve for static pages that do not load Firebase (e.g. index.html)
-        const cachedUser = window.AuthSystem.getCurrentUser();
+        const cachedUser = getLocalUser();
         resolveAuthReady(cachedUser);
         isAuthResolved = true;
     }
@@ -434,11 +442,7 @@
 
         /** Returns current cached user details */
         getCurrentUser() {
-            try {
-                return JSON.parse(localStorage.getItem(USER_KEY));
-            } catch {
-                return null;
-            }
+            return getLocalUser();
         },
 
         /** Synchronous check if token exists in storage */
